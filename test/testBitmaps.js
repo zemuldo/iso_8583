@@ -32,6 +32,6 @@ let iso1 = new isoPack(test1)
 let iso2 = new isoPack(test2)
 
 let bitmapArray1 = iso1.assembleBitMap()
-let bitmapArray2 = iso2.assembleBitMap()
 console.log(bitmapArray1)
-console.log(bitmapArray2)
+console.log(iso2.getBmpsBinary())
+console.log(iso1.getBitMapBuffer())
