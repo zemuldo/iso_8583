@@ -103,7 +103,7 @@ or an error object with error prop
 To get the assembled data:
 
 ```
-isopack.assembleDataElements()
+isopack.assembleBitMap()
 
 ```
 
@@ -119,7 +119,7 @@ or an error object with error prop
 To save the hustle, you can get all this information in one object
 
 ```
-isopack.getPack()
+isopack.getBmpPack()
 
 ```
 
