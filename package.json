@@ -1,0 +1,27 @@
+{
+  "name": "iso8583",
+  "version": "1.0.0",
+  "description": "A javascript library for messaging in iso 8583 messaging format.",
+  "main": "server",
+  "scripts": {
+    "test": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zemuldo/iso8583.git"
+  },
+  "keywords": [
+    "isoPack",
+    "node",
+    "nodemon"
+  ],
+  "author": "Danstan Otieno Onyango",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zemuldo/iso8583/issues"
+  },
+  "homepage": "https://github.com/zemuldo/iso8583#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}
