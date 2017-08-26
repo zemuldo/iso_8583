@@ -3,7 +3,7 @@
 let isoPack = require('../lib/8583');
 
 let test1 = {
-    "0": "0100",
+    "0": "5100",
     "2": "5413330",
     "3": "000000",
     "4": "000000002000",
@@ -30,7 +30,7 @@ let test2 = {}
 
 let iso1 = new isoPack(test1)
 let iso2 = new isoPack(test2)
-console.log(iso1.assembleDataElements().data)
+console.log(iso1.assembleDataElements())
 console.log(iso1.getMtiBuffer())
 console.log(iso1.checkMTI())
 console.log(iso2.getMtiBuffer())
