@@ -1,5 +1,5 @@
 {
-  "name": "iso8583",
+  "name": "iso_8583",
   "version": "1.0.0",
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "server",
@@ -22,6 +22,5 @@
   },
   "homepage": "https://github.com/zemuldo/iso8583#readme",
   "dependencies": {
-    "express": "^4.15.4"
   }
 }
