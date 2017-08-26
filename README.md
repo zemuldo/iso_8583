@@ -20,7 +20,7 @@ npm install --save iso_8583
 Import the library using:
 
 ```
-let iso_8583 = require('iso_8583')
+let { iso_8583 } = require('iso_8583')
 
 ```
 
