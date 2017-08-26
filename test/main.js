@@ -29,9 +29,5 @@ let test1 = {
 let test2 = {}
 
 let iso1 = new isoPack(test1)
-let iso2 = new isoPack(test2)
-console.log(iso1.assembleDataElements())
-console.log(iso1.getMtiBuffer())
-console.log(iso1.checkMTI())
-console.log(iso2.getMtiBuffer())
-console.log(iso2.checkMTI())
+
+console.log(iso1.getPack())

@@ -3,7 +3,7 @@
 let isoPack = require('../lib/8583');
 
 let test1 = {
-    "0": "9100",
+    "0": "0100",
     "2": "5413330",
     "3": "000000",
     "4": "000000002000",
@@ -32,6 +32,5 @@ let iso1 = new isoPack(test1)
 let iso2 = new isoPack(test2)
 
 let bitmapArray1 = iso1.assembleBitMap()
-console.log(bitmapArray1)
-console.log(iso2.getBmpsBinary())
-console.log(iso1.getBitMapBuffer())
+console.log(iso1.getBmpsBinary())
+console.log(iso1.getBitMapHex())
