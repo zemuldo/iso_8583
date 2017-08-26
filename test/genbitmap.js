@@ -3,7 +3,7 @@
 let isoPack = require('../lib/8583');
 let { getHex,getLenType } = require('../lib/tools')
 let checkTypes = require('../lib/types')
-let formats = require('../lib/postbridge')
+let formats = require('../lib/formats')
 
 let testData = {
 	"0": "0100",
