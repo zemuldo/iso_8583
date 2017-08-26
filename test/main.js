@@ -1,6 +1,7 @@
 'use strict'
 
 let isoPack = require('../lib/8583');
+let { validateFields,getLenType,getHex } = require('../lib/tools');
 
 let test1 = {
     "0": "0100",
@@ -30,4 +31,14 @@ let test2 = {}
 
 let iso1 = new isoPack(test1)
 
-console.log(iso1.getPack())
+let x = iso1.getBufferMessage(iso1.getBmpPack())
+console.log(x)
+console.log(parseInt(getHex(x.slice(0, 1).toString('hex')), 2))
+console.log(parseInt(getHex(x.slice(1, 2).toString('hex')), 2))
+let thisMti = x.slice(2, 6).toString()
+let thisBitmaps = getHex(x.slice(6, 22).toString('hex'))
+let thisData = x.slice(22, x.length).toString()
+
+let y = new isoPack().getIsoJSON(thisBitmaps,thisData,thisMti)
+
+console.log(y)
