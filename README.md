@@ -153,15 +153,11 @@ This returns a buffer containing the message or an object containing error messa
 
 
 To upuck a message from the interface, that always comes in a tcp stream/buffer
-Split the message in appropriate fields
+Just parse the incoming buffer or string to the method
 
 
 ```
-let thisMti = incoming.slice(2, 6).toString()
-let thisBitmaps = getHex(incoming.slice(6, 22).toString('hex'))
-let thisData = incoming.slice(22, incoming.length).toString()
-
-let incoming = new isopack().getIsoJSON(thisBitmaps,thisData,thisMti)
+let incoming = new isopack().getIsoJSON(incoming)
 
 ```
 
