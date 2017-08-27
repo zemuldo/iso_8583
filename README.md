@@ -24,7 +24,7 @@ let iso_8583 = require('iso_8583')
 
 ```
 
-To invoke the initialize with the iso8583 json or object as argument
+To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.
 
 ```
 let isoJson = {
