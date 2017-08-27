@@ -31,6 +31,7 @@ console.log(iso.getBitMapHex())
 console.log(iso.assembleDataElements())
 console.log(iso.getBmpPack())
 console.log(iso.getBufferMessage())
+console.log(iso.getIsoJSON(iso.getBufferMessage()))
 
 let emptyMessage = {}
 let iso1 = new isoPack(emptyMessage)
@@ -39,7 +40,7 @@ console.log(iso1.getBmpsBinary())
 console.log(iso1.getBitMapHex())
 console.log(iso1.assembleDataElements())
 console.log(iso1.getBmpPack())
-console.log(iso1.getBufferMessage())
+console.log(iso1.getBufferMessage().isBuffer)
 
 let iso2 = new isoPack(emptyMessage)
 console.log(iso2.getMti())
