@@ -8,7 +8,7 @@ ISO 8583 defines a message format and a communication flow so that different sys
 
 Although ISO 8583 defines a common standard, it is not typically used directly by systems or networks. It defines many standard fields (data elements) which remain the same in all systems or networks, and leaves a few additional fields for passing network-specific details. These fields are used by each network to adapt the standard for its own use with custom fields and custom usages. 
 
-Usage:
+Usage: For Bitmap Messaging
 
 Install from npm using
 
@@ -62,7 +62,7 @@ The object initialized has the following methods:
 
 To get the mti as a string:
 ```
-isopack.getMtiBuffer()
+isopack.getMti()
 
 ```
 
@@ -192,5 +192,75 @@ This returns a json object of the message
 
 ```
 
+Usage: For XML Messaging:
+To get xml from a json:
+Initialize the iso object with the json as argument
+
+```
+let isoPack = new isoPack(isoJson)
+
+```
+
+```
+isoPack.getXMLString()
+
+```
+
+returns a string of iso 8583 xml string
+
+To get json form the xml string
+Initialize with no argument
+
+```$xslt
+let isoPack = new isoPack()
+
+```
+
+parse the string to the method to get the iso json
+
+```$xslt
+let xmlTets = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<Iso8583PostXml>\n' +
+    '<MsgType>0200</MsgType>\n' +
+    '<Fields>\n' +
+    '<Field_002>4839123456709012</Field_002>\n' +
+    '<Field_003>000000</Field_003>\n' +
+    '<Field_004>000000001500</Field_004>\n' +
+    '<Field_007>0604074705</Field_007>\n' +
+    '<Field_011>804058</Field_011>\n' +
+    '<Field_012>074808</Field_012>\n' +
+    '<Field_013>0604</Field_013>\n' +
+    '<Field_014>0812</Field_014>\n' +
+    '<Field_015>0905</Field_015>\n' +
+    '<Field_022>901</Field_022>\n' +
+    '<Field_025>02</Field_025>\n' +
+    '<Field_026>05</Field_026>\n' +
+    '<Field_028>000000500</Field_028>\n' +
+    '<Field_030>000000500</Field_030>\n' +
+    '<Field_032>483912</Field_032>\n' +
+    '<Field_035>4839123456709012=08125876305082011</Field_035>\n' +
+    '<Field_037>D000A0030000</Field_037>\n' +
+    '<Field_040>507</Field_040>\n' +
+    '<Field_041>FOFUGUT1</Field_041>\n' +
+    '<Field_042>191121119111112</Field_042>\n' +
+    '<Field_043>Postilion Cafeteria Rondebosch ZA</Field_043>\n' +
+    '<Field_049>710</Field_049> <Field_056>1510</Field_056>\n' +
+    '<Field_059>0000000072</Field_059>\n' +
+    '<Field_123>211401213041013</Field_123>\n' +
+    '<Field_127_002>0007713856</Field_127_002>\n' +
+    '<Field_127_009>013040604040604016501100330000</Field_127_009>\n' +
+    '<Field_127_012>My Terminal Business</Field_127_012>\n' +
+    '<Field_127_020>20100604</Field_127_020>\n' +
+    '</Fields>\n' +
+    '</Iso8583PostXml>'
+
+```
+
+```$xslt
+getJsonFromXml(xmlTets)
+
+```
+
+returns a json object or an error object
 
 Thanks, Have Fun
