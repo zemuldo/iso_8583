@@ -103,7 +103,7 @@ or an error object with error prop
 To get the assembled data:
 
 ```
-isopack.assembleBitMap()
+isopack.assembleDataElements()
 
 ```
 
