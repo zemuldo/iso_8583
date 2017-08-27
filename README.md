@@ -140,14 +140,14 @@ To get a buffer tcp message to send to the ISO 8584 Interface:
 
 ```
 
-let bufferMessage = isopack.getBufferMessage(isopack.getBmpPack());
+let bufferMessage = isopack.getBufferMessage();
 
 ```
 
-This returns a buffer containing the message.
+This returns a buffer containing the message or an object containing error message
 
 ```
-<Buffer 01 11 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00...
+<Buffer 01 11 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00 00 00 00 00 00 20 30 37 35 34 ...
 
 ```
 
