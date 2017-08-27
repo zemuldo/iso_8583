@@ -1,6 +1,6 @@
 {
   "name": "iso_8583",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "server",
   "scripts": {
@@ -11,9 +11,9 @@
     "url": "git+https://github.com/zemuldo/iso_8583.git"
   },
   "keywords": [
-    "isoPack",
-    "node",
-    "nodemon"
+    "iso",
+    "iso8583",
+    "iso_8583"
   ],
   "author": "Danstan Otieno Onyango",
   "license": "ISC",
