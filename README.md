@@ -140,9 +140,7 @@ To get a buffer tcp message to send to the ISO 8584 Interface:
 
 ```
 
-let thisIsoPack = isopack.getBmpPack();
-
-let bufferMessage = iso1.getBufferMessage(thisIsoPack);
+let bufferMessage = isopack.getBufferMessage(isopack.getBmpPack());
 
 ```
 
@@ -159,9 +157,9 @@ Split the message in appropriate fields
 
 
 ```
-let thisMti = x.slice(2, 6).toString()
-let thisBitmaps = getHex(x.slice(6, 22).toString('hex'))
-let thisData = x.slice(22, x.length).toString()
+let thisMti = incoming.slice(2, 6).toString()
+let thisBitmaps = getHex(incoming.slice(6, 22).toString('hex'))
+let thisData = incoming.slice(22, incoming.length).toString()
 
 let incoming = new isopack().getIsoJSON(thisBitmaps,thisData,thisMti)
 
