@@ -10,14 +10,14 @@ Although ISO 8583 defines a common standard, it is not typically used directly b
 
 # Usage: For Bitmap Messaging
 
-Install from npm using
+##  Install from npm using
 
 ```
 npm install --save iso_8583
 
 ```
 
-Import the library using:
+##  Import the library using:
 
 ```
 let iso_8583 = require('iso_8583')
@@ -68,7 +68,7 @@ isopack.getMti()
 
 returns a 4 byte buffer containing the mti
 
-To get the bitmaps in binary:
+##  To get the bitmaps in binary:
 
 ```
 isopack.getBmpsBinary()
@@ -84,7 +84,7 @@ returns a string
 
 or an error object with error prop
 
-To get the bitmaps in hex:
+##  To get the bitmaps in hex:
 
 ```
 isopack.getBitMapHex()
@@ -116,7 +116,7 @@ returns an object with props data and length
 
 or an error object with error prop
 
-To save the hustle, you can get all this information in one object
+##  To save the hustle, you can get all this information in one object
 
 ```
 isopack.getBmpPack()
@@ -136,7 +136,7 @@ returns
 ```
 
 
-To get a buffer tcp message to send to the ISO 8584 Interface:
+##  To get a buffer tcp message to send to the ISO 8584 Interface:
 
 ```
 
@@ -152,7 +152,7 @@ This returns a buffer containing the message or an object containing error messa
 ```
 
 
-To upuck a message from the interface, that always comes in a tcp stream/buffer
+##  To upuck a message from the interface, that always comes in a tcp stream/buffer
 Just parse the incoming buffer or string to the method
 
 
@@ -189,7 +189,7 @@ This returns a json object of the message
 ```
 
 # Usage: For XML Messaging:
-To get xml from a json:
+## To get xml from a json:
 Initialize the iso object with the json as argument
 
 ```
@@ -204,7 +204,7 @@ isoPack.getXMLString()
 
 returns a string of iso 8583 xml string
 
-To get json form the xml string
+## To get json form the xml string
 Initialize with no argument
 
 ```$xslt
