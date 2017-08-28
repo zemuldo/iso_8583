@@ -75,7 +75,7 @@ isopack.getBmpsBinary()
 
 ```
 
-returns a string 
+### returns a string 
 
 ```
 111100100011110001000110110...
@@ -91,7 +91,7 @@ isopack.getBitMapHex()
 
 ```
 
-returns a hexadecimal string 
+### returns a hexadecimal string 
 
 ```
 f23c46c020e880000000000000000020
@@ -107,7 +107,7 @@ isopack.assembleDataElements()
 
 ```
 
-returns an object with props data and length 
+### returns an object with props data and length 
 
 ```
 07541333000000000000000200002101606.. 253
@@ -144,7 +144,7 @@ let bufferMessage = isopack.getBufferMessage();
 
 ```
 
-This returns a buffer containing the message or an object containing error message
+### This returns a buffer containing the message or an object containing error message
 
 ```
 <Buffer 01 11 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00 00 00 00 00 00 20 30 37 35 34 ...
@@ -161,7 +161,7 @@ let incoming = new isopack().getIsoJSON(incoming)
 
 ```
 
-This returns a json object of the message
+### This returns a json object of the message
 
 ```
 { '0': '0100',
@@ -202,7 +202,7 @@ isoPack.getXMLString()
 
 ```
 
-returns a string of iso 8583 xml string
+### returns a string of iso 8583 xml string
 
 ## To get json form the xml string
 Initialize with no argument
@@ -257,6 +257,6 @@ isoPack.getJsonFromXml(xmlTets)
 
 ```
 
-returns a json object or an error object
+### returns a json object or an error object
 
 # Thanks, Have Fun
