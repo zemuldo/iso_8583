@@ -8,7 +8,7 @@ ISO 8583 defines a message format and a communication flow so that different sys
 
 Although ISO 8583 defines a common standard, it is not typically used directly by systems or networks. It defines many standard fields (data elements) which remain the same in all systems or networks, and leaves a few additional fields for passing network-specific details. These fields are used by each network to adapt the standard for its own use with custom fields and custom usages. [More info here](https://en.wikipedia.org/wiki/ISO_8583)
 
-Usage: For Bitmap Messaging
+# Usage: For Bitmap Messaging
 
 Install from npm using
 
@@ -188,7 +188,7 @@ This returns a json object of the message
 
 ```
 
-Usage: For XML Messaging:
+# Usage: For XML Messaging:
 To get xml from a json:
 Initialize the iso object with the json as argument
 
@@ -259,4 +259,4 @@ isoPack.getJsonFromXml(xmlTets)
 
 returns a json object or an error object
 
-Thanks, Have Fun
+# Thanks, Have Fun
