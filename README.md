@@ -1,4 +1,4 @@
-# iso8583
+# iso_8583
 
 This is a javascript library that does message conversion between a system and an interface that accepts iso8583 message requests and send [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583) responses.
 
