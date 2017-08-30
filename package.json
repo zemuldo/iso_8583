@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/zemuldo/iso8583#readme",
   "dependencies": {
-    "jxon": "^2.0.0-beta.5"
+    "jxon": "^2.0.0-beta.5",
+    "moment": "^2.18.1"
   }
 }
