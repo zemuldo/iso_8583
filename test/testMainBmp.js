@@ -43,4 +43,6 @@ console.log(iso.getBufferMessage())
 console.log(iso1.getBufferMessage())
 console.log(iso.getIsoJSON(iso.getBufferMessage()))
 console.log(iso1.getIsoJSON(iso.getBufferMessage()))
+console.log(iso.attachTimeStamp())
+console.log(iso1.attachTimeStamp())
 
