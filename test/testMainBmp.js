@@ -2,7 +2,7 @@
 
 let isoPack = require('../lib/8583');
 let testData = {
-    "0": "01x00",
+    "0": "0100",
     "2": "5413330",
     "3": "000000",
     "4": "000000002000",
@@ -28,6 +28,7 @@ let iso = new isoPack(testData)
 let emptyMessage = {}
 let iso1 = new isoPack(emptyMessage)
 console.log(iso.validateMessage())
+console.log(iso1.validateMessage())
 console.log(iso.getMti())
 console.log(iso1.getMti())
 console.log(iso.getBmpsBinary())
