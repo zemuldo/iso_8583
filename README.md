@@ -60,6 +60,15 @@ let isopack = new iso_8583(isoJson)
 
 The object initialized has the following methods:
 
+To validate the iso message
+
+```
+isopack.validateMessage()
+
+```
+
+returns true for valid message or error
+
 To get the mti as a string:
 ```
 isopack.getMti()
