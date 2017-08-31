@@ -270,4 +270,7 @@ isoPack.getJsonFromXml(xmlTets)
 
 ### returns a json object or an error object
 
+There are other cool stuff like isoPack.attachTimeStamp() which adds times stamps to field 7,12,13, plus more
+When working with xml, first change the xml to json then validate.
+
 # Thanks, Have Fun
