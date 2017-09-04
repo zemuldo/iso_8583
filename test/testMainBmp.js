@@ -47,4 +47,5 @@ console.log(iso.attachTimeStamp())
 console.log(iso1.attachTimeStamp())
 console.log(iso.getTType())
 console.log(iso.getAccType())
+console.log(iso.getTransStatus())
 
