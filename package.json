@@ -1,6 +1,6 @@
 {
   "name": "iso_8583",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "server",
   "scripts": {
@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/zemuldo/iso8583/issues"
   },
-  "homepage": "https://github.com/zemuldo/iso8583#readme",
+  "homepage": "https://github.com/zemuldo/iso_8583/wiki",
   "dependencies": {
     "jxon": "^2.0.0-beta.5",
     "moment": "^2.18.1"
