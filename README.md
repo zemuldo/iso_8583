@@ -2,11 +2,7 @@
 
 This is a javascript library that does message conversion between a system and an interface that accepts iso8583 message requests and send [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583) responses.
 
-ISO 8583 is an international standard for Financial transaction card originated interchange messaging. It is the International Organization for Standardization standard for systems that exchange electronic transactions initiated by cardholders using payment cards.
-
-ISO 8583 defines a message format and a communication flow so that different systems can exchange these transaction requests and responses. The vast majority of transactions made when a customer uses a card to make a payment in a store (EFTPOS) use ISO 8583 at some point in the communication chain, as do transactions made at ATMs. In particular, both the MasterCard and Visa networks base their authorization communications on the ISO 8583 standard, as do many other institutions and networks.
-
-Although ISO 8583 defines a common standard, it is not typically used directly by systems or networks. It defines many standard fields (data elements) which remain the same in all systems or networks, and leaves a few additional fields for passing network-specific details. These fields are used by each network to adapt the standard for its own use with custom fields and custom usages. [More info here](https://en.wikipedia.org/wiki/ISO_8583)
+ [More info here about iso 8583 standard is here](https://en.wikipedia.org/wiki/ISO_8583)
 
 # Usage: For Bitmap Messaging
 
@@ -20,11 +16,17 @@ npm install --save iso_8583
 ##  Import the library using:
 
 ```
-let iso_8583 = require('iso_8583')
+let isopack = require('iso_8583')
 
 ```
-
+#NOTE !IMPORTANT
+The library extends fields 127 and fields 127.25 to their sub fields.
+If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length
+In the above case the library will expand them.
+If they are already broken down to subfields, nothing changes.
 To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.
+If you want to handle xml iso 8583 messages, the usage is described down there.
+#END OF NOTE
 
 ```
 let testData = {
@@ -87,7 +89,7 @@ isopack.getBmpsBinary()
 
 ```
 
-### returns a string 
+### returns a string
 
 ```
 111100100011110001000110110...
@@ -96,58 +98,25 @@ isopack.getBmpsBinary()
 
 or an error object with error prop
 
-##  To get the bitmaps in hex:
+##  To get the bitmaps in hex for fields 0-127, fields 127 extensions and  fields 127.25 extensions
 
 ```
 isopack.getBitMapHex()
+isopack.getBitMapHex_127_ext()
+isopack.getBitMapHex_127_ext_25()
 
 ```
 
-### returns a hexadecimal string 
+### returns a hexadecimal string
 
 ```
-f23c46c020e880000000000000000020
-
-```
-
-or an error object with error prop
-
-To get the assembled data:
-
-```
-isopack.assembleDataBuffer()
-
-```
-
-### returns an object with props data and length 
-
-```
-<Buffer 01 cf 30 31 30 30 f2 1c 46 c1 a0 e0 91 00 00 00 00 00 00 00 00 22 31 36 34 37 36 31 37 33 39 30 30 31 30...
+f23c46c1a8e091000000000000000022
+8000008000000000
+fe1e5f7c00000000
 
 ```
 
 or an error object with error prop
-
-##  To save the hustle, you can get all this information in one object
-
-```
-isopack.getBmpPack()
-
-```
-
-returns
-
-```
-{ mti: '0100',
-  bitmapHex: 'f21c46c1a0e091000000000000000022',
-  dataString: '?\u001cF???\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"164761739001010119000000000000005000091113141113141109112212411105100100120642393509111111111344761739001010119D2212201175892888912345678MOBITILL_000001Mobitll Merchant 1 0000000 NAIROBI KE KE404t4?x\u0013??E004151001591010151134C101212000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959',
-  len: 463,
-  lengthIndicator: [ 1, 207 ] }
-
-
-
-```
-
 
 ##  To get a buffer tcp message to send to the ISO 8584 Interface:
 
