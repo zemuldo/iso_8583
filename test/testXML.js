@@ -61,5 +61,15 @@ let xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '</Iso8583PostXml>'
 
 let iso = new isoPack(test1)
-console.log(iso.getXMLString())
-console.log(iso.getJsonFromXml(iso.getXMLString()))
+// console.log(iso.getXMLString())
+// console.log(iso.getJsonFromXml(iso.getXMLString()))
+let new_0800_0810 = {
+    "0": "0800",
+    "7": "0818160244",
+    "11": "646465",
+    "12": "160244",
+    "13": "0818",
+    "70": "001"
+}
+let y = new isoPack(new_0800_0810).getBufferMessage()
+console.log(new isoPack().getIsoJSON(y))

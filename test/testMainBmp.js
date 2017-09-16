@@ -127,11 +127,11 @@ let iso4 = new iso1Pack(testData4)
    Then we can get the bitmaps for the extensions
 */
 
-console.log(iso1.rebuildExtensions())
-console.log(iso1.Msg)
-
-console.log(iso2.rebuildExtensions())
-console.log(iso2.Msg)
+// console.log(iso1.rebuildExtensions())
+// console.log(iso1.Msg)
+//
+// console.log(iso2.rebuildExtensions())
+// console.log(iso2.Msg)
 // console.log(iso1.assembleBitMap().join(''))
 // console.log(iso1.assembleBitMap_127().join(''))
 // console.log(iso1.assembleBitMap_127_125().join(''))
@@ -198,13 +198,22 @@ console.log(iso2.Msg)
 // console.log(unpack3.json)
 // console.log("---------------------------------")
 // console.log(unpack3.remSlice)
-// //CASE 4
-// let _0_127_Buffer4 = iso4.getBufferMessage()
-// console.log(_0_127_Buffer4)
-// let unpack4 = iso4.getIsoJSON(_0_127_Buffer4,{})
-// console.log(unpack4)
-// console.log("---------------------------------")
-// console.log(unpack4)
+//CASE 4
+let t = {
+    "0": "0800",
+    "7": "0818160244",
+    "11": "646465",
+    "12": "160244",
+    "13": "0818",
+    "70": "001"
+}
+let iso5 = new iso1Pack(t)
+let _0_127_Buffer5 = iso5.getBufferMessage()
+console.log(_0_127_Buffer5)
+let unpack5 = iso5.getIsoJSON(_0_127_Buffer5,{})
+console.log(unpack5)
+console.log("---------------------------------")
+console.log(unpack5)
 
 
 // let _0_127_Buffer2 = iso2.assemble0_127_Fields()
