@@ -20,12 +20,12 @@ let isopack = require('iso_8583')
 
 ```
 #NOTE !IMPORTANT
-The library extends fields 127 and fields 127.25 to their sub fields.
-If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length
-In the above case the library will expand them.
-If they are already broken down to subfields, nothing changes.
-To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.
-If you want to handle xml iso 8583 messages, the usage is described down there.
+The library extends fields 127 and fields 127.25 to their sub fields.    
+If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length    
+In the above case the library will expand them.    
+If they are already broken down to subfields, nothing changes.    
+To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.    
+If you want to handle xml iso 8583 messages, the usage is described down there.    
 #END OF NOTE
 
 ```
