@@ -13,7 +13,9 @@
   "keywords": [
     "iso",
     "iso8583",
-    "iso_8583"
+    "iso_8583",
+    "card transaction",
+    "8583"
   ],
   "author": "Danstan Otieno Onyango",
   "license": "ISC",
