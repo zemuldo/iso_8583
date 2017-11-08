@@ -18,7 +18,7 @@
   "author": "Danstan Otieno Onyango",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zemuldo/iso8583/issues"
+    "url": "https://github.com/zemuldo/iso_8583/issues"
   },
   "homepage": "https://github.com/zemuldo/iso_8583/wiki",
   "dependencies": {
