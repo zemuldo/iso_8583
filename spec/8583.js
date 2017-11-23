@@ -39,9 +39,9 @@ test('should validate message', t => {
  * getTType() test cases
  */
 test('should return proper transaction type description fro type 00', t => {
-   let data = { 3: "000000" };
-   let isopack = new Main(data);
+  let data = { 3: '000000' };
+  let isopack = new Main(data);
 
-   t.is(isopack.getTType(), 'Goods and services');
+  t.is(isopack.getTType(), 'Goods and services');
 });
 

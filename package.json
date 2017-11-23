@@ -4,7 +4,7 @@
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "server",
   "scripts": {
-    "test": "nyc --reporter=html ava"
+    "test": "eslint spec/** && nyc --reporter=html ava"
   },
   "ava": {
     "files": [
@@ -40,7 +40,9 @@
     "moment": "^2.18.1"
   },
   "devDependencies": {
-    "nyc": "^11.3.0",
-    "ava": "^0.23.0"
+    "eslint": "^4.11.0",
+    "eslint-plugin-import": "^2.8.0",
+    "ava": "^0.23.0",
+    "nyc": "^11.3.0"
   }
 }
