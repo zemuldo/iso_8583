@@ -6,6 +6,18 @@
   "scripts": {
     "test": "nodemon server.js"
   },
+  "ava": {
+    "files": [
+      "spec/*.js"
+    ],
+    "source": [
+      "lib/**/*.{js}"
+    ],
+    "concurrency": 5,
+    "failFast": true,
+    "failWithoutAssertions": false,
+    "powerAssert": false
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zemuldo/iso_8583.git"
@@ -26,5 +38,8 @@
   "dependencies": {
     "jxon": "^2.0.0-beta.5",
     "moment": "^2.18.1"
+  },
+  "devDependencies": {
+    "ava": "^0.23.0"
   }
 }
