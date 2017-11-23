@@ -89,12 +89,21 @@ isopack.getBitMapHex_127_ext_25();  // returns 'fe1e5f7c00000000'
 // in case of error, the error object returned with error prop
 ```
 
+To get a raw message:
 
-To get a buffer tcp message to send to the ISO 8584 Interface:
+```javascript
+let bufferMessage = isopack.getRawMessage(); 
+// returns a buffer containing the message (without 2-byte length field) or an error object
+<Buffer 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00 00 00 00 00 00 20 30 37 35 34 ...
+
+```
+
+To get a buffer tcp message to send to the ISO 8583 Interface:
 
 ```javascript
 let bufferMessage = isopack.getBufferMessage(); 
-// returns a buffer containing the message or an error object
+// returns a buffer containing the message with 2 additional bytes indicating the length 
+// or an error object
 <Buffer 01 11 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00 00 00 00 00 00 20 30 37 35 34 ...
 
 ```
