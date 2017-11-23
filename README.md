@@ -2,9 +2,7 @@
 
 This is a javascript library that does message conversion between a system and an interface that accepts iso8583 message requests and send [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583) responses.
 
- [More info here about iso 8583 standard is here](https://en.wikipedia.org/wiki/ISO_8583)
-
-# Usage: For Bitmap Messaging
+# Usage: Bitmap Messaging
 
 ##  Install from npm using
 
@@ -15,137 +13,106 @@ npm install --save iso_8583
 
 ##  Import the library using:
 
-```
-let isopack = require('iso_8583')
+```javascript
+const iso8583 = require('iso_8583');
+let data = {
+    0: "0100",
+    2: "4761739001010119",
+    3: "000000",
+    4: "000000005000",
+    7: "0911131411",
+    12: "131411",
+    13: "0911",
+    14: "2212",
+    18: "4111",
+    22: "051",
+    23: "001",
+    25: "00",
+    26: "12",
+    32: "423935",
+    33: "111111111",
+    35: "4761739001010119D22122011758928889",
+    41: "12345678",
+    42: "MOTITILL_000001",
+    43: "My Termianl Business                    ",
+    49: "404",
+    52: "7434F67813BAE545",
+    56: "1510",
+    123: "91010151134C101",
+    127: "000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959"
+};
 
-```
-#NOTE !IMPORTANT
-The library extends fields 127 and fields 127.25 to their sub fields.    
-If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length    
-In the above case the library will expand them.    
-If they are already broken down to subfields, nothing changes.    
-To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.    
-If you want to handle xml iso 8583 messages, the usage is described down there.    
-#END OF NOTE
-
-```
-let testData = {
-    "0": "0100",
-    "2": "4761739001010119",
-    "3": "000000",
-    "4": "000000005000",
-    "7": "0911131411",
-    "12": "131411",
-    "13": "0911",
-    "14": "2212",
-    "18": "4111",
-    "22": "051",
-    "23": "001",
-    "25": "00",
-    "26": "12",
-    "32": "423935",
-    "33": "111111111",
-    "35": "4761739001010119D22122011758928889",
-    "41": "12345678",
-    "42": "MOTITILL_000001",
-    "43": "My Termianl Business                    ",
-    "49": "404",
-    "52": "7434F67813BAE545",
-    "56": "1510",
-    "123": "91010151134C101",
-    "127": "000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959"
-}
-
+let isopack = new iso8583(data);
 ```
 
-```
-let isopack = new iso_8583(isoJson)
+> **!IMPORTANT**
+>
+>The library extends fields 127 and fields 127.25 to their sub fields.    
+>If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length
+>In the above case the library will expand them.    
+>If they are already broken down to subfields, nothing changes.    
+>To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.    
+>If you want to handle xml iso 8583 messages, the usage is described down there.    
 
-```
 
 The object initialized has the following methods:
 
 To validate the iso message
 
-```
-isopack.validateMessage()
+```javascript
+isopack.validateMessage();  // returns true for valid message or error
 
 ```
 
-returns true for valid message or error
 
 To get the mti as a string:
-```
-isopack.getMti()
+```javascript
+isopack.getMti(); // returns a 4 byte buffer containing the mti
 
 ```
 
-returns a 4 byte buffer containing the mti
+To get the bitmaps in binary:
 
-##  To get the bitmaps in binary:
-
-```
-isopack.getBmpsBinary()
+```javascript
+isopack.getBmpsBinary(); // returns a string '1111001000111..' or an error object with error prop
 
 ```
 
-### returns a string
 
-```
-111100100011110001000110110...
+To get the bitmaps in hex for fields 0-127, fields 127 extensions and  fields 127.25 extensions
 
-```
+```javascript
+isopack.getBitMapHex();             // returns 'f23c46c1a8e091000000000000000022'
+isopack.getBitMapHex_127_ext();     // returns '8000008000000000'
+isopack.getBitMapHex_127_ext_25();  // returns 'fe1e5f7c00000000'
 
-or an error object with error prop
-
-##  To get the bitmaps in hex for fields 0-127, fields 127 extensions and  fields 127.25 extensions
-
-```
-isopack.getBitMapHex()
-isopack.getBitMapHex_127_ext()
-isopack.getBitMapHex_127_ext_25()
-
+// in case of error, the error object returned with error prop
 ```
 
-### returns a hexadecimal string
+To get a raw message:
 
-```
-f23c46c1a8e091000000000000000022
-8000008000000000
-fe1e5f7c00000000
+```javascript
+let bufferMessage = isopack.getRawMessage(); 
+// returns a buffer containing the message (without 2-byte length field) or an error object
+<Buffer 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00 00 00 00 00 00 20 30 37 35 34 ...
 
 ```
 
-or an error object with error prop
+To get a buffer tcp message to send to the ISO 8583 Interface:
 
-##  To get a buffer tcp message to send to the ISO 8584 Interface:
-
-```
-
-let bufferMessage = isopack.getBufferMessage();
-
-```
-
-### This returns a buffer containing the message or an object containing error message
-
-```
+```javascript
+let bufferMessage = isopack.getBufferMessage(); 
+// returns a buffer containing the message with 2 additional bytes indicating the length 
+// or an error object
 <Buffer 01 11 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00 00 00 00 00 00 20 30 37 35 34 ...
 
 ```
 
+To unpack a message from the interface, that usually comes in a tcp stream/buffer just parse the incoming buffer or string to the method
 
-##  To upuck a message from the interface, that always comes in a tcp stream/buffer
-Just parse the incoming buffer or string to the method
-
-
-```
-let incoming = new isopack().getIsoJSON(incoming)
-
-```
-
-### This returns a json object of the message
-
-```
+```javascript
+let incoming = new isopack().getIsoJSON(incoming);
+// returns parsed json object:
 let testData = {
     "0": "0100",
     "2": "5413330",
@@ -172,34 +139,25 @@ let testData = {
 
 ```
 
-# Usage: For XML Messaging:
+# Usage: XML Messaging
 ## To get xml from a json:
 Initialize the iso object with the json as argument
 
-```
-let isoPack = new isoPack(testData)
-
-```
-
-```
-isoPack.getXMLString()
-
+```javascript
+let isoPack = new isoPack(testData);
+isoPack.getXMLString();     // returns a string of iso 8583 xml string
 ```
 
-### returns a string of iso 8583 xml string
 
-## To get json form the xml string
-Initialize with no argument
-
-```$xslt
-let isoPack = new isoPack()
-
+To get json form the xml string
+```javascript
+let isoPack = new isoPack();    // Initialize with no argument
 ```
 
-parse the string to the method to get the iso json
+Parse the string to the method to get the iso json
 
-```$xslt
-let xmlTets = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+```javascript
+let xmlData = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<Iso8583PostXml>\n' +
     '<MsgType>0200</MsgType>\n' +
     '<Fields>\n' +
@@ -232,18 +190,12 @@ let xmlTets = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<Field_127_012>My Terminal Business</Field_127_012>\n' +
     '<Field_127_020>20100604</Field_127_020>\n' +
     '</Fields>\n' +
-    '</Iso8583PostXml>'
+    '</Iso8583PostXml>';
 
+isoPack.getJsonFromXml(xmlData); // returns a json object or an error object
 ```
 
-```$xslt
-isoPack.getJsonFromXml(xmlTets)
-
-```
-
-### returns a json object or an error object
-
-There are other cool stuff like isoPack.attachTimeStamp() which adds times stamps to field 7,12,13, plus more
+There are other cool stuff like ```isoPack.attachTimeStamp()``` which adds times stamps to field 7,12,13, plus more
 When working with xml, first change the xml to json then validate.
 
 # Thanks, Have Fun
