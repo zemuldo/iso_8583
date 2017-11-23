@@ -1,4 +1,9 @@
 .idea
 node_modules
+coverage
 yarn.lock
 package-lock.json
+*.tgz
+*.lock
+*.swp
+*.log
