@@ -59,3 +59,13 @@ test('should return error if transaction type is not defined', t => {
   t.deepEqual(isopack.getTType(), {error: 'transaction type not defined in message',});
 });
 
+test('getTransactionType() should be an alias to getTType()', t => {
+  let data = { 3: '02' };
+  let isopack = new Main(data);
+
+  t.deepEqual(isopack.getTType(), isopack.getTransactionType());
+});
+
+
+
+
