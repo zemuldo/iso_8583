@@ -4,7 +4,7 @@
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "server",
   "scripts": {
-    "test": "ava"
+    "test": "nyc --reporter=html --reporter=text ava"
   },
   "ava": {
     "files": [
@@ -40,6 +40,7 @@
     "moment": "^2.18.1"
   },
   "devDependencies": {
+    "nyc": "^11.3.0",
     "ava": "^0.23.0"
   }
 }
