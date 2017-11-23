@@ -38,10 +38,24 @@ test('should validate message', t => {
 /**
  * getTType() test cases
  */
-test('should return proper transaction type description fro type 00', t => {
+test('should return proper transaction type description for type 00', t => {
   let data = { 3: '000000' };
   let isopack = new Main(data);
 
   t.is(isopack.getTType(), 'Goods and services');
+});
+
+test('should return proper transaction type description for type 01', t => {
+  let data = { 3: '010000' };
+  let isopack = new Main(data);
+
+  t.is(isopack.getTType(), 'Cash withdrawal');
+});
+
+test('should return error if transaction type is not defined', t => {
+  let data = { 2: '4444555566667777' };
+  let isopack = new Main(data);
+
+  t.deepEqual(isopack.getTType(), {error: 'transaction type not defined in message',});
 });
 

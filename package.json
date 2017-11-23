@@ -12,7 +12,7 @@
     ],
     "source": [
       "lib/**/*.{js}"
-    ],
+    ],   
     "concurrency": 5,
     "failFast": true,
     "failWithoutAssertions": false,
