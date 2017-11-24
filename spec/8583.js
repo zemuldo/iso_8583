@@ -142,5 +142,30 @@ test('validateMessage() should validate generic message from README', t => {
   t.is(isopack.validateMessage(), true);
 });
 
+/**
+ * getMTI() test cases
+ */
+test('getMti() should return proper MTI for 0100', t => {
+  let data = { 
+    0: '0100',
+    2: '4761739001010119'
+  };
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.getMti(), '0100');
+});
+
+/* the test is failing because of the ISSUE#1 bug 
+test('getMti() should return proper MTI for 1820', t => {
+  let data = { 
+     0: '1820',
+     70: '001'
+  };
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.getMti(), '1820');
+});
+*/
+
 
 
