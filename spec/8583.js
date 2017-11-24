@@ -41,31 +41,71 @@ test('should validate message', t => {
 test('should return proper transaction type description for type 00', t => {
   let data = { 3: '000000' };
   let isopack = new Main(data);
-
   t.is(isopack.getTType(), 'Goods and services');
 });
 
 test('should return proper transaction type description for type 01', t => {
-  let data = { 3: '010000' };
+  let data = { 3: '010200' };
   let isopack = new Main(data);
-
   t.is(isopack.getTType(), 'Cash withdrawal');
 });
 
 test('should return error if transaction type is not defined', t => {
   let data = { 2: '4444555566667777' };
   let isopack = new Main(data);
-
   t.deepEqual(isopack.getTType(), {error: 'transaction type not defined in message',});
 });
 
 test('getTransactionType() should be an alias to getTType()', t => {
-  let data = { 3: '02' };
+  let data = { 3: '020100' };
   let isopack = new Main(data);
-
   t.deepEqual(isopack.getTType(), isopack.getTransactionType());
 });
 
+
+/**
+ * getAccType() test cases
+ */
+
+test('getAccType() should return error if transaction type is not defined', t => {
+  let data = { 2: '4444555566667777' };
+  let isopack = new Main(data);
+  t.deepEqual(isopack.getAccType(), {error: 'transaction type not defined in message',});
+});
+
+test('getAccType() should return proper 00 account type', t => {
+  let data = { 3: 'xx00xx' };
+  let isopack = new Main(data);
+  t.is(isopack.getAccType(), 'Default – unspecified');
+});
+
+test('getAccType() should return proper 10 account type', t => {
+  let data = { 3: 'xx10xx' };
+  let isopack = new Main(data);
+  t.is(isopack.getAccType(), 'Savings account');
+});
+
+test('getAccountTypeFrom() should be an alias to getAccType()', t => {
+  let data = { 3: 'xx20xx' };
+  let isopack = new Main(data);
+  t.deepEqual(isopack.getAccType(), isopack.getAccountTypeFrom());
+});
+
+
+/**
+ * getAccountTypeTo() test cases
+ */
+test('getAccountTypeTo() should return error if transaction type is not defined', t => {
+  let data = { 2: '4444555566667777' };
+  let isopack = new Main(data);
+  t.deepEqual(isopack.getAccountTypeTo(), {error: 'transaction type not defined in message',});
+});
+
+test('getAccountTypeTo() should return proper 30 account type', t => {
+  let data = { 3: 'xxxx30' };
+  let isopack = new Main(data);
+  t.is(isopack.getAccountTypeTo(), 'Credit account');
+});
 
 
 
