@@ -1,5 +1,8 @@
 # iso_8583
 
+
+![Travis CI build badge](https://travis-ci.org/zemuldo/iso_8583.svg?branch=master)
+
 This is a javascript library that does message conversion between a system and an interface that accepts iso8583 message requests and send [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583) responses.
 
 # Usage: Bitmap Messaging
