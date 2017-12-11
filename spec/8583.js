@@ -154,18 +154,23 @@ test('getMti() should return proper MTI for 0100', t => {
   t.is(isopack.validateMessage(), true);
   t.is(isopack.getMti(), '0100');
 });
-
-/* the test is failing because of the ISSUE#1 bug 
 test('getMti() should return proper MTI for 1820', t => {
-  let data = { 
-     0: '1820',
+  let data = {
+     0: '0800',
      70: '001'
   };
   let isopack = new Main(data);
   t.is(isopack.validateMessage(), true);
-  t.is(isopack.getMti(), '1820');
+  t.is(isopack.getMti(), '0800');
 });
-*/
+test('getMti() should return proper MTI for 1820', t => {
+    let data = {
+        0: '1899',
+        70: '001'
+    };
+    let isopack = new Main(data);
+    t.is(isopack.validateMessage(), false);
+});
 
 
 
