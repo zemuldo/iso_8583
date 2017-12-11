@@ -120,4 +120,4 @@ console.log(iso3.getBufferMessage().toString())
 
 console.log(iso4.assemble0_127_Fields())
 console.log(iso4.assemble127_extensions())
-console.log(iso4.getBufferMessage())
+console.log(iso4.getBufferMessage());
