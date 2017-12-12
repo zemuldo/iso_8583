@@ -5,7 +5,13 @@ import Main from '../lib/8583.js';
  * checkMTI()
  */
 test('should validate all basic MTIs for ISO8583:1987', t => {
-  ['0100', '0110', '0120', '0121', '0130', '0200', '0210', '0220', '0221', '0230', '0320', '0330', '0400', '0510', '0800', '0810', '0820'].forEach( mti => {
+  [ '0100','0110','0101','0120','0121','0130', 
+    '0200','0201','0202','0203','0210','0212','0220','0221','0230',
+    '0320','0321','0322','0323','0330','0332',
+    '0400','0401','0410','0420','0421','0430',
+    '0500','0501','0510','0520','0521','0522','0532','0523','0530',
+    '0600','0601','0610','0620','0621','0630',
+    '0800','0801','0810','0820'].forEach( mti => {
     let data = { 0: mti };
     let message = new Main(data);
     t.true(message.checkMTI());
@@ -237,21 +243,3 @@ test('validateMessage() then rebuildExtensions() should validate generic message
   let buffer = isopack.getBufferMessage();
   t.is(new Main().getIsoJSON(buffer,{})['127.25.30'],'BAC24959');
 });
-
-/**
- * getRawMessage()
-test('should get raw message', t => {
-  let data = {
-    0: '1800',
-    11: '204360',
-    12: '123456',
-    24: '801'
-  };
-
-  let message = new Main(data);
-
-  console.log(message.validateMessage());
-  //t.true();
-  t.deepEqual(message.getRawMessage(), Buffer('1800\x80\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00777', 'binary'));
-});
- */
