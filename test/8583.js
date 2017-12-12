@@ -2,6 +2,17 @@ import test from 'ava';
 import Main from '../lib/8583.js';
 
 /**
+ * checkMTI()
+ */
+test('should validate all basic MTIs for ISO8583:1987', t => {
+  ['0100', '0110', '0120', '0121', '0130', '0200', '0210', '0220', '0221', '0230', '0320', '0330', '0400', '0510', '0800', '0810', '0820'].forEach( mti => {
+    let data = { 0: mti };
+    let message = new Main(data);
+    t.true(message.checkMTI());
+  });
+});
+
+/**
  * getTType() test cases
  */
 test('should return proper transaction type description for type 00', t => {
@@ -211,17 +222,6 @@ test('validateMessage() then rebuildExtensions() should validate generic message
   t.is(isopack.getBufferMessage().byteLength.toString(), '468');
   let buffer = isopack.getBufferMessage();
   t.is(new Main().getIsoJSON(buffer,{})['127.25.30'],'BAC24959');
-});
-
-/**
- * checkMTI()
- */
-test('should validate all basic MTI for ISO8583:1987', t => {
-  ['0100', '0110', '0120', '0121', '0130', '0200', '0210', '0220', '0221', '0230', '0320', '0330', '0400', '0510', '0800', '0810', '0820'].forEach( mti => {
-    let data = { 0: mti };
-    let message = new Main(data);
-    t.true(message.checkMTI());
-  });
 });
 
 /**
