@@ -2,6 +2,37 @@ import test from 'ava';
 import Main from '../lib/8583.js';
 
 /**
+ * checkMTI()
+ */
+test('should validate all basic MTIs for ISO8583:1987', t => {
+  [ '0100','0110','0101','0120','0121','0130', 
+    '0200','0201','0202','0203','0210','0212','0220','0221','0230',
+    '0320','0321','0322','0323','0330','0332',
+    '0400','0401','0410','0420','0421','0430',
+    '0500','0501','0510','0520','0521','0522','0532','0523','0530',
+    '0600','0601','0610','0620','0621','0630',
+    '0800','0801','0810','0820'].forEach( mti => {
+    let data = { 0: mti };
+    let message = new Main(data);
+    t.true(message.checkMTI());
+  });
+});
+
+test('should validate all basic MTIs for ISO8583:1993', t => {
+  [ '1100','1110','1101','1120','1121','1130', 
+    '1200','1201','1202','1203','1210','1212','1220','1221','1230',
+    '1320','1321','1322','1323','1330','1332',
+    '1400','1401','1410','1420','1421','1430',
+    '1500','1501','1510','1520','1521','1522','1532','1523','1530',
+    '1600','1601','1610','1620','1621','1630',
+    '1800','1801','1810','1820'].forEach( mti => {
+    let data = { 0: mti };
+    let message = new Main(data);
+    t.true(message.checkMTI());
+  });
+});
+
+/**
  * getTType() test cases
  */
 test('should return proper transaction type description for type 00', t => {
@@ -212,5 +243,3 @@ test('validateMessage() then rebuildExtensions() should validate generic message
   let buffer = isopack.getBufferMessage();
   t.is(new Main().getIsoJSON(buffer,{})['127.25.30'],'BAC24959');
 });
-
-
