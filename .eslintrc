@@ -30,7 +30,6 @@
     "indent": ["warn", 2],
     "eqeqeq": 2,
     "no-implicit-globals": 2,
-    "no-magic-numbers": 2,
     "radix": 2,
     "strict": 2,
     "brace-style": 2,
