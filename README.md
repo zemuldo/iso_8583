@@ -81,8 +81,16 @@ isopack.getBmpsBinary(); // returns a string '1111001000111..' or an error objec
 
 ```
 
+To get the bitmap active fields:
+```javascript
+isopack.getBitMapFields(); 
+// returns the array of enabled fields in bitmap, excluding MTI and bitmap fields
+// e.g. [2, 3, 4, 7, 12, 13, 14, 18, 22, 23, 25, 26, 32, 33, 35, 41, 42, 43, 49, 52, 56, 123, 127]
 
-To get the bitmaps in hex for fields 0-127, fields 127 extensions and  fields 127.25 extensions
+```
+
+
+To get the bitmaps in hex for fields 0-127, fields 127 extensions and fields 127.25 extensions
 
 ```javascript
 isopack.getBitMapHex();             // returns 'f23c46c1a8e091000000000000000022'
