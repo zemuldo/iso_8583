@@ -33,6 +33,45 @@ test('should validate all basic MTIs for ISO8583:1993', t => {
 });
 
 /**
+ * getFieldDescription()
+ */
+test('getFieldDescription() should return empty object when field not passed in', t => {
+  t.deepEqual(Main.getFieldDescription(), {});
+});
+
+test('getFieldDescription() should the field description for a single field', t => {
+  t.deepEqual(Main.getFieldDescription(2), {2: 'Primary account number (PAN)'});
+});
+
+test('getFieldDescription() should return empty object if field description does not exist', t => {
+  t.deepEqual(Main.getFieldDescription(330), {});
+});
+
+test('getFieldDescription() should return empty object when the empty array is passed in', t => {
+  t.deepEqual(Main.getFieldDescription([]), {});
+});
+
+test('getFieldDescription() should return empty object when the empty array is passed in', t => {
+  const expected = {
+    2: 'Primary account number (PAN)',
+    3: 'Processing code',
+    4: 'Amount, transaction'
+  };
+
+  t.deepEqual(Main.getFieldDescription([2, 3, 4]), expected);
+});
+
+test('getFieldDescription() should return include only existing field descriptions', t => {
+  const expected = {
+    12: 'Time, local transaction (hhmmss)',
+    22: 'Point of service entry mode',
+    54: 'Additional amounts'
+  };
+
+  t.deepEqual(Main.getFieldDescription([12, 22, null, 54, 777]), expected);
+});
+
+/**
  * getTType() test cases
  */
 test('should return proper transaction type description for type 00', t => {

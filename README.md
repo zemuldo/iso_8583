@@ -119,6 +119,27 @@ let bufferMessage = isopack.getBufferMessage();
 
 ```
 
+To get the field description:
+```javascript
+const iso8583 = require('iso_8583');
+iso8583.getFieldDescription(24);
+// The object with field descriptions to be returned:
+// {24: 'Network International identifier (NII)'}
+```
+
+To get the several fields descriptions:
+```javascript
+const iso8583 = require('iso_8583');
+iso8583.getFieldDescription([24, 37, 39]);
+// The object with field descriptions to be returned:
+// {
+//    24: 'Network International identifier (NII)'},
+//    37: 'Retrieval reference number', 
+//    39: 'Response code'
+// }
+```
+
+
 To unpack a message from the interface, that usually comes in a tcp stream/buffer just parse the incoming buffer or string to the method
 
 ```javascript
