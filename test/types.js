@@ -111,4 +111,3 @@ test('should return false in case of \'an\' type invalid data', t => {
 });
 
 
-
