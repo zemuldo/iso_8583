@@ -50,4 +50,19 @@ test('should return false in case of \'n\' type invalid data', t => {
   t.deepEqual(types(options, data, field), {error: 'while processing field 77: provided data is not of type \'b\''});
 });
 
+test('should process numeric and special characters (\'ns\') type', t => {
+  const options = {'ContentType': 'ns'};
+  const data = '1293801928+_--=.,';
+
+  t.true(types(options, data));
+});
+
+test('should return false in case of \'ns\' type invalid data', t => {
+  const options = {'ContentType': 'b'};
+  const data = '+_--=.,ASD';
+  const field = 93;
+
+  t.deepEqual(types(options, data, field), {error: 'while processing field 93: provided data is not of type \'b\''});
+});
+
 
