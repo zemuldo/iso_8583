@@ -58,11 +58,26 @@ test('should process numeric and special characters (\'ns\') type', t => {
 });
 
 test('should return false in case of \'ns\' type invalid data', t => {
-  const options = {'ContentType': 'b'};
+  const options = {'ContentType': 'ns'};
   const data = '+_--=.,ASD';
   const field = 93;
 
-  t.deepEqual(types(options, data, field), {error: 'while processing field 93: provided data is not of type \'b\''});
+  t.deepEqual(types(options, data, field), {error: 'while processing field 93: provided data is not of type \'ns\''});
+});
+
+test('should process special characters (\'s\') type', t => {
+  const options = {'ContentType': 's'};
+  const data = '></////+_--=.,~';
+
+  t.true(types(options, data));
+});
+
+test('should return false in case of \'s\' type invalid data', t => {
+  const options = {'ContentType': 's'};
+  const data = '+_--=.,ASD';
+  const field = 93;
+
+  t.deepEqual(types(options, data, field), {error: 'while processing field 93: provided data is not of type \'s\''});
 });
 
 
