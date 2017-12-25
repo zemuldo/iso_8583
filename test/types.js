@@ -95,4 +95,19 @@ test('should return false in case of \'an\' type invalid data', t => {
   t.deepEqual(types(options, data, field), {error: 'while processing field 9: provided data is not of type \'an\''});
 });
 
+test('should process alphanumeric with special characters (\'ans\') type', t => {
+  const options = {'ContentType': 'ans'};
+  const data = 'asdasdakjlk1238719283ASDASDLK-=-=-=-,.,.,/.,<><><><><>';
+
+  t.true(types(options, data));
+});
+
+test('should return false in case of \'an\' type invalid data', t => {
+  const options = {'ContentType': 'ans'};
+  const data = 'AS.,ASDaadasd\x01';
+  const field = 9;
+
+  t.deepEqual(types(options, data, field), {error: 'while processing field 9: provided data is not of type \'ans\''});
+});
+
 
