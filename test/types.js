@@ -8,15 +8,14 @@ test('should return error if options has no ContentType', t => {
 test('should process \'a\' type', t => {
   const options = {'ContentType': 'a'};
   const data = 'ABCD';
-  const field = 2;
 
-  t.true(types(options, data, field));
+  t.true(types(options, data));
 });
 
 test('should return false in case of \'a\' type invalid data', t => {
   const options = {'ContentType': 'a'};
-  const data = 'ABCD';
+  const data = 'A1';
   const field = 2;
 
-  t.true(types(options, data, field), {});
+  t.deepEqual(types(options, data, field), {error: 'while processing field 2: provided data is not of type \'a\''});
 });
