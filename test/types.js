@@ -35,4 +35,19 @@ test('should return false in case of \'n\' type invalid data', t => {
   t.deepEqual(types(options, data, field), {error: 'while processing field 16: provided data is not of type \'n\''});
 });
 
+test('should process binary data representation (\'b\') type', t => {
+  const options = {'ContentType': 'b'};
+  const data = 'DEADBEAF300';
+
+  t.true(types(options, data));
+});
+
+test('should return false in case of \'n\' type invalid data', t => {
+  const options = {'ContentType': 'b'};
+  const data = 'Invalid DATA';
+  const field = 77;
+
+  t.deepEqual(types(options, data, field), {error: 'while processing field 77: provided data is not of type \'b\''});
+});
+
 
