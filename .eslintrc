@@ -32,10 +32,11 @@
     "no-implicit-globals": 2,
     "radix": 2,
     "strict": 2,
-    "brace-style": 2,
+    "brace-style": 1,
     "comma-style": 2,
-    "key-spacing": 2,
-    "keyword-spacing": 2,
+    "key-spacing": 1,
+    "keyword-spacing": 1,
     "linebreak-style": 2,
+    "no-useless-escape": 0
   }
 }
