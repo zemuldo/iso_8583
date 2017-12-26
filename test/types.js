@@ -110,4 +110,50 @@ test('should return false in case of \'an\' type invalid data', t => {
   t.deepEqual(types(options, data, field), {error: 'while processing field 9: provided data is not of type \'ans\''});
 });
 
+test('should process alphanumeric with pad character (\'anp\') type', t => {
+  const options = {'ContentType': 'anp'};
+  const data = 'asd80  DEADBEAF 1337';
+
+  t.true(types(options, data));
+});
+
+test('should return false in case of \'anp\' type invalid data', t => {
+  const options = {'ContentType': 'anp'};
+  const data = '=-=<>.,.';
+  const field = 98;
+
+  t.deepEqual(types(options, data, field), {error: 'while processing field 98: provided data is not of type \'anp\''});
+});
+
+test('should process \'x+n\' type (a prefix of C followed by numeric characters)', t => {
+  const options = {'ContentType': 'x+n'};
+  const data = 'C0000198500';
+
+  t.true(types(options, data));
+});
+
+test('should process \'x+n\' type (a prefix of D followed by numeric characters)', t => {
+  const options = {'ContentType': 'x+n'};
+  const data = 'D0004198500';
+
+  t.true(types(options, data));
+});
+
+
+test('should return false in case of \'x+n\' type invalid data', t => {
+  const options = {'ContentType': 'x+n'};
+  const data = 'X09180938019';
+  const field = 103;
+
+  t.deepEqual(types(options, data, field), {error: 'while processing field ' + field + ': provided data is not of type \'' + options.ContentType + '\''});
+});
+
+test('should return false in case of \'x+n\' type invalid amount data', t => {
+  const options = {'ContentType': 'x+n'};
+  const data = 'C09180938ABCD';
+  const field = 103;
+
+  t.deepEqual(types(options, data, field), {error: 'while processing field ' + field + ': provided data is not of type \'' + options.ContentType + '\''});
+});
+
 
