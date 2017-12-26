@@ -2,6 +2,37 @@ import test from 'ava';
 import Main from '../lib/8583.js';
 
 /**
+ * assembleBitMap() test cases
+ */
+test('assembleBitMap() should return error object if no MTI', t => {
+  let data = {
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+  };
+
+  let isopack = new Main(data);
+  t.deepEqual(isopack.assembleBitMap(), {error: 'bitmap error, iso message type undefined or invalid'});
+});
+
+test('assembleBitMap() should return bitmap binary represenation', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.true(message.checkMTI());
+
+  const expected = new Uint8Array([1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
+  t.deepEqual(message.assembleBitMap(), expected);
+});
+
+
+/**
  * checkMTI()
  */
 test('should validate all basic MTIs for ISO8583:1987', t => {
@@ -316,17 +347,6 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
   let isopack = new Main(data);
   t.is(isopack.validateMessage(), true);
   t.deepEqual(isopack.getBitMapFields(), [2, 3, 4, 7, 12, 13, 14, 18, 22, 23, 25, 26, 32, 33, 35, 41, 42, 43, 49, 52, 56, 123, 127]);
-});
-
-test('assembleBitMap() should return error object if no MTI', t => {
-  let data = {
-    2: '4761739001010119',
-    3: '000000',
-    4: '000000005000',
-  };
-
-  let isopack = new Main(data);
-  t.deepEqual(isopack.assembleBitMap(), {error: 'bitmap error, iso message type undefined or invalid'});
 });
 
 
