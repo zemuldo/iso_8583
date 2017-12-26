@@ -11,8 +11,8 @@ test('assembleBitMap() should return error object if no MTI', t => {
     4: '000000005000',
   };
 
-  let isopack = new Main(data);
-  t.deepEqual(isopack.assembleBitMap(), {error: 'bitmap error, iso message type undefined or invalid'});
+  let message = new Main(data);
+  t.deepEqual(message.assembleBitMap(), {error: 'bitmap error, iso message type undefined or invalid'});
 });
 
 test('assembleBitMap() should return bitmap binary represenation', t => {
@@ -30,6 +30,66 @@ test('assembleBitMap() should return bitmap binary represenation', t => {
   const expected = new Uint8Array([1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
   t.deepEqual(message.assembleBitMap(), expected);
 });
+
+/**
+ * getBitMapHex() test cases
+ */
+test('getBitMapHex() should return bitmap for a message with a single field', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+  };
+
+  let message = new Main(data);
+  t.is(message.getBitMapHex(), 'c0000000000000000000000000000000');
+});
+
+test('getBitMapHex() should return bitmap for a message with two fields', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+  };
+
+  let message = new Main(data);
+  t.is(message.getBitMapHex(), 'e0000000000000000000000000000000');
+});
+
+test('getBitMapHex() should return bitmap for a message with three fields', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '0000000000000'
+  };
+
+  let message = new Main(data);
+  t.is(message.getBitMapHex(), 'f0000000000000000000000000000000');
+});
+
+
+test('getBitMapHex() should return bitmap for a random field set', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+  };
+
+  let message = new Main(data);
+  t.is(message.getBitMapHex(), 'f40006c1a08000000000000000000000');
+});
+
+
 
 
 /**
