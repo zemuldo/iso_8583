@@ -317,3 +317,16 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
   t.is(isopack.validateMessage(), true);
   t.deepEqual(isopack.getBitMapFields(), [2, 3, 4, 7, 12, 13, 14, 18, 22, 23, 25, 26, 32, 33, 35, 41, 42, 43, 49, 52, 56, 123, 127]);
 });
+
+test('assembleBitMap() should return error object if no MTI', t => {
+  let data = {
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+  };
+
+  let isopack = new Main(data);
+  t.deepEqual(isopack.assembleBitMap(), {error: 'bitmap error, iso message type undefined or invalid'});
+});
+
+
