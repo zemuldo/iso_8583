@@ -89,6 +89,64 @@ test('getBitMapHex() should return bitmap for a random field set', t => {
   t.is(message.getBitMapHex(), 'f40006c1a08000000000000000000000');
 });
 
+/**
+ * buildBitmapBuffer()i
+ */
+test('buildBitmapBuffer() should build ASCII bitmap buffer', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+  };
+
+  const message = new Main(data);
+  const bitmap = 'f40006c1a08000000000000000000000';
+  t.is(message.getBitMapHex(), bitmap);
+
+  let ascii_array = [];
+  bitmap.toUpperCase().split('').forEach(char => {
+    ascii_array.push(char.charCodeAt(0));
+  });
+
+  const expected = new Buffer(ascii_array);
+  t.deepEqual(message.buildBitmapBuffer(bitmap, 'ascii'), expected);
+});
+
+test('buildBitmapBuffer() should build HEX bitmap buffer', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+  };
+
+  const message = new Main(data);
+  const bitmap = 'f40006c1a08000000000000000000000';
+  t.is(message.getBitMapHex(), bitmap);
+
+  const expected = new Buffer([0xF4, 0x00, 0x06, 0xC1, 0xA0, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
+  t.deepEqual(message.buildBitmapBuffer(bitmap, 'hex'), expected);
+});
+
 
 
 
