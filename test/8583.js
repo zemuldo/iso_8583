@@ -147,8 +147,37 @@ test('buildBitmapBuffer() should build HEX bitmap buffer', t => {
   t.deepEqual(message.buildBitmapBuffer(bitmap, 'hex'), expected);
 });
 
+/**
+ * getLenBuffer() test cases
+ */
 
+test('getLenBuffer() should return length 0', t => {
+  const message = new Main();
+  const expected = new Buffer([0x00, 0x00]);
+  
+  t.deepEqual(message.getLenBuffer(0), expected);
+});
 
+test('getLenBuffer() should return length 1', t => {
+  const message = new Main();
+  const expected = new Buffer([0x00, 0x01]);
+  
+  t.deepEqual(message.getLenBuffer(1), expected);
+});
+
+test('getLenBuffer() should return length 15', t => {
+  const message = new Main();
+  const expected = new Buffer([0x00, 0x0F]);
+  
+  t.deepEqual(message.getLenBuffer(15), expected);
+});
+
+test('getLenBuffer() should return length 317', t => {
+  const message = new Main();
+  const expected = new Buffer([0x01, 0x3D]);
+  
+  t.deepEqual(message.getLenBuffer(317), expected);
+});
 
 /**
  * checkMTI()
