@@ -2,6 +2,184 @@ import test from 'ava';
 import Main from '../lib/8583.js';
 
 /**
+ * assembleBitMap() test cases
+ */
+test('assembleBitMap() should return error object if no MTI', t => {
+  let data = {
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+  };
+
+  let message = new Main(data);
+  t.deepEqual(message.assembleBitMap(), {error: 'bitmap error, iso message type undefined or invalid'});
+});
+
+test('assembleBitMap() should return bitmap binary represenation', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.true(message.checkMTI());
+
+  const expected = new Uint8Array([1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
+  t.deepEqual(message.assembleBitMap(), expected);
+});
+
+/**
+ * getBitMapHex() test cases
+ */
+test('getBitMapHex() should return bitmap for a message with a single field', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+  };
+
+  let message = new Main(data);
+  t.is(message.getBitMapHex(), 'c0000000000000000000000000000000');
+});
+
+test('getBitMapHex() should return bitmap for a message with two fields', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+  };
+
+  let message = new Main(data);
+  t.is(message.getBitMapHex(), 'e0000000000000000000000000000000');
+});
+
+test('getBitMapHex() should return bitmap for a message with three fields', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '0000000000000'
+  };
+
+  let message = new Main(data);
+  t.is(message.getBitMapHex(), 'f0000000000000000000000000000000');
+});
+
+
+test('getBitMapHex() should return bitmap for a random field set', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+  };
+
+  let message = new Main(data);
+  t.is(message.getBitMapHex(), 'f40006c1a08000000000000000000000');
+});
+
+/**
+ * buildBitmapBuffer()i
+ */
+test('buildBitmapBuffer() should build ASCII bitmap buffer', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+  };
+
+  const message = new Main(data);
+  const bitmap = 'f40006c1a08000000000000000000000';
+  t.is(message.getBitMapHex(), bitmap);
+
+  let ascii_array = [];
+  bitmap.toUpperCase().split('').forEach(char => {
+    ascii_array.push(char.charCodeAt(0));
+  });
+
+  const expected = new Buffer(ascii_array);
+  t.deepEqual(message.buildBitmapBuffer(bitmap, 'ascii'), expected);
+});
+
+test('buildBitmapBuffer() should build HEX bitmap buffer', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+  };
+
+  const message = new Main(data);
+  const bitmap = 'f40006c1a08000000000000000000000';
+  t.is(message.getBitMapHex(), bitmap);
+
+  const expected = new Buffer([0xF4, 0x00, 0x06, 0xC1, 0xA0, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
+  t.deepEqual(message.buildBitmapBuffer(bitmap, 'hex'), expected);
+});
+
+/**
+ * getLenBuffer() test cases
+ */
+
+test('getLenBuffer() should return length 0', t => {
+  const message = new Main();
+  const expected = new Buffer([0x00, 0x00]);
+  
+  t.deepEqual(message.getLenBuffer(0), expected);
+});
+
+test('getLenBuffer() should return length 1', t => {
+  const message = new Main();
+  const expected = new Buffer([0x00, 0x01]);
+  
+  t.deepEqual(message.getLenBuffer(1), expected);
+});
+
+test('getLenBuffer() should return length 15', t => {
+  const message = new Main();
+  const expected = new Buffer([0x00, 0x0F]);
+  
+  t.deepEqual(message.getLenBuffer(15), expected);
+});
+
+test('getLenBuffer() should return length 317', t => {
+  const message = new Main();
+  const expected = new Buffer([0x01, 0x3D]);
+  
+  t.deepEqual(message.getLenBuffer(317), expected);
+});
+
+/**
  * checkMTI()
  */
 test('should validate all basic MTIs for ISO8583:1987', t => {
@@ -317,3 +495,5 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
   t.is(isopack.validateMessage(), true);
   t.deepEqual(isopack.getBitMapFields(), [2, 3, 4, 7, 12, 13, 14, 18, 22, 23, 25, 26, 32, 33, 35, 41, 42, 43, 49, 52, 56, 123, 127]);
 });
+
+
