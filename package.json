@@ -42,7 +42,7 @@
   "devDependencies": {
     "eslint": "^4.11.0",
     "eslint-plugin-import": "^2.8.0",
-    "ava": "^0.23.0",
+    "ava": "^0.24.0",
     "nyc": "^11.3.0"
   }
 }
