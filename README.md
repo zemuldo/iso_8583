@@ -13,6 +13,42 @@ npm install --save iso_8583
 
 ```
 
+> **!NEW FEATURE**
+> Now supports custom ISO 8583 Formats
+> [This feature was requested here.](https://github.com/zemuldo/iso_8583/issues/8)
+
+> PLEASE NOTE THAT THIS MEANS U HAVE TO DEFINE FORMATS IN THIS MANNER
+
+```javascript
+{
+      'FIELD_NAME': {
+        ContentType: 'Types accepted',
+        Label: 'Description of the field',
+        LenType: 'Length type can bee fixed or lvar ...',
+        MaxLen: Maximum length (number)
+      }
+    }
+    
+```
+
+Refer to default for more info
+
+Example is below
+
+
+```javascript
+
+let customFormats = {
+    '3': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 9
+    }
+  };
+
+```
+
 ##  Import the library using:
 
 ```javascript
@@ -44,7 +80,16 @@ let data = {
     127: "000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959"
 };
 
-let isopack = new iso8583(data);
+let customFormats = {
+    '3': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 9
+    }
+  };
+
+let isopack = new iso8583(data,customFormats);
 ```
 
 > **!IMPORTANT**
@@ -54,8 +99,7 @@ let isopack = new iso8583(data);
 >In the above case the library will expand them.    
 >If they are already broken down to subfields, nothing changes.    
 >To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.    
->If you want to handle xml iso 8583 messages, the usage is described down there.    
-
+>If you want to handle xml iso 8583 messages, the usage is described down there. 
 
 The object initialized has the following methods:
 
