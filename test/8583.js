@@ -496,4 +496,39 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
   t.deepEqual(isopack.getBitMapFields(), [2, 3, 4, 7, 12, 13, 14, 18, 22, 23, 25, 26, 32, 33, 35, 41, 42, 43, 49, 52, 56, 123, 127]);
 });
 
+/*
+Support custom iso 8583 formats
+Support Case: Field 3 of 9 length,
+*/
+test('getBitMapFields() should return the array of active (enabled) fields in a bitmap, except MTI and Bitmap field', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000000',
+    4: '000000005000',
+    7: '0911131411'
+  };
+
+  let customFormats = {
+    '3': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 9
+    }
+  };
+
+  let isopack = new Main(data,customFormats);
+  t.is(isopack.validateMessage(), true);
+});
+
+let formats = {
+  '3': {
+    ContentType: 'n',
+    Label: 'Processing code',
+    LenType: 'fixed',
+    MaxLen: 9
+  }
+};
+
 
