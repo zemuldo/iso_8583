@@ -14,6 +14,56 @@ test('assembleBitMap() should return error object if no MTI', t => {
   let message = new Main(data);
   t.deepEqual(message.assembleBitMap(), {error: 'bitmap error, iso message type undefined or invalid'});
 });
+test('checkMTI() should return true, iso 1987 support', t => {
+  let data = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.true(message.checkMTI());
+});
+test('checkMTI() should return true, iso 1993 support', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.true(message.checkMTI());
+});
+
+test('checkMTI() should return true, iso 2003 support', t => {
+  let data = {
+    0: '2200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.true(message.checkMTI());
+});
+
+test('checkMTI() should return false, iso unsupported mti', t => {
+  let data = {
+    0: '3200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.false(message.checkMTI());
+});
 
 test('assembleBitMap() should return bitmap binary represenation', t => {
   let data = {
