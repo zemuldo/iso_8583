@@ -1,6 +1,159 @@
 import test from 'ava';
 import Main from '../lib/8583.js';
 
+/*
+Support custom iso 8583 formats
+Support Case: Field 3 of 9 length,
+*/
+test('getBitMapFields() should return the array of active (enabled) fields in a bitmap, except MTI and Bitmap field', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000000',
+    4: '000000005000',
+    7: '0911131411'
+  };
+
+  let customFormats = {
+    '3': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 9
+    }
+  };
+
+  let isopack = new Main(data,customFormats);
+  t.is(isopack.validateMessage(), true);
+});
+
+
+/*
+  hasPecialFields test () test cases
+ */
+test('hasPecialFields test detect special fields', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411',
+    12: '131411',
+    13: '0911',
+    14: '2212',
+    18: '4111',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+    42: 'MOTITILL_000001',
+    43: 'My Termianl Business                    ',
+    49: '404',
+    52: '7434F67813BAE545',
+    56: '1510',
+    123: '91010151134C101',
+    127: '000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959',
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.hasSpecialFields, false);
+});
+
+test('hasPecialFields test detect special fields and Custom format defined', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411',
+    12: '131411',
+    13: '0911',
+    14: '2212',
+    18: '4111',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+    42: 'MOTITILL_000001',
+    43: 'My Termianl Business                    ',
+    49: '404',
+    52: '7434F67813BAE545',
+    56: '1510',
+    123: '91010151134C101',
+    127: '000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959',
+    129: '12'
+  };
+
+  let customFormats = {
+    '129': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 2
+    }
+  };
+
+
+
+  let isopack = new Main(data,customFormats);
+  t.is(isopack.hasSpecialFields, true);
+  t.is(isopack.validateMessage(), true);
+});
+
+test('hasPecialFields test detect special fields BUT no custom format', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411',
+    12: '131411',
+    13: '0911',
+    14: '2212',
+    18: '4111',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+    42: 'MOTITILL_000001',
+    43: 'My Termianl Business                    ',
+    49: '404',
+    52: '7434F67813BAE545',
+    56: '1510',
+    123: '91010151134C101',
+    127: '000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959',
+    129: '12'
+  };
+
+  let customFormats = {
+    '129': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 4
+    }
+  };
+
+
+
+  let isopack = new Main(data);
+  t.is(isopack.hasSpecialFields, true);
+  t.is(isopack.validateMessage(), false);
+});
+
+
 /**
  * assembleBitMap() test cases
  */
@@ -13,6 +166,56 @@ test('assembleBitMap() should return error object if no MTI', t => {
 
   let message = new Main(data);
   t.deepEqual(message.assembleBitMap(), {error: 'bitmap error, iso message type undefined or invalid'});
+});
+test('checkMTI() should return true, iso 1987 support', t => {
+  let data = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.true(message.checkMTI());
+});
+test('checkMTI() should return true, iso 1993 support', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.true(message.checkMTI());
+});
+
+test('checkMTI() should return true, iso 2003 support', t => {
+  let data = {
+    0: '2200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.true(message.checkMTI());
+});
+
+test('checkMTI() should return false, iso unsupported mti', t => {
+  let data = {
+    0: '3200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  t.false(message.checkMTI());
 });
 
 test('assembleBitMap() should return bitmap binary represenation', t => {
@@ -28,6 +231,33 @@ test('assembleBitMap() should return bitmap binary represenation', t => {
   t.true(message.checkMTI());
 
   const expected = new Uint8Array([1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
+  t.deepEqual(message.assembleBitMap(), expected);
+});
+
+test('assembleBitMap() should return bitmap binary represenation', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+    129: '12'
+  };
+
+  let customFormats = {
+    '129': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 2
+    }
+  };
+
+  const message = new Main(data,customFormats);
+  t.true(message.checkMTI());
+  t.is(message.hasSpecialFields, true);
+  t.is(message.validateMessage(), true);
+  const expected = new Uint8Array([1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ]);
   t.deepEqual(message.assembleBitMap(), expected);
 });
 
@@ -451,7 +681,7 @@ test('validateMessage() then rebuildExtensions() should validate generic message
     52: '7434F67813BAE545',
     56: '1510',
     123: '91010151134C101',
-    127: '000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959'
+    127: '000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959',
   };
 
   let isopack = new Main(data);
@@ -488,7 +718,7 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
     52: '7434F67813BAE545',
     56: '1510',
     123: '91010151134C101',
-    127: '000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959'
+    127: '000000800000000001927E1E5F7C0000000000000000500000000000000014A00000000310105C000128FF0061F379D43D5AEEBC8002800000000000000001E0302031F000203001406010A03A09000008CE0D0C840421028004880040417091180000014760BAC24959',
   };
 
   let isopack = new Main(data);
@@ -496,39 +726,6 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
   t.deepEqual(isopack.getBitMapFields(), [2, 3, 4, 7, 12, 13, 14, 18, 22, 23, 25, 26, 32, 33, 35, 41, 42, 43, 49, 52, 56, 123, 127]);
 });
 
-/*
-Support custom iso 8583 formats
-Support Case: Field 3 of 9 length,
-*/
-test('getBitMapFields() should return the array of active (enabled) fields in a bitmap, except MTI and Bitmap field', t => {
-  let data = {
-    0: '0100',
-    2: '4761739001010119',
-    3: '000000000',
-    4: '000000005000',
-    7: '0911131411'
-  };
 
-  let customFormats = {
-    '3': {
-      ContentType: 'n',
-      Label: 'Processing code',
-      LenType: 'fixed',
-      MaxLen: 9
-    }
-  };
-
-  let isopack = new Main(data,customFormats);
-  t.is(isopack.validateMessage(), true);
-});
-
-let formats = {
-  '3': {
-    ContentType: 'n',
-    Label: 'Processing code',
-    LenType: 'fixed',
-    MaxLen: 9
-  }
-};
 
 
