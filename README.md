@@ -14,10 +14,10 @@ npm install --save iso_8583
 ```
 
 > **!NEW FEATURE**
-> Now supports custom ISO 8583 Formats
+> Now supports custom ISO 8583 Formats, vesions 1993 and 2003.
 > [This feature was requested here.](https://github.com/zemuldo/iso_8583/issues/8)
 
-> PLEASE NOTE THAT THIS MEANS U HAVE TO DEFINE FORMATS IN THIS MANNER
+> PLEASE NOTE THAT THIS MEANS IF U NEED CUSTOM FORMATS,  U HAVE TO DEFINE FORMATS IN THIS MANNER 
 
 ```javascript
 {
