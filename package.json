@@ -40,7 +40,7 @@
     "moment": "^2.18.1"
   },
   "devDependencies": {
-    "eslint": "^4.11.0",
+    "eslint": "^5.0.0",
     "eslint-plugin-import": "^2.8.0",
     "ava": "^0.25.0",
     "nyc": "^11.3.0"
