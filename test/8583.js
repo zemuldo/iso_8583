@@ -726,6 +726,97 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
   t.deepEqual(isopack.getBitMapFields(), [2, 3, 4, 7, 12, 13, 14, 18, 22, 23, 25, 26, 32, 33, 35, 41, 42, 43, 49, 52, 56, 123, 127]);
 });
 
+// Test Retransmit
+test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toRetransmit()['0'], '0101');
+});
 
 
+test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+  let data = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toRetransmit()['0'], '0201');
+});
+
+test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+  let data = {
+    0: '0410',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toRetransmit()['0'], '0411');
+});
+
+test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+  let data = {
+    0: '0420',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toRetransmit()['0'], '0421');
+});
+// Test Advise
+test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toAdvice()['0'], '0120');
+});
+
+test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+  let data = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toAdvice()['0'], '0220');
+});
+
+test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+  let data = {
+    0: '0400',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toAdvice()['0'], '0420');
+});
