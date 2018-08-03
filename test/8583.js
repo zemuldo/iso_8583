@@ -820,3 +820,13 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
   t.is(isopack.validateMessage(), true);
   t.is(isopack.toAdvice()['0'], '0420');
 });
+
+
+test('should return error to validate required fields', t => {
+  let data = {
+    3: '000000'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), false);
+});
