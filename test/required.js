@@ -47,3 +47,38 @@ test('should return true because fields [0, 2, 4] is required', t => {
 
   t.is(required(data), true);
 });
+
+test('should return Processing code: 999999 - Missing required fields: 7', t => {
+  let data = {
+    0: '0100',
+    2: 'b',
+    3: '999999',
+    4: 'c'
+  };
+
+  t.deepEqual(required(data), {error: 'Processing code: 999999 - Missing required fields: 7'});
+});
+
+test('should return Processing code: 999999 - Missing required fields: 7,11', t => {
+  let data = {
+    0: '0110',
+    2: 'b',
+    3: '999999',
+    4: 'c'
+  };
+
+  t.deepEqual(required(data), {error: 'Processing code: 999999 - Missing required fields: 7,11'});
+});
+
+test('should return true', t => {
+  let data = {
+    0: '0110',
+    2: 'b',
+    3: '999999',
+    4: 'c',
+    7: 'lol',
+    11: 'lol1'
+  };
+
+  t.is(required(data), true);
+});
