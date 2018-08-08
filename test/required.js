@@ -59,7 +59,7 @@ test('should return error - fields [3, 7] is required for 0100 message code - is
   t.deepEqual(required(data), {error: 'Processing code: 999999 - Missing required fields: 7'});
 });
 
-test('should return error - fields [3, 7, 11] is required for 0500 message code - 11', t => {
+test('should return error - fields [3, 7, 11] is required for 0500 message code - is missing 11', t => {
   let data = {
     0: '0500',
     2: 'b',
@@ -82,4 +82,34 @@ test('should return true - fields [3, 7, 11] is required for 0500', t => {
   };
 
   t.is(required(data), true);
+});
+
+test('should return required is not implemented on processing code: 000000 - with custom file', t => {
+  let data = {
+    3: '000000'
+  };
+  const file = '../lib/mock/required-fields.custom.json';
+
+  t.deepEqual(required(data, file), 'required is not implemented on processing code: 000000');
+});
+
+test('should return error - fields [1, 2] is required for 0000 message code - is missing 1, 2 - with custom file', t => {
+  let data = {
+    0: '0000',
+    3: '888888'
+  };
+  const file = '../lib/mock/required-fields.custom.json';
+
+  t.deepEqual(required(data, file), {error: 'Processing code: 888888 - Missing required fields: 1,2'});
+});
+
+test('should return true - fields [3, 4] is required for 9999 message code - with custom file', t => {
+  let data = {
+    0: '9999',
+    3: '888888',
+    4: 'c'
+  };
+  const file = '../lib/mock/required-fields.custom.json';
+
+  t.is(required(data, file), true);
 });
