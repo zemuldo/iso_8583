@@ -4,7 +4,7 @@
       "required_fields": [0, 2, 4]
     },
     {
-      "processing_code": "000009",
+      "processing_code": "000002",
       "required_fields": [0]
     },
     {
@@ -12,7 +12,7 @@
       "required_fields":[
         {
           "0100": [3, 7],
-          "0110": [3, 7, 11]
+          "0500": [3, 7, 11]
         }
       ]
     }
