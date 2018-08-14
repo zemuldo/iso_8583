@@ -1,0 +1,19 @@
+[
+  {
+    "processing_code": "000000",
+    "required_fields": [0, 2, 4]
+  },
+  {
+    "processing_code": "000002",
+    "required_fields": [0]
+  },
+  {
+    "processing_code": "999999",
+    "required_fields":[
+      {
+        "0100": [3, 7],
+        "0500": [3, 7, 11]
+      }
+    ]
+  }
+]

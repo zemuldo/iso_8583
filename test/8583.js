@@ -820,3 +820,65 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
   t.is(isopack.validateMessage(), true);
   t.is(isopack.toAdvice()['0'], '0420');
 });
+
+
+test('should return error to validate required fields', t => {
+  let data = {
+    3: '000000'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), false);
+});
+
+test('should return true - fields [3, 4] is required for 9999 message code - with custom file', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '888888',
+    4: '000000005000',
+  };
+  let customFormats = {};
+  const file = '../lib/mock/required-fields.custom.json';
+  
+  let isopack = new Main(data, customFormats, file);
+  t.is(isopack.validateMessage(), true);
+});
+
+test('should return false - fields [3, 4] is required for 9999 message code - is missing 4 - with custom file', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '888888'
+  };
+  let customFormats = {};
+  const file = '../lib/mock/required-fields.custom.json';
+  
+  let isopack = new Main(data, customFormats, file);
+  t.is(isopack.validateMessage(), false);
+});
+
+test('should return false - fields [3, 4] is required for 9999 message code - with custom file config after new Main()', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '888888'
+  };
+  
+  let isopack = new Main(data);
+  isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
+  t.is(isopack.validateMessage(), false);
+});
+
+test('should return true - with custom file config after new Main()', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '888888',
+    4: '000000005000'
+  };
+  
+  let isopack = new Main(data);
+  isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
+  t.is(isopack.validateMessage(), true);
+});
