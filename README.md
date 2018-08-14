@@ -11,11 +11,48 @@ This is a javascript library that does message conversion between a system and a
 
 ```
 npm install --save iso_8583
-
 ```
 
 > **!NEW FEATURE**
-> Now supports custom ISO 8583 Formats, vesions 1993 and 2003.
+> Now supports required fields by proccess code and / or by code message.
+
+## Required fields
+
+To use required fields you need to create a json config file and add to isopack object, thats two ways works:
+
+```javascript
+let isopack = new iso8583(iso);
+isopack.requiredFieldsSchema = './config/required-fields.json';
+```
+
+```javascript
+const config = './config/required-fields.json';
+let isopack = new iso8583(iso, customFormats, config);
+```
+
+And at the config file you can organize by proccess code and by messages codes, like this:
+
+```json
+[
+  {
+    "processing_code": "000000",
+    "required_fields": [0, 2, 4]
+  },
+  {
+    "processing_code": "999999",
+    "required_fields":[
+      {
+        "0100": [3, 7],
+        "0500": [3, 7, 11]
+      }
+    ]
+  }
+]
+```
+
+## custom ISO 8583 Formats
+
+> Supports custom ISO 8583 Formats, vesions 1993 and 2003.
 > [This feature was requested here.](https://github.com/zemuldo/iso_8583/issues/8)
 
 > PLEASE NOTE THAT THIS MEANS IF U NEED CUSTOM FORMATS,  U HAVE TO DEFINE FORMATS IN THIS MANNER 
