@@ -27,6 +27,29 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
   t.is(isopack.validateMessage(), true);
 });
 
+test('getTransStatus() should return Issuer or switch inoperative as the status of transaction', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000000',
+    4: '000000005000',
+    7: '0911131411',
+    39: '91'
+  };
+
+  let customFormats = {
+    '3': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 9
+    }
+  };
+
+  let isopack = new Main(data,customFormats);
+  t.is(isopack.getTransStatus(), 'Issuer or switch inoperative');
+});
+
 
 /*
   hasPecialFields test () test cases
