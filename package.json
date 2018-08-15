@@ -1,6 +1,6 @@
 {
   "name": "iso_8583",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "lib/8583.js",
   "scripts": {
