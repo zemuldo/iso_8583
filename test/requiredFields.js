@@ -1,5 +1,5 @@
 import test from 'ava';
-import required from '../lib/required.js';
+import required from '../lib/requiredFields.js';
 
 test('should return required is not implemented on processing code: undefined', t => {
   let data = {};
