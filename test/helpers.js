@@ -75,3 +75,42 @@ test('should return required_fields inside array on processing code 888888 and m
 });
 
 
+
+test('should return [0] for match two arrays: [0] [1]', t => {
+
+  const required_fields = [0]
+  const iso_fields = [1]
+
+  t.deepEqual( helpers.matchValues({ required_fields, iso_fields }), [0] );
+
+});
+
+
+test('should return [] for match two arrays: [0] [0]', t => {
+
+  const required_fields = [0]
+  const iso_fields = [0]
+
+  t.deepEqual( helpers.matchValues({ required_fields, iso_fields }), [] );
+
+});
+
+
+test('should return [15, 18] for match two arrays: [0, 10, 15, 18, 20] [0, 10, 20, 30]', t => {
+
+  const required_fields = [0, 10, 15, 18, 20]
+  const iso_fields = [0, 10, 20, 30]
+
+  t.deepEqual( helpers.matchValues({ required_fields, iso_fields }), [15, 18] );
+
+});
+
+
+test('should return [15, 18, 45, 46, 47] for match two arrays: [0, 10, 15, 18, 20, 45, 46, 47] [0, 10, 20, 30]', t => {
+
+  const required_fields = [0, 10, 15, 18, 20, 45, 46, 47]
+  const iso_fields = [0, 10, 20, 30]
+
+  t.deepEqual( helpers.matchValues({ required_fields, iso_fields }), [15, 18, 45, 46, 47] );
+
+});
