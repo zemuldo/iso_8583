@@ -1,6 +1,12 @@
 import test from 'ava';
 import helpers from '../lib/helpers.js';
 
+
+
+// ********************************
+// findRequiredFields()
+// ********************************
+
 test('should return required_fields inside array on processing code 000000', t => {
 
   const json = [
@@ -92,6 +98,11 @@ test('should return required_fields inside array on processing code 000000', t =
 });
 
 
+// ********************************
+// matchValues()
+// ********************************
+
+
 test('should return [0] for match two arrays: [0] [1]', t => {
 
   const required_fields = [0];
@@ -128,5 +139,46 @@ test('should return [15, 18, 45, 46, 47] for match two arrays: [0, 10, 15, 18, 2
   const iso_fields = [0, 10, 20, 30];
 
   t.deepEqual( helpers.matchValues({ required_fields, iso_fields }), [15, 18, 45, 46, 47] );
+
+});
+
+
+// ********************************
+// extractBits()
+// ********************************
+
+
+test('should return [0, 3] for bit let data = { 0: 0000, 3: 888888 };', t => {
+
+  let data = {
+    0: '0000',
+    3: '888888'
+  };
+
+  const result = [0, 3];
+
+  t.deepEqual( helpers.extractBits(data), result );
+
+});
+
+test('should return [1, 3] for bit let data = { 1: 0000, 3: 888888 };', t => {
+
+  let data = {
+    1: '0000',
+    3: '888888'
+  };
+
+  const result = [1, 3];
+
+  t.deepEqual( helpers.extractBits(data), result );
+
+});
+
+test('should return [0] for bit let data = {};', t => {
+
+  let data = {};
+  const result = [];
+
+  t.deepEqual( helpers.extractBits(data), result );
 
 });

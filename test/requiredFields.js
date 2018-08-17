@@ -69,7 +69,6 @@ test('should return true - fields [3, 7, 11] is required for 0500', t => {
   t.is(required(data), true);
 });
 
-
 test('should return error - fields [1, 2] is required for 0000 message code - is missing 1, 2 - with custom file', t => {
   let data = {
     0: '0000',
