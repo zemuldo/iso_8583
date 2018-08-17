@@ -74,6 +74,21 @@ test('should return required_fields inside array on processing code 888888 and m
 
 });
 
+test('should return required_fields inside array on processing code 000000', t => {
+
+  const json = [
+    {
+      'processing_code': '000000',
+      'required_fields': [0, 2, 4]
+    }
+  ];
+  const processing_code = '000001';
+  const key = 'required_fields';
+  const result = [];
+
+  t.deepEqual( helpers.findRequiredFields({ json, key, processing_code }), result );
+
+});
 
 
 test('should return [0] for match two arrays: [0] [1]', t => {
