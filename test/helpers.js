@@ -59,6 +59,30 @@ test('should return required_fields inside array on processing code 000001', t =
 
 });
 
+
+test('should return required_fields inside array on processing code 888889 and message_code 9999', t => {
+
+  const json = [
+    {
+      'processing_code': '888889',
+      'required_fields': [
+        {
+          '0000': [1, 2],
+          '0110': [3, 4],
+          '9999': [3, 4]
+        }
+      ]
+    }
+  ];
+  const processing_code = '888889';
+  const key = 'required_fields';
+  const message_code = '9999';
+  const result = [3, 4];
+
+  t.deepEqual( helpers.findRequiredFields({ json, key, processing_code, message_code }), result );
+
+});
+
 test('should return required_fields inside array on processing code 888888 and message_code 0110', t => {
 
   const json = [
