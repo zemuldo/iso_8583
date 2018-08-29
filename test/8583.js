@@ -884,3 +884,98 @@ test('should return true - with custom file config after new Main()', t => {
   isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
   t.is(isopack.validateMessage(), true);
 });
+
+
+test('should return false to validate required echo fields', t => {
+
+  const iso_send = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '888888',
+    4: '000000005000'
+  };
+
+  const iso_answer = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '888888',
+    4: '9999999999999'
+  };
+
+  let isopack = new Main();
+  isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
+
+  t.is(isopack.validateEcho({iso_send, iso_answer}), false);
+  
+});
+
+test('should return true to validate required echo fields', t => {
+
+  const iso_send = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '888888',
+    4: '000000005000'
+  };
+
+  const iso_answer = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '888888',
+    4: '000000005000'
+  };
+
+  let isopack = new Main();
+  isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
+
+  t.is(isopack.validateEcho({iso_send, iso_answer}), true);
+  
+});
+
+test('should return false to validate required echo AND required fields', t => {
+
+  const iso_send = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '888888',
+    4: '000000005000'
+  };
+
+  const iso_answer = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '888888',
+    4: '9999999999999'
+  };
+  
+  let isopack = new Main(iso_send);
+  isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
+
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.validateEcho({iso_send, iso_answer}), false);
+  
+});
+
+test('should return true to validate required echo AND required fields', t => {
+
+  const iso_send = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '888888',
+    4: '000000005000'
+  };
+
+  const iso_answer = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '888888',
+    4: '000000005000'
+  };
+  
+  let isopack = new Main(iso_send);
+  isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
+
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.validateEcho({iso_send, iso_answer}), true);
+  
+});
