@@ -1,21 +1,6 @@
 import test from 'ava';
-import required from '../lib/required.js';
+import required from '../lib/requiredFields.js';
 
-test('should return required is not implemented on processing code: undefined', t => {
-  let data = {};
-  
-  t.deepEqual(required(data), 'required is not implemented on processing code: undefined');
-});
-
-test('should return required is not implemented on processing code: 000001', t => {
-  let data = {
-    0: '',
-    2: '',
-    3: '000001'
-  };
-
-  t.deepEqual(required(data), 'required is not implemented on processing code: 000001');
-});
 
 test('should return error - fields [0, 2, 4] is required - is missing 4', t => {
   let data = {
@@ -82,15 +67,6 @@ test('should return true - fields [3, 7, 11] is required for 0500', t => {
   };
 
   t.is(required(data), true);
-});
-
-test('should return required is not implemented on processing code: 000000 - with custom file', t => {
-  let data = {
-    3: '000000'
-  };
-  const file = '../lib/mock/required-fields.custom.json';
-
-  t.deepEqual(required(data, file), 'required is not implemented on processing code: 000000');
 });
 
 test('should return error - fields [1, 2] is required for 0000 message code - is missing 1, 2 - with custom file', t => {
