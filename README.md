@@ -5,6 +5,9 @@
 
 This is a javascript library that does message conversion between a system and an interface that accepts iso8583 message requests and send [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583) responses.
 
+## Slack Channel
+https://join.slack.com/t/zemuldo/shared_invite/enQtNDQwMzY3OTE3MzQ0LTllYWNjNGFlMDBlMjY4OTgxMWU5MWQ3ZTZjMjYyYWIyMDcwNjZiMDJhYmU4YTdhYzk4MDY3NWRiMjljODBiMTU
+
 # Usage: Bitmap Messaging
 
 ##  Install from npm using
