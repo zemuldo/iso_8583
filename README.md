@@ -312,6 +312,33 @@ let xmlData = '<?xml version="1.0" encoding="UTF-8"?>\n' +
 isoPack.getJsonFromXml(xmlData); // returns a json object or an error object
 ```
 
+# Usage: MTI converting
+## Changing current mti type:
+Initialize the iso object with the json as argument
+
+```javascript
+  let data = {
+    0: '0400',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411'
+  };
+
+  let isopack = new isoPack(data);
+  isoPack.toRetransmit()
+  isoPack.getMti(); // returns '0401'
+  
+  isopack = new isoPack(data);
+  isoPack.toResponse(); 
+  isoPack.getMti(); // returns '0410'
+  
+  isopack = new isoPack(data);
+  isoPack.toAdvice(); 
+  isoPack.getMti(); // returns '0420'
+  
+```
+
 There are other cool stuff like ```isoPack.attachTimeStamp()``` which adds times stamps to field 7,12,13, plus more
 When working with xml, first change the xml to json then validate.
 

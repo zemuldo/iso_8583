@@ -407,28 +407,28 @@ test('buildBitmapBuffer() should build HEX bitmap buffer', t => {
 test('getLenBuffer() should return length 0', t => {
   const message = new Main();
   const expected = new Buffer([0x00, 0x00]);
-  
+
   t.deepEqual(message.getLenBuffer(0), expected);
 });
 
 test('getLenBuffer() should return length 1', t => {
   const message = new Main();
   const expected = new Buffer([0x00, 0x01]);
-  
+
   t.deepEqual(message.getLenBuffer(1), expected);
 });
 
 test('getLenBuffer() should return length 15', t => {
   const message = new Main();
   const expected = new Buffer([0x00, 0x0F]);
-  
+
   t.deepEqual(message.getLenBuffer(15), expected);
 });
 
 test('getLenBuffer() should return length 317', t => {
   const message = new Main();
   const expected = new Buffer([0x01, 0x3D]);
-  
+
   t.deepEqual(message.getLenBuffer(317), expected);
 });
 
@@ -436,7 +436,7 @@ test('getLenBuffer() should return length 317', t => {
  * checkMTI()
  */
 test('should validate all basic MTIs for ISO8583:1987', t => {
-  [ '0100','0110','0101','0120','0121','0130', 
+  [ '0100','0110','0101','0120','0121','0130',
     '0200','0201','0202','0203','0210','0212','0220','0221','0230',
     '0320','0321','0322','0323','0330','0332',
     '0400','0401','0410','0420','0421','0430',
@@ -450,7 +450,7 @@ test('should validate all basic MTIs for ISO8583:1987', t => {
 });
 
 test('should validate all basic MTIs for ISO8583:1993', t => {
-  [ '1100','1110','1101','1120','1121','1130', 
+  [ '1100','1110','1101','1120','1121','1130',
     '1200','1201','1202','1203','1210','1212','1220','1221','1230',
     '1320','1321','1322','1323','1330','1332',
     '1400','1401','1410','1420','1421','1430',
@@ -803,8 +803,77 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
   t.is(isopack.validateMessage(), true);
   t.is(isopack.toRetransmit()['0'], '0421');
 });
+
+// Test Response
+test('toResponse() should return new message with appropriate retransmit MTI', t => {
+    let data = {
+        0: '0100',
+        2: '4761739001010119',
+        3: '000000',
+        4: '000000005000'
+    };
+
+    let isopack = new Main(data);
+    t.is(isopack.validateMessage(), true);
+    t.is(isopack.toResponse()['0'], '0110');
+});
+
+
+test('toResponse() should return new message with appropriate retransmit MTI', t => {
+    let data = {
+        0: '0200',
+        2: '4761739001010119',
+        3: '000000',
+        4: '000000005000'
+    };
+
+    let isopack = new Main(data);
+    t.is(isopack.validateMessage(), true);
+    t.is(isopack.toResponse()['0'], '0210');
+});
+
+test('toResponse() should return new message with appropriate retransmit MTI', t => {
+    let data = {
+        0: '0410',
+        2: '4761739001010119',
+        3: '000000',
+        4: '000000005000',
+        7: '0911131411'
+    };
+
+    let isopack = new Main(data);
+    t.is(isopack.validateMessage(), true);
+    t.is(isopack.toResponse()['0'], '0420');
+});
+
+test('toResponse() should return new message with appropriate retransmit MTI', t => {
+    let data = {
+        0: '0420',
+        2: '4761739001010119',
+        3: '000000',
+        4: '000000005000'
+    };
+
+    let isopack = new Main(data);
+    t.is(isopack.validateMessage(), true);
+    t.is(isopack.toResponse()['0'], '0430');
+});
+
+test('toResponse() should return new message with appropriate retransmit MTI', t => {
+    let data = {
+        0: '0430',
+        2: '4761739001010119',
+        3: '000000',
+        4: '000000005000'
+    };
+
+    let isopack = new Main(data);
+    t.is(isopack.validateMessage(), true);
+    t.is(isopack.toResponse()['0'], '0440');
+});
+
 // Test Advise
-test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+test('toAdvice() should return new message with appropriate retransmit MTI', t => {
   let data = {
     0: '0100',
     2: '4761739001010119',
@@ -817,7 +886,7 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
   t.is(isopack.toAdvice()['0'], '0120');
 });
 
-test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+test('toAdvice() should return new message with appropriate retransmit MTI', t => {
   let data = {
     0: '0200',
     2: '4761739001010119',
@@ -830,7 +899,7 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
   t.is(isopack.toAdvice()['0'], '0220');
 });
 
-test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+test('toAdvice() should return new message with appropriate retransmit MTI', t => {
   let data = {
     0: '0400',
     2: '4761739001010119',
@@ -850,7 +919,7 @@ test('should return false - fields [3, 4] is required for 888888 - with custom f
     2: '4761739001010119',
     3: '888888'
   };
-  
+
   let isopack = new Main(data);
   isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
   t.is(isopack.validateMessage(), false);
@@ -874,7 +943,7 @@ test('should return false - fields [3, 4] is required for 888888 message code - 
   };
   let customFormats = {};
   const file = '../lib/mock/required-fields.custom.json';
-  
+
   let isopack = new Main(data, customFormats, file);
   t.is(isopack.validateMessage(), false);
 });
@@ -889,7 +958,7 @@ test('should return true - fields [3, 4] is required for 9999 message code - wit
   };
   let customFormats = {};
   const file = '../lib/mock/required-fields.custom.json';
-  
+
   let isopack = new Main(data, customFormats, file);
   t.is(isopack.validateMessage(), true);
 });
@@ -902,7 +971,7 @@ test('should return true - with custom file config after new Main()', t => {
     3: '888888',
     4: '000000005000'
   };
-  
+
   let isopack = new Main(data);
   isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
   t.is(isopack.validateMessage(), true);
@@ -929,7 +998,7 @@ test('should return false to validate required echo fields', t => {
   isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
 
   t.is(isopack.validateEcho({iso_send, iso_answer}), false);
-  
+
 });
 
 test('should return true to validate required echo fields', t => {
@@ -952,7 +1021,7 @@ test('should return true to validate required echo fields', t => {
   isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
 
   t.is(isopack.validateEcho({iso_send, iso_answer}), true);
-  
+
 });
 
 test('should return false to validate required echo AND required fields', t => {
@@ -970,13 +1039,13 @@ test('should return false to validate required echo AND required fields', t => {
     3: '888888',
     4: '9999999999999'
   };
-  
+
   let isopack = new Main(iso_send);
   isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
 
   t.is(isopack.validateMessage(), true);
   t.is(isopack.validateEcho({iso_send, iso_answer}), false);
-  
+
 });
 
 test('should return true to validate required echo AND required fields', t => {
@@ -994,11 +1063,11 @@ test('should return true to validate required echo AND required fields', t => {
     3: '888888',
     4: '000000005000'
   };
-  
+
   let isopack = new Main(iso_send);
   isopack.requiredFieldsSchema = '../lib/mock/required-fields.custom.json';
 
   t.is(isopack.validateMessage(), true);
   t.is(isopack.validateEcho({iso_send, iso_answer}), true);
-  
+
 });
