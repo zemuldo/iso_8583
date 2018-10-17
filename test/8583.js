@@ -371,7 +371,7 @@ test('buildBitmapBuffer() should build ASCII bitmap buffer', t => {
     ascii_array.push(char.charCodeAt(0));
   });
 
-  const expected = new Buffer(ascii_array);
+  const expected = Buffer.from(ascii_array);
   t.deepEqual(message.buildBitmapBuffer(bitmap, 'ascii'), expected);
 });
 
@@ -396,7 +396,7 @@ test('buildBitmapBuffer() should build HEX bitmap buffer', t => {
   const bitmap = 'f40006c1a08000000000000000000000';
   t.is(message.getBitMapHex(), bitmap);
 
-  const expected = new Buffer([0xF4, 0x00, 0x06, 0xC1, 0xA0, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
+  const expected =Buffer.from([0xF4, 0x00, 0x06, 0xC1, 0xA0, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
   t.deepEqual(message.buildBitmapBuffer(bitmap, 'hex'), expected);
 });
 
@@ -406,28 +406,28 @@ test('buildBitmapBuffer() should build HEX bitmap buffer', t => {
 
 test('getLenBuffer() should return length 0', t => {
   const message = new Main();
-  const expected = new Buffer([0x00, 0x00]);
+  const expected =Buffer.from([0x00, 0x00]);
 
   t.deepEqual(message.getLenBuffer(0), expected);
 });
 
 test('getLenBuffer() should return length 1', t => {
   const message = new Main();
-  const expected = new Buffer([0x00, 0x01]);
+  const expected =Buffer.from([0x00, 0x01]);
 
   t.deepEqual(message.getLenBuffer(1), expected);
 });
 
 test('getLenBuffer() should return length 15', t => {
   const message = new Main();
-  const expected = new Buffer([0x00, 0x0F]);
+  const expected =Buffer.from([0x00, 0x0F]);
 
   t.deepEqual(message.getLenBuffer(15), expected);
 });
 
 test('getLenBuffer() should return length 317', t => {
   const message = new Main();
-  const expected = new Buffer([0x01, 0x3D]);
+  const expected =Buffer.from([0x01, 0x3D]);
 
   t.deepEqual(message.getLenBuffer(317), expected);
 });
@@ -806,70 +806,70 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
 
 // Test Response
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0100',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000'
-    };
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0110');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0110');
 });
 
 
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0200',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000'
-    };
+  let data = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0210');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0210');
 });
 
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0410',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000',
-        7: '0911131411'
-    };
+  let data = {
+    0: '0410',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0420');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0420');
 });
 
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0420',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000'
-    };
+  let data = {
+    0: '0420',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0430');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0430');
 });
 
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0430',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000'
-    };
+  let data = {
+    0: '0430',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0440');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0440');
 });
 
 // Test Advise
