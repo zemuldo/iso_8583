@@ -806,70 +806,70 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
 
 // Test Response
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0100',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000'
-    };
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0110');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0110');
 });
 
 
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0200',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000'
-    };
+  let data = {
+    0: '0200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0210');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0210');
 });
 
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0410',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000',
-        7: '0911131411'
-    };
+  let data = {
+    0: '0410',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0420');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0420');
 });
 
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0420',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000'
-    };
+  let data = {
+    0: '0420',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0430');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0430');
 });
 
 test('toResponse() should return new message with appropriate retransmit MTI', t => {
-    let data = {
-        0: '0430',
-        2: '4761739001010119',
-        3: '000000',
-        4: '000000005000'
-    };
+  let data = {
+    0: '0430',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000'
+  };
 
-    let isopack = new Main(data);
-    t.is(isopack.validateMessage(), true);
-    t.is(isopack.toResponse()['0'], '0440');
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.toResponse()['0'], '0440');
 });
 
 // Test Advise
