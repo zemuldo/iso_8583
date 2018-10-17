@@ -371,7 +371,7 @@ test('buildBitmapBuffer() should build ASCII bitmap buffer', t => {
     ascii_array.push(char.charCodeAt(0));
   });
 
-  const expected = new Buffer(ascii_array);
+  const expected = Buffer.from(ascii_array);
   t.deepEqual(message.buildBitmapBuffer(bitmap, 'ascii'), expected);
 });
 
@@ -396,7 +396,7 @@ test('buildBitmapBuffer() should build HEX bitmap buffer', t => {
   const bitmap = 'f40006c1a08000000000000000000000';
   t.is(message.getBitMapHex(), bitmap);
 
-  const expected = new Buffer([0xF4, 0x00, 0x06, 0xC1, 0xA0, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
+  const expected =Buffer.from([0xF4, 0x00, 0x06, 0xC1, 0xA0, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]);
   t.deepEqual(message.buildBitmapBuffer(bitmap, 'hex'), expected);
 });
 
@@ -406,28 +406,28 @@ test('buildBitmapBuffer() should build HEX bitmap buffer', t => {
 
 test('getLenBuffer() should return length 0', t => {
   const message = new Main();
-  const expected = new Buffer([0x00, 0x00]);
+  const expected =Buffer.from([0x00, 0x00]);
 
   t.deepEqual(message.getLenBuffer(0), expected);
 });
 
 test('getLenBuffer() should return length 1', t => {
   const message = new Main();
-  const expected = new Buffer([0x00, 0x01]);
+  const expected =Buffer.from([0x00, 0x01]);
 
   t.deepEqual(message.getLenBuffer(1), expected);
 });
 
 test('getLenBuffer() should return length 15', t => {
   const message = new Main();
-  const expected = new Buffer([0x00, 0x0F]);
+  const expected =Buffer.from([0x00, 0x0F]);
 
   t.deepEqual(message.getLenBuffer(15), expected);
 });
 
 test('getLenBuffer() should return length 317', t => {
   const message = new Main();
-  const expected = new Buffer([0x01, 0x3D]);
+  const expected =Buffer.from([0x01, 0x3D]);
 
   t.deepEqual(message.getLenBuffer(317), expected);
 });
