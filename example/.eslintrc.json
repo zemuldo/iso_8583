@@ -1,0 +1,67 @@
+{
+    "extends": "airbnb-base",
+    "parserOptions": {
+        "ecmaVersion": 8,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true,
+            "spread": true
+        },
+        "sourceType": "module"
+    },
+
+    "env": {
+        "node": true,
+        "es6": true
+    },
+    "parser": "babel-eslint",
+
+    "rules": {
+        "no-fallthrough": "error",
+        "no-unreachable": "error",
+        "no-cond-assign": "error",
+        "no-console": "error",
+        "valid-typeof": "error",
+        "no-func-assign": "error",
+        "no-extra-semi": "error",
+        "no-param-reassign": ["error", { "props": false }],
+        "no-unused-vars": [
+            "error",
+            {
+                "varsIgnorePattern": "[iI]gnored",
+                "vars": "all",
+                "args": "after-used",
+                "ignoreRestSiblings": true,
+                "argsIgnorePattern": "[iI]gnored"
+            }
+        ],
+        "max-len": ["error", 150, 2, {
+            "ignoreUrls": true,
+            "ignoreComments": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals":true
+          }],
+          "no-restricted-syntax": [
+            "error",
+            {
+                "selector": "FunctionExpression",
+                "message": "Function expressions are not allowed."
+            },
+            {
+                "selector": "CallExpression[callee.name='setTimeout'][arguments.length!=2]",
+                "message": "setTimeout must always be invoked with two arguments."
+            }
+        ],
+        "no-restricted-syntax": ["error", "WithStatement", "BinaryExpression[operator='in']"],
+        "camelcase":"off",
+        "prefer-promise-reject-errors": "off",
+        "no-throw-literal":"off",
+        "no-undef": "error",
+        "no-empty": "error",
+        "no-case-declarations": "off",
+        "no-mixed-spaces-and-tabs": "error",
+        "no-useless-escape": "error",
+        "quotes": ["error", "single"]
+        
+    }
+}

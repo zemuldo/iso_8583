@@ -1,0 +1,42 @@
+{
+  "name": "tcpserver",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "t": "nodemon server/app.js",
+    "w": "nodemon web/app.js",
+    "test": "eslint . --fix && NODE_ENV=test mocha --exit",
+    "unit-test": "NODE_ENV=test mocha --exit",
+    "lint": "eslint . --fix",
+    "start": "pm2 start ecosystem.config.js --env production"
+  },
+  "author": "Danstan Otieno Onyango",
+  "dependencies": {
+    "bluebird": "^3.5.2",
+    "body-parser": "^1.18.3",
+    "bunyan": "1.5.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.4",
+    "express-xml-bodyparser": "^0.3.0",
+    "immutable": "^3.8.2",
+    "iso_8583": "^2.5.5",
+    "jsonwebtoken": "^8.3.0",
+    "jxon": "^1.6.1",
+    "moment": "^2.22.2",
+    "mongodb": "^2.2.36",
+    "n": "^2.1.12",
+    "redis": "^2.8.0",
+    "winston": "^2.4.4"
+  },
+  "devDependencies": {
+    "babel-eslint": "^9.0.0",
+    "chai": "^4.2.0",
+    "chai-http": "^3.0.0",
+    "concurrently": "^4.0.1",
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0"
+  }
+}
