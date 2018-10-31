@@ -1,6 +1,4 @@
-
-
-const moment = require('moment');
+const formatd = require('date-fns/format');
 
 const util = {};
 
@@ -44,10 +42,10 @@ util.attachPostillionLength = (_data) => {
 };
 
 util.attachDiTimeStamps = (obj) => {
-  const time = moment(new Date());
-  if (!obj['7']) obj['7'] = time.format('MMDDhhmmss');
-  if (!obj['12']) obj['12'] = time.format('hhmmss');
-  if (!obj['13']) obj['13'] = time.format('MMDD');
+  const time = new Date();
+  if (!obj['7']) obj['7'] = formatd(time, 'MMDDhhmmss');
+  if (!obj['12']) obj['12'] = formatd(time, 'hhmmss');
+  if (!obj['13']) obj['13'] = formatd(time, 'MMDD');
 
   return obj;
 };
