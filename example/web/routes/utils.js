@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const Iso_8583 = require('iso_8583');
+const Iso_8583 = require('../../../lib/8583');
 const client = require('../../client/app');
 
 class OnDataEmitter extends EventEmitter { }
@@ -21,8 +21,6 @@ module.exports = {
       onThisData.removeAllListeners(tras_unique);
     });
   })
-    .then((success) => {
-      return success;
-    })
+    .then(success => success)
     .catch(e => e),
 };

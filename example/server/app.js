@@ -4,7 +4,7 @@
 
 
 const net = require('net');
-const Iso_8583 = require('iso_8583');
+const Iso_8583 = require('../../lib/8583');
 const logger = require('../tools/logger');
 const helpers = require('../tools/helpers');
 const config = require('../config/env');
