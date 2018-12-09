@@ -1071,3 +1071,38 @@ test('should return true to validate required echo AND required fields', t => {
   t.is(isopack.validateEcho({iso_send, iso_answer}), true);
 
 });
+
+
+test('should handle data encoded in plain text utf8 including the bitmap', t=> {
+
+  const isopack = new Main();
+  const isoString = '0800822000000000000004000000000000001125161336000255301';
+  const config = {lenHeader: false, lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false, };
+  const message = isopack.getIsoJSON(new Buffer.alloc(isoString.length, isoString), config);
+  
+  t.is(message[0], '0800');
+  t.is(message[7], '1125161336');
+});
+
+test('should fail, length indicator not included and not disabled', t=> {
+
+  const isopack = new Main();
+  const isoString = '0800822000000000000004000000000000001125161336000255301';
+  const config = { lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false, };
+  const message = isopack.getIsoJSON(new Buffer.alloc(isoString.length, isoString), config);
+  
+  t.is(message.error, 'failed to unpack at get mti');
+});
+
+test('should unpack data that has no secondary bitmap', t=> {
+  
+  const isopack = new Main();
+  const buffer = new Buffer.from('303830302220010000800000393930303030303832333135313731363030303030313833313030303030303031', 'hex');
+  const config = {lenHeader: false};
+  const message = isopack.getIsoJSON(buffer, config);
+  
+  t.is(message[0], '0800');
+  t.is(message[7], '0823151716');
+  t.is(message[11], '000001');
+  t.is(message[41], '00000001');
+});

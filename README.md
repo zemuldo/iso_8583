@@ -1,26 +1,32 @@
-# iso_8583
+# <span style="color:green">iso_8583</span>
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/zemuldo/iso_8583.svg)](https://greenkeeper.io/) ![Travis CI build badge](https://travis-ci.org/zemuldo/iso_8583.svg?branch=master)  [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1529/badge)](https://bestpractices.coreinfrastructure.org/projects/1529)
 [![Known Vulnerabilities](https://snyk.io/test/github/zemuldo/iso_8583/badge.svg?targetFile=package.json)](https://snyk.io/test/github/zemuldo/iso_8583?targetFile=package.json)
 
 This is a javascript library that does message conversion between a system and an interface that accepts iso8583 message requests and send [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583) responses.
 
-## Slack Channel
+## <span style="color:orange">Slack Channel</span>
 Join this [slack channel](https://join.slack.com/t/zemuldo/shared_invite/enQtNDQwMzY3OTE3MzQ0LTllYWNjNGFlMDBlMjY4OTgxMWU5MWQ3ZTZjMjYyYWIyMDcwNjZiMDJhYmU4YTdhYzk4MDY3NWRiMjljODBiMTU) for support.
 
 
 # Usage: Bitmap Messaging
 
-##  Install from npm using
+## Important notes;
 
-```
-npm install --save iso_8583
-```
+###  <span style="color:blue">Message Packaging and Un-packaging</span> 
 
-> **!NEW FEATURE**
-> Now supports required fields by proccess code and / or by code message.
+This library uses a default mode of message encoding and packaging. If you are using a third party message source or a third party packaging source, you have to pre-format your data to meet the default encoding or configure things for yourself.
 
-## Required fields
+#### Packing
+Messages are packaged as:
+
+- 2 byte length indicator + 4 byte message type + 16 byte bitmap(primary + secondary bitmap) + message field data.
+- Each field with variable length data is preceded with the actual length of the data in that field.
+  
+
+
+
+###  <span style="color:blue">Required fields</span> 
 
 To use required fields you need to create a json config file and add to isopack object, thats two ways works:
 
@@ -54,12 +60,11 @@ And at the config file you can organize by proccess code and by messages codes, 
 ]
 ```
 
-## custom ISO 8583 Formats
+###  <span style="color:blue">Custom ISO 8583 Formats</span>
 
-> Supports custom ISO 8583 Formats, vesions 1993 and 2003.
-> [This feature was requested here.](https://github.com/zemuldo/iso_8583/issues/8)
+Supports custom ISO 8583 Formats, vesions 1993 and 2003.
 
-> PLEASE NOTE THAT THIS MEANS IF U NEED CUSTOM FORMATS,  U HAVE TO DEFINE FORMATS IN THIS MANNER 
+PLEASE NOTE THAT THIS MEANS IF U NEED CUSTOM FORMATS,  U HAVE TO DEFINE FORMATS IN THIS MANNER 
 
 ```javascript
 {
@@ -89,6 +94,21 @@ let customFormats = {
     }
   };
 
+```
+
+###  <span style="color:blue">Field 127 and 127.25</span>
+
+>The library extends fields 127 and fields 127.25 to their sub fields.    
+>If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length
+>In the above case the library will expand them.    
+>If they are already broken down to subfields, nothing changes.    
+>To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.    
+>If you want to handle xml iso 8583 messages, the usage is described down there. 
+
+##  Install from npm using
+
+```
+npm install --save iso_8583
 ```
 
 ##  Import the library using:
@@ -133,15 +153,6 @@ let customFormats = {
 
 let isopack = new iso8583(data,customFormats);
 ```
-
-> **!IMPORTANT**
->
->The library extends fields 127 and fields 127.25 to their sub fields.    
->If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length
->In the above case the library will expand them.    
->If they are already broken down to subfields, nothing changes.    
->To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.    
->If you want to handle xml iso 8583 messages, the usage is described down there. 
 
 The object initialized has the following methods:
 
@@ -342,4 +353,4 @@ Initialize the iso object with the json as argument
 There are other cool stuff like ```isoPack.attachTimeStamp()``` which adds times stamps to field 7,12,13, plus more
 When working with xml, first change the xml to json then validate.
 
-# Thanks, Have Fun
+# <span style="color:green">Thanks</span> , <span style="color:blue">Have</span> <span style="color:orange">Fun</span>
