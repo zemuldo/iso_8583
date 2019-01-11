@@ -1116,6 +1116,16 @@ test('should handle data encoded in plain text utf8 including the bitmap', t=> {
   t.is(message[7], '1125161336');
 });
 
+test('should handle data encoded in plain text utf8 including the bitmap', t=> {
+
+  const isopack = new Main();
+  const isoString = '0800822000000800000004000000000000000904003641670011f8f2f4f6f0f0f6f7f0f0f1f10301';
+  const config = {lenHeader: false, lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false, };
+  const message = isopack.getIsoJSON(new Buffer.alloc(isoString.length, isoString), config);
+  
+  t.is(message[0], '0800');
+});
+
 test('should fail, length indicator not included and not disabled', t=> {
 
   const isopack = new Main();

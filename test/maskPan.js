@@ -1,0 +1,38 @@
+import test from 'ava';
+
+const maskPan = require('../lib/maskPan');
+
+test('should return error', t => {
+
+  const masked = maskPan('456789345678', '***');
+
+  t.deepEqual(masked, { error: 'unknown pan masking format' });
+});
+
+test('should mask pan and leave the first 4', t => {
+
+  const masked = maskPan('456789345678', '4**');
+
+  t.deepEqual(masked, '4567********');
+});
+
+test('should mask pan and leave the last 4', t => {
+
+  const masked = maskPan('456789345678', '**4');
+
+  t.deepEqual(masked, '********5678');
+});
+
+test('should mask pan and leave the middle 4', t => {
+
+  const masked = maskPan('456789345678', '*4*');
+
+  t.deepEqual(masked, '****8934****');
+});
+
+test('should mask pan and leave the middle 4', t => {
+
+  const masked = maskPan('456789345678555', '*4*');
+
+  t.deepEqual(masked, '*****93456*****');
+});
