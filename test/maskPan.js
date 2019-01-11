@@ -1,6 +1,7 @@
 import test from 'ava';
 
 const maskPan = require('../lib/maskPan');
+const Iso8583 = require('../lib/8583');
 
 test('should return error', t => {
 
@@ -33,6 +34,16 @@ test('should mask pan and leave the middle 4', t => {
 test('should mask pan and leave the middle 4', t => {
 
   const masked = maskPan('456789345678555', '*4*');
+
+  t.deepEqual(masked, '*****93456*****');
+});
+
+// Testing on Main
+
+test('should mask pan and leave the middle 4', t => {
+
+  const isoPack = new Iso8583();
+  const masked = isoPack.maskPan('456789345678555', '*4*');
 
   t.deepEqual(masked, '*****93456*****');
 });
