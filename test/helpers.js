@@ -7,7 +7,7 @@ import helpers from '../lib/helpers.js';
 // findRequiredFields()
 // ********************************
 
-test('should return required_fields inside array on processing code 000000', t => {
+test('should return required_fields inside array on processing code 000000, fields 0, 2, 4', t => {
 
   const json = [
     {
@@ -23,7 +23,7 @@ test('should return required_fields inside array on processing code 000000', t =
 
 });
 
-test('should return required_fields inside array on processing code 000000 (2)', t => {
+test('should return required_fields inside array on processing code 000000 , fields 0, 2, 5', t => {
 
   const json = [
     {
