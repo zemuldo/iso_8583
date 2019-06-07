@@ -5,7 +5,7 @@ import Main from '../lib/8583.js';
 Support custom iso 8583 formats
 Support Case: Field 3 of 9 length,
 */
-test('getBitMapFields() should return the array of active (enabled) fields in a bitmap, except MTI and Bitmap field', t => {
+test('validateMessage() should return true, message valid', t => {
   let data = {
     0: '0100',
     2: '4761739001010119',
@@ -241,7 +241,7 @@ test('checkMTI() should return false, iso unsupported mti', t => {
   t.false(message.checkMTI());
 });
 
-test('assembleBitMap() should return bitmap binary represenation', t => {
+test('assembleBitMap() should return bitmap binary represenation 1', t => {
   let data = {
     0: '1200',
     2: '4761739001010119',
@@ -257,7 +257,7 @@ test('assembleBitMap() should return bitmap binary represenation', t => {
   t.deepEqual(message.assembleBitMap(), expected);
 });
 
-test('assembleBitMap() should return bitmap binary represenation', t => {
+test('assembleBitMap() should return bitmap binary represenation 2', t => {
   let data = {
     0: '1200',
     2: '4761739001010119',
@@ -478,11 +478,11 @@ test('getFieldDescription() should return empty object if field description does
   t.deepEqual(Main.getFieldDescription(330), {});
 });
 
-test('getFieldDescription() should return empty object when the empty array is passed in', t => {
+test('getFieldDescription() should return empty object when the empty array is passed in empty', t => {
   t.deepEqual(Main.getFieldDescription([]), {});
 });
 
-test('getFieldDescription() should return empty object when the empty array is passed in', t => {
+test('getFieldDescription() should return empty object when the empty array is passed in pan, pc, amount', t => {
   const expected = {
     2: 'Primary account number (PAN)',
     3: 'Processing code',
@@ -662,14 +662,6 @@ test('getMti() should return proper MTI for 1820', t => {
   t.is(isopack.validateMessage(), true);
   t.is(isopack.getMti(), '0800');
 });
-test('getMti() should return proper MTI for 1820', t => {
-  let data = {
-    0: '1899',
-    70: '001'
-  };
-  let isopack = new Main(data);
-  t.is(isopack.validateMessage(), false);
-});
 
 /**
  * expand message Test Cases
@@ -711,7 +703,7 @@ test('validateMessage() then rebuildExtensions() should validate generic message
 /**
  * Generate Buffer message and Unpack
  */
-test('validateMessage() then rebuildExtensions() should validate generic message from README', t => {
+test('validateMessage() then rebuildExtensions() should validate generic message from README, test length', t => {
   let data = {
     0: '0100',
     2: '4761739001010119',
@@ -782,7 +774,7 @@ test('getBitMapFields() should return the array of active (enabled) fields in a 
 });
 
 // Test Retransmit
-test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+test('toRetransmit() should return new message with appropriate retransmit MTI, 0101', t => {
   let data = {
     0: '0100',
     2: '4761739001010119',
@@ -796,7 +788,7 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
 });
 
 
-test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+test('toRetransmit() should return new message with appropriate retransmit MTI, 0201', t => {
   let data = {
     0: '0200',
     2: '4761739001010119',
@@ -809,7 +801,7 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
   t.is(isopack.toRetransmit()['0'], '0201');
 });
 
-test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+test('toRetransmit() should return new message with appropriate retransmit MTI, 0411', t => {
   let data = {
     0: '0410',
     2: '4761739001010119',
@@ -823,7 +815,7 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
   t.is(isopack.toRetransmit()['0'], '0411');
 });
 
-test('toRetransmit() should return new message with appropriate retransmit MTI', t => {
+test('toRetransmit() should return new message with appropriate retransmit MTI, 0421', t => {
   let data = {
     0: '0420',
     2: '4761739001010119',
@@ -837,7 +829,7 @@ test('toRetransmit() should return new message with appropriate retransmit MTI',
 });
 
 // Test Response
-test('toResponse() should return new message with appropriate retransmit MTI', t => {
+test('toResponse() should return new message with appropriate retransmit MTI, 0110', t => {
   let data = {
     0: '0100',
     2: '4761739001010119',
@@ -851,7 +843,7 @@ test('toResponse() should return new message with appropriate retransmit MTI', t
 });
 
 
-test('toResponse() should return new message with appropriate retransmit MTI', t => {
+test('toResponse() should return new message with appropriate retransmit MTI, 0210', t => {
   let data = {
     0: '0200',
     2: '4761739001010119',
@@ -864,7 +856,7 @@ test('toResponse() should return new message with appropriate retransmit MTI', t
   t.is(isopack.toResponse()['0'], '0210');
 });
 
-test('toResponse() should return new message with appropriate retransmit MTI', t => {
+test('toResponse() should return new message with appropriate retransmit MTI, 0420', t => {
   let data = {
     0: '0410',
     2: '4761739001010119',
@@ -878,7 +870,7 @@ test('toResponse() should return new message with appropriate retransmit MTI', t
   t.is(isopack.toResponse()['0'], '0420');
 });
 
-test('toResponse() should return new message with appropriate retransmit MTI', t => {
+test('toResponse() should return new message with appropriate retransmit MTI, 0430', t => {
   let data = {
     0: '0420',
     2: '4761739001010119',
@@ -891,7 +883,7 @@ test('toResponse() should return new message with appropriate retransmit MTI', t
   t.is(isopack.toResponse()['0'], '0430');
 });
 
-test('toResponse() should return new message with appropriate retransmit MTI', t => {
+test('toResponse() should return new message with appropriate retransmit MTI, 0440', t => {
   let data = {
     0: '0430',
     2: '4761739001010119',
@@ -905,7 +897,7 @@ test('toResponse() should return new message with appropriate retransmit MTI', t
 });
 
 // Test Advise
-test('toAdvice() should return new message with appropriate retransmit MTI', t => {
+test('toAdvice() should return new message with appropriate retransmit MTI, 0120', t => {
   let data = {
     0: '0100',
     2: '4761739001010119',
@@ -918,7 +910,7 @@ test('toAdvice() should return new message with appropriate retransmit MTI', t =
   t.is(isopack.toAdvice()['0'], '0120');
 });
 
-test('toAdvice() should return new message with appropriate retransmit MTI', t => {
+test('toAdvice() should return new message with appropriate retransmit MTI, 0220', t => {
   let data = {
     0: '0200',
     2: '4761739001010119',
@@ -931,7 +923,7 @@ test('toAdvice() should return new message with appropriate retransmit MTI', t =
   t.is(isopack.toAdvice()['0'], '0220');
 });
 
-test('toAdvice() should return new message with appropriate retransmit MTI', t => {
+test('toAdvice() should return new message with appropriate retransmit MTI, 0420', t => {
   let data = {
     0: '0400',
     2: '4761739001010119',
@@ -1105,7 +1097,7 @@ test('should return true to validate required echo AND required fields', t => {
 });
 
 
-test('should handle data encoded in plain text utf8 including the bitmap', t=> {
+test('should handle data encoded in plain text utf8 including the bitmap case 1', t=> {
 
   const isopack = new Main();
   const isoString = '0800822000000000000004000000000000001125161336000255301';
@@ -1116,7 +1108,7 @@ test('should handle data encoded in plain text utf8 including the bitmap', t=> {
   t.is(message[7], '1125161336');
 });
 
-test('should handle data encoded in plain text utf8 including the bitmap', t=> {
+test('should handle data encoded in plain text utf8 including the bitmap case 2', t=> {
 
   const isopack = new Main();
   const isoString = '0800822000000800000004000000000000000904003641670011f8f2f4f6f0f0f6f7f0f0f1f10301';

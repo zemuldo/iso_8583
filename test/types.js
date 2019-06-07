@@ -42,7 +42,7 @@ test('should process binary data representation (\'b\') type', t => {
   t.true(types(options, data));
 });
 
-test('should return false in case of \'n\' type invalid data', t => {
+test('should return false in case of \'b\' type invalid data', t => {
   const options = {'ContentType': 'b'};
   const data = 'Invalid DATA';
   const field = 77;
@@ -102,7 +102,7 @@ test('should process alphanumeric with special characters (\'ans\') type', t => 
   t.true(types(options, data));
 });
 
-test('should return false in case of \'an\' type invalid data', t => {
+test('should return false in case of \'ans\' type invalid data', t => {
   const options = {'ContentType': 'ans'};
   const data = 'AS.,ASDaadasd\x01';
   const field = 9;
