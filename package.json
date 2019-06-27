@@ -1,11 +1,12 @@
 {
   "name": "iso_8583",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "lib/8583.js",
   "scripts": {
     "pretest": "eslint --fix lib/*.js test/**",
-    "test": "nyc --reporter=html --reporter=lcov ava"
+    "test": "nyc --reporter=html --reporter=lcov ava",
+    "test.watch": "ava --watch"
   },
   "ava": {
     "files": [
