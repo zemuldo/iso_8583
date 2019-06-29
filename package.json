@@ -5,6 +5,7 @@
   "main": "lib/8583.js",
   "scripts": {
     "pretest": "eslint --fix lib/*.js test/**",
+    "lint": "eslint --fix lib/*.js test/**",
     "test": "nyc --reporter=html --reporter=lcov ava",
     "test.watch": "ava --watch"
   },
