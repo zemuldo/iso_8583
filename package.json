@@ -40,7 +40,6 @@
   "homepage": "https://github.com/zemuldo/iso_8583/wiki",
   "dependencies": {
     "date-fns": "^1.30.1",
-    "gulp-shell": "^0.7.1",
     "jxon": "^2.0.0-beta.5"
   },
   "devDependencies": {
@@ -48,6 +47,7 @@
     "eslint": "^5.0.0",
     "eslint-plugin-import": "^2.8.0",
     "gulp": "^4.0.2",
+    "gulp-shell": "^0.7.1",
     "jsdoc": "^3.6.2",
     "nyc": "^14.0.0",
     "toast-jsdoc": "^1.0.2"
