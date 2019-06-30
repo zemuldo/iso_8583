@@ -13,15 +13,15 @@
   },
   "author": "Danstan Otieno Onyango",
   "dependencies": {
-    "bluebird": "^3.5.5",
-    "body-parser": "^1.19.0",
+    "bluebird": "^3.5.2",
+    "body-parser": "^1.18.3",
     "bunyan": "1.5.1",
-    "cookie-parser": "^1.4.4",
-    "date-fns": "^1.30.1",
-    "express": "^4.17.1",
+    "cookie-parser": "^1.4.3",
+    "date-fns": "^1.29.0",
+    "express": "^4.16.4",
     "express-xml-bodyparser": "^0.3.0",
     "immutable": "^3.8.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^8.3.0",
     "jxon": "^1.6.1",
     "mongodb": "^2.2.36",
     "redis": "^2.8.0",
@@ -29,12 +29,12 @@
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
-    "concurrently": "^4.1.1",
-    "eslint": "^5.16.0",
+    "concurrently": "^4.0.1",
+    "eslint": "^5.7.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.19.1",
+    "nodemon": "^1.18.5",
     "pm2": "^3.5.1"
   }
 }
