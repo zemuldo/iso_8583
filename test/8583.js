@@ -15,6 +15,12 @@ test('validateMessage() should return true, message valid', t => {
   };
 
   let customFormats = {
+    '1': {
+      ContentType: 'an',
+      Label: 'Bitmap',
+      LenType: 'fixed',
+      MaxLen: 8
+    },
     '3': {
       ContentType: 'n',
       Label: 'Processing code',
