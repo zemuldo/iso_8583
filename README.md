@@ -1,26 +1,58 @@
 # ISO_8583
-<span style="color:green">Customizable ISO 8583 Library for JavaScript and NodeJS</span>
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/zemuldo/iso_8583.svg)](https://greenkeeper.io/)~![Travis CI build badge](https://travis-ci.org/zemuldo/iso_8583.svg?branch=master)~[![Known Vulnerabilities](https://snyk.io/test/github/zemuldo/iso_8583/badge.svg?targetFile=package.json)](https://snyk.io/test/github/zemuldo/iso_8583?targetFile=package.json)
 
-This is a javascript library that does message conversion between a system and an interface that exchange [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583).
+ISO_8583 is a <span style="color:green; font-size:18px">Customizable ISO 8583 Library for JavaScript and NodeJS</span> that does message conversion between a system and an interface that exchange [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583).
+
+##  Install from npm using
+
+```
+npm install --save iso_8583
+```
 
 ## <span style="color:orange">Slack Channel</span>
+
 Join this [slack channel](https://join.slack.com/t/zemuldo/shared_invite/enQtNDQwMzY3OTE3MzQ0LTllYWNjNGFlMDBlMjY4OTgxMWU5MWQ3ZTZjMjYyYWIyMDcwNjZiMDJhYmU4YTdhYzk4MDY3NWRiMjljODBiMTU) for support.
 
-# Table of Contents
+## Usage: Bitmap Messaging
 
-- [Table of Contents](#table-of-contents)
-  - [Installation](#configuration)
-        - [Required-Fields](#span-style%22colorblue%22Required-fieldsspan)
+### Configuration
 
-# Usage: Bitmap Messaging
+#### Custom ISO 8583 Formats.
 
-## Configuration
+This library Supports custom ISO 8583 Formats, versions 1993 and 2003. This means you can decide what data types are allowed on each field, the length properties of the field and its description.
+Custom ISO 8583 formats must be passed in the format below.
 
-### <span style="color:blue">Required fields</span> 
+```javascript
+{
+      'FIELD_NAME': {
+        ContentType: 'Types accepted',
+        Label: 'Description of the field',
+        LenType: 'Length type can bee fixed or lvar ...',
+        MaxLen: Maximum length (number)
+      }
+    }
+```
 
-To use required fields you need to create a json config file and add to isopack object, thats two ways works:
+Here is an example of custom format for field 3. You can refer to formats in the docs to see the default formats.
+
+```javascript
+
+let customFormats = {
+    '3': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 9
+    }
+  };
+
+```
+
+#### Required fields
+
+You can also set required field for message types as you desire.
+To use required fields you need to create a json config file and add to the class when creating a new message class, thats two ways works:
 
 ```javascript
 let isopack = new iso8583(iso);
@@ -28,11 +60,11 @@ isopack.requiredFieldsSchema = './config/required-fields.json';
 ```
 
 ```javascript
-const config = './config/required-fields.json';
-let isopack = new iso8583(iso, customFormats, config);
+const required_fields = './config/required-fields.json';
+let isopack = new iso8583(iso, customFormats, required_fields);
 ```
 
-And at the config file you can organize by proccess code and by messages codes, like this:
+And at the config file you can organize by process code and by messages codes, like this:
 
 ```json
 [
@@ -52,54 +84,28 @@ And at the config file you can organize by proccess code and by messages codes, 
 ]
 ```
 
-###  <span style="color:blue">Custom ISO 8583 Formats</span>
+#### Message Packaging and Un-packaging
 
-Supports custom ISO 8583 Formats, vesions 1993 and 2003.
+This library uses a default mode of message encoding and packaging. If you are using a third party message source or a third party packaging source, you have to pre-format your data to meet the default encoding or configure things for yourself. See configuration for more info.
 
-PLEASE NOTE THAT THIS MEANS IF U NEED CUSTOM FORMATS,  U HAVE TO DEFINE FORMATS IN THIS MANNER 
+##### Unpacking
 
-```javascript
-{
-      'FIELD_NAME': {
-        ContentType: 'Types accepted',
-        Label: 'Description of the field',
-        LenType: 'Length type can bee fixed or lvar ...',
-        MaxLen: Maximum length (number)
-      }
-    }
-    
-```
+This only applies when you are receiving messages from others sources that don't encode as per this library like JPos.
+Default unpack conditions:
 
-Refer to default for more info
+`2-byte leng header in hex` + `4-byte MTI encoded in utf8` + `16-byte Bitmap encoded in hex`
 
-Example is below
+If the message you are receiving is in a different state, the passing config to `getIsoJSON` like below.
 
 
-```javascript
-
-let customFormats = {
-    '3': {
-      ContentType: 'n',
-      Label: 'Processing code',
-      LenType: 'fixed',
-      MaxLen: 9
-    }
-  };
-
-```
-
-###  <span style="color:blue">Message Packaging and Un-packaging</span> 
-
-This library uses a default mode of message encoding and packaging. If you are using a third party message source or a third party packaging source, you have to pre-format your data to meet the default encoding or configure things for yourself.
-
-#### Packing
+##### Packing
 Messages are packaged as:
 
 - 2 byte length indicator + 4 byte message type + 16 byte bitmap(primary + secondary bitmap) + message field data.
 - Each field with variable length data is preceded with the actual length of the data in that field.
 
 
-###  <span style="color:blue">Field 127 and 127.25</span>
+######  <span style="color:blue">Field 127 and 127.25</span>
 
 >The library extends fields 127 and fields 127.25 to their sub fields.    
 >If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length
@@ -108,13 +114,7 @@ Messages are packaged as:
 >To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.    
 >If you want to handle xml iso 8583 messages, the usage is described down there. 
 
-##  Install from npm using
-
-```
-npm install --save iso_8583
-```
-
-##  Import the library using:
+## Example
 
 ```javascript
 const iso8583 = require('iso_8583');
@@ -270,8 +270,10 @@ let testData = {
 
 ```
 
-# Usage: XML Messaging
-## To get xml from a json:
+## Usage: XML Messaging
+
+### To get xml from a json
+
 Initialize the iso object with the json as argument
 
 ```javascript
@@ -326,8 +328,10 @@ let xmlData = '<?xml version="1.0" encoding="UTF-8"?>\n' +
 isoPack.getJsonFromXml(xmlData); // returns a json object or an error object
 ```
 
-# Usage: MTI converting
-## Changing current mti type:
+## Usage: MTI converting
+
+### Changing current mti type
+
 Initialize the iso object with the json as argument
 
 ```javascript
@@ -356,4 +360,4 @@ Initialize the iso object with the json as argument
 There are other cool stuff like ```isoPack.attachTimeStamp()``` which adds times stamps to field 7,12,13, plus more
 When working with xml, first change the xml to json then validate.
 
-# <span style="color:green">Thanks</span> , <span style="color:blue">Have</span> <span style="color:orange">Fun</span>
+## <span style="color:green">Thanks</span> , <span style="color:blue">Have</span> <span style="color:orange">Fun</span>
