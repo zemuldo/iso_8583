@@ -1,32 +1,24 @@
-# <span style="color:green">iso_8583</span>
+# ISO_8583
+<span style="color:green">Customizable ISO 8583 Library for JavaScript and NodeJS</span>
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/zemuldo/iso_8583.svg)](https://greenkeeper.io/) ![Travis CI build badge](https://travis-ci.org/zemuldo/iso_8583.svg?branch=master)  [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1529/badge)](https://bestpractices.coreinfrastructure.org/projects/1529)
-[![Known Vulnerabilities](https://snyk.io/test/github/zemuldo/iso_8583/badge.svg?targetFile=package.json)](https://snyk.io/test/github/zemuldo/iso_8583?targetFile=package.json)
+[![Greenkeeper badge](https://badges.greenkeeper.io/zemuldo/iso_8583.svg)](https://greenkeeper.io/)~![Travis CI build badge](https://travis-ci.org/zemuldo/iso_8583.svg?branch=master)~[![Known Vulnerabilities](https://snyk.io/test/github/zemuldo/iso_8583/badge.svg?targetFile=package.json)](https://snyk.io/test/github/zemuldo/iso_8583?targetFile=package.json)
 
-This is a javascript library that does message conversion between a system and an interface that accepts iso8583 message requests and send [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583) responses.
+This is a javascript library that does message conversion between a system and an interface that exchange [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583).
 
 ## <span style="color:orange">Slack Channel</span>
 Join this [slack channel](https://join.slack.com/t/zemuldo/shared_invite/enQtNDQwMzY3OTE3MzQ0LTllYWNjNGFlMDBlMjY4OTgxMWU5MWQ3ZTZjMjYyYWIyMDcwNjZiMDJhYmU4YTdhYzk4MDY3NWRiMjljODBiMTU) for support.
 
+# Table of Contents
+
+- [Table of Contents](#table-of-contents)
+  - [Installation](#configuration)
+        - [Required-Fields](#span-style%22colorblue%22Required-fieldsspan)
 
 # Usage: Bitmap Messaging
 
-## Important notes;
+## Configuration
 
-###  <span style="color:blue">Message Packaging and Un-packaging</span> 
-
-This library uses a default mode of message encoding and packaging. If you are using a third party message source or a third party packaging source, you have to pre-format your data to meet the default encoding or configure things for yourself.
-
-#### Packing
-Messages are packaged as:
-
-- 2 byte length indicator + 4 byte message type + 16 byte bitmap(primary + secondary bitmap) + message field data.
-- Each field with variable length data is preceded with the actual length of the data in that field.
-  
-
-
-
-###  <span style="color:blue">Required fields</span> 
+### <span style="color:blue">Required fields</span> 
 
 To use required fields you need to create a json config file and add to isopack object, thats two ways works:
 
@@ -95,6 +87,17 @@ let customFormats = {
   };
 
 ```
+
+###  <span style="color:blue">Message Packaging and Un-packaging</span> 
+
+This library uses a default mode of message encoding and packaging. If you are using a third party message source or a third party packaging source, you have to pre-format your data to meet the default encoding or configure things for yourself.
+
+#### Packing
+Messages are packaged as:
+
+- 2 byte length indicator + 4 byte message type + 16 byte bitmap(primary + secondary bitmap) + message field data.
+- Each field with variable length data is preceded with the actual length of the data in that field.
+
 
 ###  <span style="color:blue">Field 127 and 127.25</span>
 
