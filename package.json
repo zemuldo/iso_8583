@@ -6,8 +6,8 @@
   "scripts": {
     "pretest": "eslint --fix lib/*.js test/**",
     "docs": "jsdoc -c js_docs.conf.json .",
-    "test": "nyc --reporter=html --reporter=lcov ava",
-    "test.watch": "ava --watch"
+    "test": "nyc --reporter=html --reporter=lcov ava --verbose",
+    "test.watch": " npx ava --verbose --watch"
   },
   "ava": {
     "files": [
