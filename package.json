@@ -4,7 +4,8 @@
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "lib/8583.js",
   "scripts": {
-    "pretest": "eslint --fix lib/*.js test/**",
+    "pretest": "eslint --fix lib/*.js test/*.js test/**",
+    "lint": "eslint --fix lib/*.js test/*.js test/**",
     "docs": "jsdoc -c js_docs.conf.json .",
     "test": "nyc --reporter=html --reporter=lcov ava --verbose",
     "test.watch": " npx ava --verbose --watch"
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "ava": "^2.0.0",
+    "babel-eslint": "^10.0.3",
     "eslint": "^5.0.0",
     "eslint-plugin-import": "^2.8.0",
     "gulp": "^4.0.2",
