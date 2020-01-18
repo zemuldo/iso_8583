@@ -4,8 +4,8 @@
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "lib/8583.js",
   "scripts": {
-    "pretest": "eslint --fix lib/*.js test/*.js test/**",
-    "lint": "eslint --fix lib/*.js test/*.js test/**",
+    "lint": "eslint lib test --fix",
+    "pretest": "eslint lib/** test/** --fix",
     "docs": "jsdoc -c js_docs.conf.json .",
     "test": "nyc --reporter=html --reporter=lcov ava --verbose",
     "test.watch": " npx ava --verbose --watch"
@@ -40,18 +40,18 @@
   },
   "homepage": "https://github.com/zemuldo/iso_8583/wiki",
   "dependencies": {
-    "date-fns": "^2.0.0",
+    "date-fns": "^2.9.0",
     "jxon": "^2.0.0-beta.5"
   },
   "devDependencies": {
-    "ava": "^2.0.0",
+    "ava": "^2.4.0",
     "babel-eslint": "^10.0.3",
-    "eslint": "^5.0.0",
-    "eslint-plugin-import": "^2.8.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-import": "^2.20.0",
     "gulp": "^4.0.2",
     "gulp-shell": "^0.7.1",
     "jsdoc": "^3.6.3",
-    "nyc": "^14.0.0",
+    "nyc": "^14.1.1",
     "toast-jsdoc": "^1.0.2"
   }
 }
