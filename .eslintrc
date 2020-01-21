@@ -1,11 +1,12 @@
 {
+  "parser": "babel-eslint",
   "extends": [
     "eslint:recommended",
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2019,
     "sourceType": "module"
   },
   "env": {
@@ -13,7 +14,8 @@
     "browser": true,
     "node": true,
     "jquery": true,
-    "mocha": true
+    "mocha": true,
+    "jest": true
   },
   "rules": {
     "quotes": [1, "single"],
@@ -23,7 +25,22 @@
     "semi": [1, "always"],
     "no-trailing-spaces": 0,
     "eol-last": 0,
-    "no-unused-vars": 0,
+    "no-unused-vars": [
+      "error",
+      {
+          "varsIgnorePattern": "_",
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": true,
+          "argsIgnorePattern": "_"
+      }
+  ],
+    "max-len": ["error", 140, 2, {
+      "ignoreUrls": true,
+      "ignoreComments": true,
+      "ignoreStrings": true,
+      "ignoreTemplateLiterals":true
+    }],
     "no-underscore-dangle": 0,
     "no-alert": 0,
     "no-lone-blocks": 0,

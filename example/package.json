@@ -21,6 +21,7 @@
     "express": "^4.16.4",
     "express-xml-bodyparser": "^0.3.0",
     "immutable": "^3.8.2",
+    "iso_8583": "^2.6.5-beta.0",
     "jsonwebtoken": "^8.3.0",
     "jxon": "^1.6.1",
     "mongodb": "^2.2.36",
