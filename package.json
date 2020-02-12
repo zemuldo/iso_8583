@@ -49,7 +49,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-import": "^2.20.0",
     "gulp": "^4.0.2",
-    "gulp-shell": "^0.7.1",
+    "gulp-shell": "^0.8.0",
     "jsdoc": "^3.6.3",
     "nyc": "^14.1.1",
     "toast-jsdoc": "^1.0.2"
