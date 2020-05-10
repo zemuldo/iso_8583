@@ -11,6 +11,7 @@
     "test.watch": " npx ava --verbose --watch"
   },
   "ava": {
+    "babel": true,
     "files": [
       "test/*.js"
     ],
@@ -44,6 +45,7 @@
     "jxon": "^2.0.0-beta.5"
   },
   "devDependencies": {
+    "@ava/babel": "^1.0.1",
     "ava": "^3.1.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^5.16.0",
