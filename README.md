@@ -10,10 +10,6 @@ ISO_8583 is a <span style="color:green; font-size:18px">Customizable ISO 8583 Li
 npm install --save iso_8583
 ```
 
-## <span style="color:orange">Slack Channel</span>
-
-Join this [slack channel](https://join.slack.com/t/zemuldo/shared_invite/enQtNDQwMzY3OTE3MzQ0LTllYWNjNGFlMDBlMjY4OTgxMWU5MWQ3ZTZjMjYyYWIyMDcwNjZiMDJhYmU4YTdhYzk4MDY3NWRiMjljODBiMTU) for support.
-
 ## Usage: Bitmap Messaging
 
 ### Configuration
