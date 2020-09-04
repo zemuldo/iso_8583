@@ -24,7 +24,7 @@
     "iso_8583": "^2.6.5-beta.0",
     "jsonwebtoken": "^8.3.0",
     "jxon": "^1.6.1",
-    "mongodb": "^2.2.36",
+    "mongodb": "^3.1.13",
     "redis": "^2.8.0",
     "winston": "^2.4.4"
   },
