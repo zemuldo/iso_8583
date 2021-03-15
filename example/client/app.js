@@ -10,7 +10,7 @@ const log = require('../tools/logger');
 const helpers = require('../tools/helpers');
 const config = require('../config/env');
 
-const host = config[process.env.NODE_ENV];
+const host = config[process.env.NODE_ENV || 'development'];
 
 const timeout = 3000;
 let retrying = false;

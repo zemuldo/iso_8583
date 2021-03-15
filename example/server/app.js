@@ -11,7 +11,7 @@ const config = require('../config/env');
 
 const server = net.createServer();
 
-const configs = config[process.env.NODE_ENV];
+const configs = config[process.env.NODE_ENV || 'development'];
 const PORT = configs.port;
 const HOST = '0.0.0.0';
 
@@ -123,7 +123,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 // server running
 server.on('listening', () => {
-  logger.info('server is listening on %j', PORT);
+  logger.info(`server is listening on ${PORT}`);
 });
 
 // Restart server if port or address is under use

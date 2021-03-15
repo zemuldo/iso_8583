@@ -30,12 +30,12 @@
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
-    "concurrently": "^4.0.1",
-    "eslint": "^5.7.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.5",
-    "pm2": "^3.5.1"
+    "concurrently": "^6.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "mocha": "^8.3.2",
+    "nodemon": "^1.19.4",
+    "pm2": "^4.5.5"
   }
 }
