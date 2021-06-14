@@ -1,6 +1,6 @@
 # ISO_8583
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/zemuldo/iso_8583.svg)](https://greenkeeper.io/)~![Travis CI build badge](https://travis-ci.org/zemuldo/iso_8583.svg?branch=master)~[![Known Vulnerabilities](https://snyk.io/test/github/zemuldo/iso_8583/badge.svg?targetFile=package.json)](https://snyk.io/test/github/zemuldo/iso_8583?targetFile=package.json)
+[![Greenkeeper badge](https://badges.greenkeeper.io/zemuldo/iso_8583.svg)](https://greenkeeper.io/)~![Travis CI build badge](https://travis-ci.org/zemuldo/iso_8583.svg?branch=main)~[![Known Vulnerabilities](https://snyk.io/test/github/zemuldo/iso_8583/badge.svg?targetFile=package.json)](https://snyk.io/test/github/zemuldo/iso_8583?targetFile=package.json)
 
 ISO_8583 is a <span style="color:green; font-size:18px">Customizable ISO 8583 Library for JavaScript and NodeJS</span> that does message conversion between a system and an interface that exchange [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583).
 
@@ -19,7 +19,7 @@ yarn add iso_8583
 
 ## Basic Usage: Bitmap Messaging
 
-See the a sample usage example see [this example](https://github.com/zemuldo/iso_8583/tree/master/example)
+See the a sample usage example see [this example](https://github.com/zemuldo/iso_8583/tree/main/example)
 
 ```javascript
 const iso8583 = require('iso_8583');
