@@ -52,83 +52,14 @@
 <p><a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/zemuldo/iso_8583.svg" alt="Greenkeeper badge"></a>~<img src="https://travis-ci.org/zemuldo/iso_8583.svg?branch=master" alt="Travis CI build badge">~<a href="https://snyk.io/test/github/zemuldo/iso_8583?targetFile=package.json"><img src="https://snyk.io/test/github/zemuldo/iso_8583/badge.svg?targetFile=package.json" alt="Known Vulnerabilities"></a></p>
 <p>ISO_8583 is a <span style="color:green; font-size:18px">Customizable ISO 8583 Library for JavaScript and NodeJS</span> that does message conversion between a system and an interface that exchange <a href="https://en.wikipedia.org/wiki/ISO_8583">ISO 8583 Financial transaction card originated messages</a>.</p>
 <h2>Install from npm using</h2>
-<pre class="prettyprint source"><code>npm install --save iso_8583
+<pre class="prettyprint source lang-shell"><code>
+npm install --save iso_8583
 </code></pre>
-<h2>Usage: Bitmap Messaging</h2>
-<h3>Configuration</h3>
-<h4>Custom ISO 8583 Formats.</h4>
-<p>This library Supports custom ISO 8583 Formats, versions 1993 and 2003. This means you can decide what data types are allowed on each field, the length properties of the field and its description.
-Custom ISO 8583 formats must be passed in the format below.</p>
-<pre class="prettyprint source lang-javascript"><code>{
-      'FIELD_NAME': {
-        ContentType: 'Types accepted',
-        Label: 'Description of the field',
-        LenType: 'Length type can bee fixed or lvar ...',
-        MaxLen: Maximum length (number)
-      }
-    }
+<h3>OR</h3>
+<pre class="prettyprint source lang-shell"><code>yarn add iso_8583
 </code></pre>
-<p>Here is an example of custom format for field 3. You can refer to formats in the docs to see the default formats.</p>
-<pre class="prettyprint source lang-javascript"><code>
-let customFormats = {
-    '3': {
-      ContentType: 'n',
-      Label: 'Processing code',
-      LenType: 'fixed',
-      MaxLen: 9
-    }
-  };
-
-</code></pre>
-<h4>Required fields</h4>
-<p>You can also set required field for message types as you desire.
-To use required fields you need to create a json config file and add to the class when creating a new message class, thats two ways works:</p>
-<pre class="prettyprint source lang-javascript"><code>let isopack = new iso8583(iso);
-isopack.requiredFieldsSchema = './config/required-fields.json';
-</code></pre>
-<pre class="prettyprint source lang-javascript"><code>const required_fields = './config/required-fields.json';
-let isopack = new iso8583(iso, customFormats, required_fields);
-</code></pre>
-<p>And at the config file you can organize by process code and by messages codes, like this:</p>
-<pre class="prettyprint source lang-json"><code>[
-  {
-    &quot;processing_code&quot;: &quot;000000&quot;,
-    &quot;required_fields&quot;: [0, 2, 4]
-  },
-  {
-    &quot;processing_code&quot;: &quot;999999&quot;,
-    &quot;required_fields&quot;:[
-      {
-        &quot;0100&quot;: [3, 7],
-        &quot;0500&quot;: [3, 7, 11]
-      }
-    ]
-  }
-]
-</code></pre>
-<h4>Message Packaging and Un-packaging</h4>
-<p>This library uses a default mode of message encoding and packaging. If you are using a third party message source or a third party packaging source, you have to pre-format your data to meet the default encoding or configure things for yourself. See configuration for more info.</p>
-<h5>Unpacking</h5>
-<p>This only applies when you are receiving messages from others sources that don't encode as per this library like JPos.
-Default unpack conditions:</p>
-<p><code>2-byte leng header in hex</code> + <code>4-byte MTI encoded in utf8</code> + <code>16-byte Bitmap encoded in hex</code></p>
-<p>If the message you are receiving is in a different state, the passing config to <code>getIsoJSON</code> like below.</p>
-<h5>Packing</h5>
-<p>Messages are packaged as:</p>
-<ul>
-<li>2 byte length indicator + 4 byte message type + 16 byte bitmap(primary + secondary bitmap) + message field data.</li>
-<li>Each field with variable length data is preceded with the actual length of the data in that field.</li>
-</ul>
-<h6><span style="color:blue">Field 127 and 127.25</span></h6>
-<blockquote>
-<p>The library extends fields 127 and fields 127.25 to their sub fields.<br>
-If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length
-In the above case the library will expand them.<br>
-If they are already broken down to subfields, nothing changes.<br>
-To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.<br>
-If you want to handle xml iso 8583 messages, the usage is described down there.</p>
-</blockquote>
-<h2>Example</h2>
+<h2>Basic Usage: Bitmap Messaging</h2>
+<p>See the a sample usage example see <a href="https://github.com/zemuldo/iso_8583/tree/master/example">this example</a></p>
 <pre class="prettyprint source lang-javascript"><code>const iso8583 = require('iso_8583');
 let data = {
     0: &quot;0100&quot;,
@@ -169,51 +100,51 @@ let customFormats = {
 let isopack = new iso8583(data,customFormats);
 </code></pre>
 <p>The object initialized has the following methods:</p>
-<p>To validate the iso message</p>
+<h5>To validate the iso message</h5>
 <pre class="prettyprint source lang-javascript"><code>isopack.validateMessage();  // returns true for valid message or error
 
 </code></pre>
-<p>To get the mti as a string:</p>
+<h5>To get the mti as a string:</h5>
 <pre class="prettyprint source lang-javascript"><code>isopack.getMti(); // returns a 4 byte buffer containing the mti
 
 </code></pre>
-<p>To get the bitmaps in binary:</p>
+<h5>To get the bitmaps in binary:</h5>
 <pre class="prettyprint source lang-javascript"><code>isopack.getBmpsBinary(); // returns a string '1111001000111..' or an error object with error prop
 
 </code></pre>
-<p>To get the bitmap active fields:</p>
+<h5>To get the bitmap active fields:</h5>
 <pre class="prettyprint source lang-javascript"><code>isopack.getBitMapFields(); 
 // returns the array of enabled fields in bitmap, excluding MTI and bitmap fields
 // e.g. [2, 3, 4, 7, 12, 13, 14, 18, 22, 23, 25, 26, 32, 33, 35, 41, 42, 43, 49, 52, 56, 123, 127]
 
 </code></pre>
-<p>To get the bitmaps in hex for fields 0-127, fields 127 extensions and fields 127.25 extensions</p>
+<h5>To get the bitmaps in hex for fields 0-127, fields 127 extensions and fields 127.25 extensions</h5>
 <pre class="prettyprint source lang-javascript"><code>isopack.getBitMapHex();             // returns 'f23c46c1a8e091000000000000000022'
 isopack.getBitMapHex_127_ext();     // returns '8000008000000000'
 isopack.getBitMapHex_127_ext_25();  // returns 'fe1e5f7c00000000'
 
 // in case of error, the error object returned with error prop
 </code></pre>
-<p>To get a raw message:</p>
+<h5>To get a raw message:</h5>
 <pre class="prettyprint source lang-javascript"><code>let bufferMessage = isopack.getRawMessage(); 
 // returns a buffer containing the message (without 2-byte length field) or an error object
 &lt;Buffer 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00 00 00 00 00 00 20 30 37 35 34 ...
 
 </code></pre>
-<p>To get a buffer tcp message to send to the ISO 8583 Interface:</p>
+<h5>To get a buffer tcp message to send to the ISO 8583 Interface:</h5>
 <pre class="prettyprint source lang-javascript"><code>let bufferMessage = isopack.getBufferMessage(); 
 // returns a buffer containing the message with 2 additional bytes indicating the length 
 // or an error object
 &lt;Buffer 01 11 30 31 30 30 f2 3c 46 c0 20 e8 80 00 00 00 00 00 00 00 00 20 30 37 35 34 ...
 
 </code></pre>
-<p>To get the field description:</p>
+<h5>To get the field description:</h5>
 <pre class="prettyprint source lang-javascript"><code>const iso8583 = require('iso_8583');
 iso8583.getFieldDescription(24);
 // The object with field descriptions to be returned:
 // {24: 'Network International identifier (NII)'}
 </code></pre>
-<p>To get the several fields descriptions:</p>
+<h3>To get the several fields descriptions:</h3>
 <pre class="prettyprint source lang-javascript"><code>const iso8583 = require('iso_8583');
 iso8583.getFieldDescription([24, 37, 39]);
 // The object with field descriptions to be returned:
@@ -251,7 +182,7 @@ let testData = {
 };
 
 </code></pre>
-<h2>Usage: XML Messaging</h2>
+<h2>Basic Usage: XML Messaging</h2>
 <h3>To get xml from a json</h3>
 <p>Initialize the iso object with the json as argument</p>
 <pre class="prettyprint source lang-javascript"><code>let isoPack = new isoPack(testData);
@@ -324,6 +255,79 @@ isoPack.getJsonFromXml(xmlData); // returns a json object or an error object
 </code></pre>
 <p>There are other cool stuff like <code>isoPack.attachTimeStamp()</code> which adds times stamps to field 7,12,13, plus more
 When working with xml, first change the xml to json then validate.</p>
+<h2>Configuration and Customization</h2>
+<h3>Custom ISO 8583 Formats.</h3>
+<p>This library Supports custom ISO 8583 Formats, versions 1993 and 2003. This means you can decide what data types are allowed on each field, the length properties of the field and its description.
+Custom ISO 8583 formats must be passed in the format below.</p>
+<pre class="prettyprint source lang-javascript"><code>{
+      'FIELD_NAME': {
+        ContentType: 'Types accepted',
+        Label: 'Description of the field',
+        LenType: 'Length type can bee fixed or lvar ...',
+        MaxLen: Maximum length (number)
+      }
+    }
+</code></pre>
+<p>Here is an example of custom format for field 3. You can refer to formats in the docs to see the default formats.</p>
+<pre class="prettyprint source lang-javascript"><code>
+let customFormats = {
+    '3': {
+      ContentType: 'n',
+      Label: 'Processing code',
+      LenType: 'fixed',
+      MaxLen: 9
+    }
+  };
+
+</code></pre>
+<h3>Required fields</h3>
+<p>You can also set required field for message types as you desire.
+To use required fields you need to create a json config file and add to the class when creating a new message class, thats two ways works:</p>
+<pre class="prettyprint source lang-javascript"><code>let isopack = new iso8583(iso);
+isopack.requiredFieldsSchema = './config/required-fields.json';
+</code></pre>
+<pre class="prettyprint source lang-javascript"><code>const required_fields = './config/required-fields.json';
+let isopack = new iso8583(iso, customFormats, required_fields);
+</code></pre>
+<p>And at the config file you can organize by process code and by messages codes, like this:</p>
+<pre class="prettyprint source lang-json"><code>[
+  {
+    &quot;processing_code&quot;: &quot;000000&quot;,
+    &quot;required_fields&quot;: [0, 2, 4]
+  },
+  {
+    &quot;processing_code&quot;: &quot;999999&quot;,
+    &quot;required_fields&quot;:[
+      {
+        &quot;0100&quot;: [3, 7],
+        &quot;0500&quot;: [3, 7, 11]
+      }
+    ]
+  }
+]
+</code></pre>
+<h3>Message Packaging and Un-packaging</h3>
+<p>This library uses a default mode of message encoding and packaging. If you are using a third party message source or a third party packaging source, you have to pre-format your data to meet the default encoding or configure things for yourself. See configuration for more info.</p>
+<h3>Unpacking</h3>
+<p>This only applies when you are receiving messages from others sources that don't encode as per this library like JPos.
+Default unpack conditions:</p>
+<p><code>2-byte leng header in hex</code> + <code>4-byte MTI encoded in utf8</code> + <code>16-byte Bitmap encoded in hex</code></p>
+<p>If the message you are receiving is in a different state, the passing config to <code>getIsoJSON</code> like below.</p>
+<h3>Packing</h3>
+<p>Messages are packaged as:</p>
+<ul>
+<li>2 byte length indicator + 4 byte message type + 16 byte bitmap(primary + secondary bitmap) + message field data.</li>
+<li>Each field with variable length data is preceded with the actual length of the data in that field.</li>
+</ul>
+<h6><span style="color:blue">Field 127 and 127.25</span></h6>
+<blockquote>
+<p>The library extends fields 127 and fields 127.25 to their sub fields.<br>
+If you are handling a json with field 127 or 127.25 as one string, the bitmap must be 16 character string then a 4 digit number indicating the length
+In the above case the library will expand them.<br>
+If they are already broken down to subfields, nothing changes.<br>
+To invoke the package initialize with the iso8583 json or object as argument. If the json contains any fields not defined in iso8583 or has no field 0, the error is returned in an object.<br>
+If you want to handle xml iso 8583 messages, the usage is described down there.</p>
+</blockquote>
 <h2><span style="color:green">Thanks</span> , <span style="color:blue">Have</span> <span style="color:orange">Fun</span></h2></article>
     </section>
 
@@ -337,7 +341,7 @@ When working with xml, first change the xml to json then validate.</p>
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jun 14 2021 13:32:34 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jun 14 2021 13:49:17 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
