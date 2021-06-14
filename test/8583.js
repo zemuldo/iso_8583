@@ -1185,3 +1185,35 @@ test('should unpack data that has no secondary bitmap', t=> {
   t.is(message[11], '000001');
   t.is(message[41], '00000001');
 });
+
+test('should puck unpack data with field 127.25 as XML', t=> {
+  
+  let data = {
+    '0': '0100',
+    '2': '4761739001010010',
+    '3': '000000',
+    '4': '000000002341',
+    '11': '000001',
+    '14': '2212',
+    '18': '4789',
+    '22': '051',
+    '23': '001',
+    '25': '00',
+    '26': '12',
+    '32': '108600',
+    '35': '4761739001010010D22122011143844489',
+    '41': '12000014',
+    '42': 'TERMINAL_000001',
+    '43': 'TERMINAL Merchant 1 0000000 NAIROBI KE  ',
+    '49': '404',
+    '56': '1510',
+    '123': '51010151134C101',
+    '127.25': '<IccData><IccRequest><AmountAuthorized>000000002341</AmountAuthorized><AmountOther>000000000000</AmountOther><ApplicationIdentifier>14A0000000031010</ApplicationIdentifier><ApplicationInterchangeProfile>5000</ApplicationInterchangeProfile><ApplicationTransactionCounter>0008</ApplicationTransactionCounter><Cryptogram>D17AC224D703ED03</Cryptogram><CryptogramInformationData>80</CryptogramInformationData><InterfaceDeviceSerialNumber>3332303030303632</InterfaceDeviceSerialNumber><IssuerApplicationData>1406011203A09800</IssuerApplicationData><TerminalApplicationVersionNumber>0096</TerminalApplicationVersionNumber><TerminalVerificationResult>4280000800</TerminalVerificationResult><TransactionCurrencyCode>404</TransactionCurrencyCode><TransactionDate>201008</TransactionDate><TransactionSequenceCounter>800000144</TransactionSequenceCounter><TransactionType>00</TransactionType><UnpredictableNumber>9FACCF09</UnpredictableNumber></IccRequest></IccData>'
+  };
+
+  let isopack = new Main(data);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.getBufferMessage().byteLength.toString(), '1189');
+  let buffer = isopack.getBufferMessage();
+  t.is(new Main().getIsoJSON(buffer,{})['127.25'], data['127.25']);
+});
