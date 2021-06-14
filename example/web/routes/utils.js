@@ -1,6 +1,6 @@
 const EventEmitter = require('events');
 const Iso_8583 = require('../../../lib/8583');
-const client = require('../../client/app');
+const client = require('../../client');
 
 class OnDataEmitter extends EventEmitter { }
 const onThisData = new OnDataEmitter();

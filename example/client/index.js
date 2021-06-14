@@ -6,7 +6,6 @@ const net = require('net');
 const client = new net.Socket();
 const Iso_8583 = require('../../lib/8583');
 
-const log = require('../tools/logger');
 const helpers = require('../tools/helpers');
 const config = require('../config/env');
 
@@ -21,11 +20,11 @@ function makeConnection() {
   client.connect(host.port, host.address);
 }
 function connectEventHandler() {
-  log.info('***** connected ******');
-  log.info({
+  console.info('***** connected ******');
+  console.info({
     port: client.remotePort,
     host: client.remoteAddress,
-  }, 'connected to inter-switch postillion postbridge');
+  }, 'connected to postillion postbridge');
   retrying = false;
 }
 function dataEventHandler() {
@@ -48,30 +47,30 @@ function drainEventHandler(data) {
       };
       helpers.attachDiTimeStamps(new_0800_0810);
       return client.write(new Iso_8583(new_0800_0810).getBufferMessage(), () => {
-        log.info('Message write finish');
+        console.info('Message write finish');
       });
     default:
       return false;
   }
 }
 function errorEventHandler(e) {
-  log.error(`Connection error ${e.code}`);
+  console.error(`Connection error ${e.code}`);
   if (e.code === 'ECONNREFUSED') {
-    log.error({ error: 'Remote Server Refused' });
-    log.info(`Reconnecting... in ${timeout / 1000} Seconds`);
+    console.error({ error: 'Remote Server Refused' });
+    console.info(`Reconnecting... in ${timeout / 1000} Seconds`);
   } else if (e.code === 'EHOSTUNREACH') {
-    log.error('could not reach postbridge node');
-    log.info(`Reconnecting... in ${timeout / 1000} Seconds`);
+    console.error('could not reach postbridge node');
+    console.info(`Reconnecting... in ${timeout / 1000} Seconds`);
   } else if (e.code === 'ETIMEDOUT') {
     // might want to set back up the connection
-    log.error('EHOSTUNREACH error connection with postilion timed out...');
-    log.info(`Reconnecting... in ${timeout / 1000} Seconds`);
+    console.error('EHOSTUNREACH error connection with postilion timed out...');
+    console.info(`Reconnecting... in ${timeout / 1000} Seconds`);
   } else if (e.code === 'EPIPE') {
-    log.error('the FIN has been sent from the other side');
-    log.info(`Reconnecting... in ${timeout / 1000} Seconds`);
+    console.error('the FIN has been sent from the other side');
+    console.info(`Reconnecting... in ${timeout / 1000} Seconds`);
   } else {
-    log.error(e.code);
-    log.info(`Reconnecting... in ${timeout / 1000} Seconds`);
+    console.error(e.code);
+    console.info(`Reconnecting... in ${timeout / 1000} Seconds`);
   }
 
   if (!retrying) {
@@ -81,8 +80,8 @@ function errorEventHandler(e) {
 }
 function closeEventHandler() {
   if (retrying) return false;
-  log.error('Server closed');
-  log.info(`Reconnecting... in ${timeout / 1000} Seconds`);
+  console.error('Server closed');
+  console.info(`Reconnecting... in ${timeout / 1000} Seconds`);
   if (!retrying) {
     retrying = true;
   }
@@ -98,7 +97,7 @@ client.on('error', errorEventHandler);
 client.on('close', closeEventHandler);
 
 // Connect to remote server
-log.info('***** connecting ******');
+console.info('***** connecting ******');
 makeConnection();
 
 module.exports = client;
