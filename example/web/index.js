@@ -4,7 +4,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const xmlparser = require('express-xml-bodyparser');
 const config = require('../config/env');
-const log = require('../tools/logger');
 const pos_route = require('./routes/pos');
 
 const configs = config[process.env.NODE_ENV || 'development'];
@@ -20,7 +19,7 @@ app.use(xmlparser());
 app.use('/pos', pos_route);
 
 app.listen(configs.httpPort, () => {
-  log.info({
+  console.info({
     MESS: `Web server running at http://localhost:${configs.httpPort}`,
   });
 });

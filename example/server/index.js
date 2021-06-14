@@ -5,7 +5,6 @@
 
 const net = require('net');
 const Iso_8583 = require('../../lib/8583');
-const logger = require('../tools/logger');
 const helpers = require('../tools/helpers');
 const config = require('../config/env');
 
@@ -18,7 +17,7 @@ const HOST = '0.0.0.0';
 server.on('connection', (socket) => {
   // New Client Connection
   socket.setTimeout(20000);
-  logger.info({
+  console.info({
     family: socket.remoteFamily,
     ip: socket.remoteAddress,
     port: socket.remotePort,
@@ -34,14 +33,16 @@ server.on('connection', (socket) => {
   };
   helpers.attachDiTimeStamps(new_0800_0810_Initial);
   socket.write(new Iso_8583(new_0800_0810_Initial).getBufferMessage(), 'utf8', () => {
-    logger.info('Message write finish');
+    console.info('Message write finish');
   });
 
   socket.on('data', (data) => {
+    console.info(data, '****** Received Raw Data ******');
     // this is the data that came to postilion
     // postilion responds with a bitmap format
     const thisMti = data.slice(2, 6).toString();
     const iso = new Iso_8583().getIsoJSON(data);
+    console.info(iso, '****** Decoded Raw Data ******');
     switch (thisMti) {
       // auth request message
       case '0810':
@@ -53,10 +54,10 @@ server.on('connection', (socket) => {
           };
           helpers.attachDiTimeStamps(new_0800_0810);
           socket.write(new Iso_8583(new_0800_0810).getBufferMessage(), 'utf8', () => {
-            logger.info('Message write finish');
+            console.info('Message write finish');
           });
         } else {
-          logger.info('**** connection with client up ****');
+          console.info('**** connection with client up ****');
         }
         break;
       case '0500':
@@ -71,7 +72,7 @@ server.on('connection', (socket) => {
     }
   });
   socket.on('error', (err) => {
-    logger.info({ error: `error in connection ${err}` });
+    console.info({ error: `error in connection ${err}` });
     socket.destroy(JSON.stringify({
       error: 'connection error',
       code: 500,
@@ -90,22 +91,22 @@ server.on('connection', (socket) => {
     };
     helpers.attachDiTimeStamps(new_0800_0810);
     socket.write(new Iso_8583(new_0800_0810).getBufferMessage(), 'utf8', () => {
-      logger.info('Message write finish');
+      console.info('Message write finish');
     });
   });
 
   // listen for the end event
   socket.on('end', () => {
-    logger.info('Transaction finished');
+    console.info('Transaction finished');
   });
   // listen for the close event
   socket.on('close', (err) => {
     if (!err) {
-      logger.info({
+      console.info({
         ok: 'success',
       }, 'connection was closed');
     } else {
-      logger.info({
+      console.info({
         error: err,
       }, 'connection was closed');
     }
@@ -123,13 +124,13 @@ if (process.env.NODE_ENV !== 'test') {
 
 // server running
 server.on('listening', () => {
-  logger.info(`server is listening on ${PORT}`);
+  console.info(`server is listening on ${PORT}`);
 });
 
 // Restart server if port or address is under use
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    logger.info('Address or Port in use, retrying...');
+    console.info('Address or Port in use, retrying...');
     setTimeout(() => {
       server.close();
       server.listen({
@@ -139,7 +140,7 @@ server.on('error', (err) => {
       });
     }, 5000);
   } else {
-    logger.info({ err: `Server error ${err}` });
+    console.info({ err: `Server error ${err}` });
   }
 });
 

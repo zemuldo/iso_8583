@@ -4,38 +4,19 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "t": "nodemon server/app.js",
-    "w": "nodemon web/app.js",
-    "test": "eslint . --fix && NODE_ENV=test mocha --exit",
-    "unit-test": "NODE_ENV=test mocha --exit",
-    "lint": "eslint . --fix",
-    "start": "pm2 start ecosystem.config.js --env production"
+    "t": "node server",
+    "w": "node web",
+    "start": "concurrently \"node server\" \"node web\""
   },
   "author": "Danstan Otieno Onyango",
   "dependencies": {
-    "bluebird": "^3.5.2",
     "body-parser": "^1.18.3",
-    "bunyan": "1.5.1",
     "cookie-parser": "^1.4.3",
     "date-fns": "^1.29.0",
     "express": "^4.16.4",
-    "express-xml-bodyparser": "^0.3.0",
-    "immutable": "^3.8.2",
-    "iso_8583": "^2.6.5-beta.0",
-    "jsonwebtoken": "^8.3.0",
-    "jxon": "^1.6.1",
-    "mongodb": "^3.1.13",
-    "redis": "^3.1.1",
-    "winston": "^2.4.4"
+    "express-xml-bodyparser": "^0.3.0"
   },
   "devDependencies": {
-    "babel-eslint": "^9.0.0",
-    "concurrently": "^6.0.0",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.2.0",
-    "eslint-plugin-import": "^2.22.1",
-    "mocha": "^8.3.2",
-    "nodemon": "^1.19.4",
-    "pm2": "^4.5.5"
+    "concurrently": "^6.2.0"
   }
 }
