@@ -3,7 +3,7 @@
     "recurseDepth": 10,
     "source": {
         "include": [
-            "lib/"
+            "lib/8583.js"
         ],
         "exclude": [
             "example/"

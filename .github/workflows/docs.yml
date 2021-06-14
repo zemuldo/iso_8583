@@ -17,7 +17,7 @@ jobs:
         with:
           source_dir: ./lib
           output_dir: ./docs
-          config_file: conf.json
+          config_file: js_docs.conf.json
           template: minami
           front_page: README.md
 
@@ -25,4 +25,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./out
+          publish_dir: ./docs
