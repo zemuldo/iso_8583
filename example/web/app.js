@@ -7,7 +7,7 @@ const config = require('../config/env');
 const log = require('../tools/logger');
 const pos_route = require('./routes/pos');
 
-const configs = config[process.env.NODE_ENV];
+const configs = config[process.env.NODE_ENV || 'development'];
 
 const app = express();
 app.post(('/'), (req, res) => {
