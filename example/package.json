@@ -25,7 +25,7 @@
     "jsonwebtoken": "^8.3.0",
     "jxon": "^1.6.1",
     "mongodb": "^3.1.13",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "winston": "^2.4.4"
   },
   "devDependencies": {
