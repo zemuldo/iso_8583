@@ -2,12 +2,12 @@
 # by @zemuldo
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
 jobs:
   build:
-    branches:
-      ignore:
-        - gh-pages
+    filters:
+      branches:
+        ignore: []
     docker:
       # specify the version you desire here
       - image: circleci/node:8
@@ -38,3 +38,12 @@ jobs:
 
       # run tests!
       - run: npm test
+
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+    filters:
+            branches:
+              ignore: gh-pages
