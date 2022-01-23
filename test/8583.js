@@ -258,7 +258,7 @@ test('assembleBitMap() should return bitmap binary represenation 1', t => {
   t.deepEqual(message.assembleBitMap(), expected);
 });
 
-test('assembleBitMap() should return bitmap binary represenation 11', t => {
+test('assembleBitMap() should return bitmap binary represenation 1 - No Secondary bitmap', t => {
   let data = {
     0: '1200',
     2: '4761739001010119',
@@ -268,7 +268,7 @@ test('assembleBitMap() should return bitmap binary represenation 11', t => {
   };
 
   const message = new Main(data);
-  message.optionalSecondaryBitmap = true
+  message.optionalSecondaryBitmap = true;
   t.true(message.checkMTI());
 
   const expected = new Uint8Array([
@@ -834,7 +834,7 @@ test('message with optional secondary bitmap', t => {
   const staticMeta = 'ISO70100000';
   let isopack = new Main(data);
   isopack.setMetadata(staticMeta);
-  isopack.optionalSecondaryBitmap = true
+  isopack.optionalSecondaryBitmap = true;
   t.is(isopack.metaData, staticMeta);
   t.is(isopack.validateMessage(), true);
   t.is(isopack.getBufferMessage().byteLength.toString(), '220');
