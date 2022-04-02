@@ -8,7 +8,7 @@
     "pretest": "eslint lib test --fix",
     "docs": "jsdoc -c js_docs.conf.json README.md",
     "test": "nyc --reporter=html --reporter=lcov ava --verbose",
-    "test.watch": " npx ava --verbose --watch"
+    "test.watch": "npx ava --verbose --watch"
   },
   "ava": {
     "babel": true,

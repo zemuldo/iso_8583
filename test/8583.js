@@ -258,6 +258,30 @@ test('assembleBitMap() should return bitmap binary represenation 1', t => {
   t.deepEqual(message.assembleBitMap(), expected);
 });
 
+test('assembleBitMap() should return bitmap binary represenation 1 - No Secondary bitmap', t => {
+  let data = {
+    0: '1200',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    6: '000000005000',
+  };
+
+  const message = new Main(data);
+  message.optionalSecondaryBitmap = true;
+  t.true(message.checkMTI());
+
+  const expected = new Uint8Array([
+    0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0
+  ]);
+  t.deepEqual(message.assembleBitMap(), expected);
+});
+
 test('assembleBitMap() should return bitmap binary represenation 2', t => {
   let data = {
     0: '1200',
@@ -783,6 +807,41 @@ test('with metadata validateMessage() then rebuildExtensions() should validate g
   t.is(new Main().setMetadata(staticMeta).getIsoJSON(buffer,{})['127.25.30'],'BAC24959');
 });
 
+
+test('message with optional secondary bitmap', t => {
+  let data = {
+    0: '0100',
+    2: '4761739001010119',
+    3: '000000',
+    4: '000000005000',
+    7: '0911131411',
+    12: '131411',
+    13: '0911',
+    14: '2212',
+    18: '4111',
+    22: '051',
+    23: '001',
+    25: '00',
+    26: '12',
+    32: '423935',
+    33: '111111111',
+    35: '4761739001010119D22122011758928889',
+    41: '12345678',
+    42: 'MOTITILL_000001',
+    43: 'My Termianl Business                    ',
+    49: '404',
+  };
+  const staticMeta = 'ISO70100000';
+  let isopack = new Main(data);
+  isopack.setMetadata(staticMeta);
+  isopack.optionalSecondaryBitmap = true;
+  t.is(isopack.metaData, staticMeta);
+  t.is(isopack.validateMessage(), true);
+  t.is(isopack.getBufferMessage().byteLength.toString(), '220');
+  let buffer = isopack.getBufferMessage();
+  t.is(isopack.getIsoJSON(buffer, {})['49'], '404');
+  t.is(new Main().setMetadata(staticMeta).getIsoJSON(buffer, {})['49'], '404');
+});
 
 // getBitMapFields() test cases
 test('getBitMapFields() should return the array of active (enabled) fields in a bitmap, except MTI and Bitmap field', t => {
