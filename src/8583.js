@@ -45,12 +45,10 @@ const addStaticMetaData = require('./pack/addStaticMetaData');
  */
 class Main {
   constructor(message, customFormats, requiredFieldsSchema) {
+    this.MsgType = null;
+    this.Msg = {};
     if (message) {
-      this.MsgType = message[0];
-      this.Msg = message;
-    } else {
-      this.MsgType = null;
-      this.Msg = {};
+      this.setMessage(message);
     }
     this.formats = customFormats || {};
 
@@ -78,6 +76,8 @@ class Main {
     this.includesSecondaryBitmap = false;
   }
 
+
+
   static getFieldDescription(fields, customFormats) {
     let cFormats = customFormats || {};
     let descriptions = {};
@@ -98,7 +98,17 @@ class Main {
     return descriptions;
   }
 
-  setMetadata(metaData){
+  setMessage(m) {
+    if (Buffer.isBuffer(m)) {
+      this.BufferMsg = m;
+    } else {
+      this.MsgType = m[0];
+      this.Msg = m;
+    }
+    return this.Msg;
+  }
+
+  setMetadata(metaData) {
     this.metaData = metaData;
     return this;
   }
@@ -155,7 +165,7 @@ class Main {
     return Buffer.concat([buf1, buf2]);
   }
 
- 
+
   getTType() {
     if (this.Msg['3']) return T.getTransType(this.Msg['3'].slice(0, 2));
     else return T.toErrorObject(['transaction type not defined in message']);
@@ -258,7 +268,7 @@ class Main {
     }
   }
 
-  validateEcho({iso_send,iso_answer}) {
+  validateEcho({ iso_send, iso_answer }) {
     const json = require(this.requiredFieldsSchema);
 
     return requiredEcho({
@@ -320,7 +330,7 @@ class Main {
   }
 
   rebuildExtensions_127_25() {
-    if (this.Msg['127.25'] && T.isXmlEncoded(this.Msg['127.25'])){
+    if (this.Msg['127.25'] && T.isXmlEncoded(this.Msg['127.25'])) {
       return this.validateMessage(this.Msg);
     }
     if (this.Msg['127.25']) {
@@ -528,7 +538,7 @@ class Main {
     return bitmap;
   }
 
-  
+
   hasSecondaryBitmap(primaryBitmapBuffer, config) {
     const binary = primaryBitmapBuffer.toString(config.bitmapEncoding || 'hex');
     const bitmap = T.getHex(binary)
@@ -538,7 +548,8 @@ class Main {
   }
 
   /**
-   * Convert an ISO 8583 message buffer to JSON, Refer to configuration
+   * Convert an ISO 8583 message buffer to JSON, Refer to configuration ::Deprecated
+   * @deprecated Will be removed in the next version, use decode instead
    * @param {buffer} buffer ISO 8583 encoded buffer
    * @param {object} config Custom conf configurations. Can be { lenHeaderEncoding: 'utf8'/'hex', bitmapEncoding: 'utf8'/'hex', secondaryBitmap: false/true, }
    * @returns {object} ISO 8583 JSON
@@ -550,9 +561,9 @@ class Main {
     const _config = config || {};
 
     const takeStaticMeta = require('./unpack/take_static_metadata');
-  
+
     if (Buffer.isBuffer(buffer)) {
-      if (_config.lenHeader === false){
+      if (_config.lenHeader === false) {
         buffer = buffer.slice(0, buffer.byteLength);
       } else {
         buffer = buffer.slice(2, buffer.byteLength);
@@ -569,13 +580,47 @@ class Main {
     }
   }
 
+  /**
+  * Convert an ISO 8583 message buffer to JSON, Refer to configuration
+  * @param {buffer} buffer ISO 8583 encoded buffer
+  * @param {object} config Custom conf configurations. Can be { lenHeaderEncoding: 'utf8'/'hex', bitmapEncoding: 'utf8'/'hex', secondaryBitmap: false/true, }
+  * @returns {object} ISO 8583 JSON
+  * @returns {object} Object with property error
+  * @example new Main().getIsoJSON(buffer, config) -> {...}
+  * @example new Main().getIsoJSON(buffer, config) -> {error: 'some error message'}
+  */
+  decode() {
+    let buffer = this.BufferMsg;
+    const _config = this.config || {};
+
+    const takeStaticMeta = require('./unpack/take_static_metadata');
+
+    if (Buffer.isBuffer(buffer)) {
+      if (_config.lenHeader === false) {
+        buffer = buffer.slice(0, buffer.byteLength);
+      } else {
+        buffer = buffer.slice(2, buffer.byteLength);
+      }
+      buffer = takeStaticMeta(this, buffer);
+      let iso = this.unpack_0_127(buffer, {}, _config);
+      if (iso.error) {
+        return iso;
+      } else {
+        return iso.json;
+      }
+    } else {
+      return T.toErrorObject(['expecting buffer but got ', typeof buffer]);
+    }
+  }
+
+
   buildBitmapBuffer(bitmap, type) {
     if (type === 'ascii') return Buffer.alloc(bitmap.length, bitmap.toUpperCase());
     else return Buffer.alloc((bitmap.length / 2), bitmap, 'hex');
   }
 
   /**
-   * 
+   * @deprecated will be removed in next version. Use encode instead
    * @param {buffer} buffer ISO 8583 encoded buffer
    * @param {object} config Custom conf configurations
    * @returns {buffer} ISO 8583 encoded Buffer
@@ -584,6 +629,31 @@ class Main {
    * @example new Main(SomeInvalidMessage,customFormats, []).getBufferMessage() -> {error: 'some error message'}
    */
   getBufferMessage() {
+    // console.warn('getBufferMessage will be removed in next version. Use encode instead');
+    const staticMetadataBuf = addStaticMetaData(this);
+    let _0_127_Buffer = this.assemble0_127_Fields();
+    if (_0_127_Buffer.error) {
+      return _0_127_Buffer;
+    } else {
+      let len_0_127_1 = T.getTCPHeaderBuffer(
+        parseInt(Number(_0_127_Buffer.byteLength) / 256, 10)
+      );
+      let len_0_127_2 = T.getTCPHeaderBuffer(
+        parseInt(Number(_0_127_Buffer.byteLength) % 256, 10)
+      );
+      return Buffer.concat([len_0_127_1, len_0_127_2, staticMetadataBuf, _0_127_Buffer]);
+      // return Buffer.concat([len_0_127_1, len_0_127_2, _0_127_Buffer]);
+    }
+  }
+
+  /**
+   * 
+   * @returns {buffer} ISO 8583 encoded Buffer
+   * @returns {object} Object with property error
+   * @example new Main(SomeValidMessage,customFormats, []).getBufferMessage() -> <Buffer 01 11 30 31 30 30 f2 ...
+   * @example new Main(SomeInvalidMessage,customFormats, []).getBufferMessage() -> {error: 'some error message'}
+   */
+  encode() {
     const staticMetadataBuf = addStaticMetaData(this);
     let _0_127_Buffer = this.assemble0_127_Fields();
     if (_0_127_Buffer.error) {
@@ -730,7 +800,7 @@ class Main {
   getXMLString() {
     const header = '<?xml version="1.0" encoding="UTF-8"?>';
 
-    if (!this.MsgType || !msgTypes(this.MsgType)) return T.toErrorObject('mti undefined or invalid'); 
+    if (!this.MsgType || !msgTypes(this.MsgType)) return T.toErrorObject('mti undefined or invalid');
     else {
       let state = this.addFromDiObject();
       if (state.error) {

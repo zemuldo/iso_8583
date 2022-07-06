@@ -6,7 +6,7 @@ module.exports = {
     let i = 0;
     for (i; i < fields.length; i++) {
       if (formats[fields[i]] && !customFormats[fields[i]]) {
-        return {error: `Special field ${fields[i]} has no custom formats`};
+        return { error: `Special field ${fields[i]} has no custom formats` };
       }
     }
     if (i === fields.length) {
