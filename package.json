@@ -4,26 +4,12 @@
   "description": "A javascript library for messaging in iso 8583 messaging format.",
   "main": "lib/8583.js",
   "scripts": {
-    "pretest": "eslint lib test --fix",
     "docs": "jsdoc -c js_docs.conf.json README.md",
-    "test": "nyc --reporter=html --reporter=lcov ava --verbose",
+    "test": "jest",
     "test.watch": "npx ava --verbose --watch",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json"
-  },
-  "ava": {
-    "babel": true,
-    "files": [
-      "test/*.js"
-    ],
-    "source": [
-      "lib/**/*.{js}"
-    ],
-    "concurrency": 5,
-    "failFast": true,
-    "failWithoutAssertions": false,
-    "powerAssert": false
   },
   "repository": {
     "type": "git",
@@ -47,17 +33,15 @@
     "jxon": "^2.0.0-beta.5"
   },
   "devDependencies": {
-    "@ava/babel": "^1.0.1",
-    "ava": "^3.1.0",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^5.16.0",
-    "eslint-plugin-import": "^2.20.0",
-    "gulp": "^4.0.2",
-    "gulp-shell": "^0.8.0",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/jest": "^28.1.4",
+    "jest": "^28.1.2",
     "jsdoc": "^3.6.3",
     "nyc": "^15.0.1",
     "prettier": "^2.7.1",
     "toast-jsdoc": "^1.0.2",
+    "ts-jest": "^28.0.5",
+    "ts-node": "^10.8.2",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.7.4"

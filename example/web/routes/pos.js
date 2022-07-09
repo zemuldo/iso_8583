@@ -1,7 +1,7 @@
 
 
 const express = require('express');
-const Iso_8583 = require('../../../lib/8583');
+const Iso_8583 = require('../../../src/ISO8583');
 const helpers = require('../../tools/helpers');
 const client = require('../../client');
 const { sender, onThisData } = require('./utils');
