@@ -27,13 +27,13 @@ export default class ISO8583 extends ISO8583Base {
   dataString: string = '';
   constructor(
     message?: Types.ISOMessageT,
-    customFormats?: Types.CustomFormatT,
-    requiredFieldsSchema?: Types.RequiredFieldSchemaT,
+    customFormats?: Types.CustomFormatsT,
+    requiredFieldsSchema?: any,
   ) {
     super(message, customFormats, requiredFieldsSchema);
   }
 
-  static getFieldDescription(fields?: string | string[] | number | number[] | null, customFormats?: Types.CustomFormatT) {
+  static getFieldDescription(fields?: string | string[] | number | number[] | null, customFormats?: Types.CustomFormatsT) {
     const cFormats = customFormats || {};
     const descriptions: Types.KeyValueStringT = {};
 

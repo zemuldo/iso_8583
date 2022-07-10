@@ -1,4 +1,4 @@
-// @ts-nocheck
+import { CustomFormatT } from './t';
 import { DefaultError } from './errors';
 /**
  * Module for validating field data types.
@@ -27,7 +27,7 @@ import { DefaultError } from './errors';
     MinLen: 1
   }, "446288148638637X", 3) -> { error: 'while processing field 3 : provided data is not of type n'}
   */
-export default function checkDataType(format, data, field) {
+export default function checkDataType(format: CustomFormatT, data: string, field: string | number) {
   const regex = {
     a: /[A-Z]/i,
     n: /[0-9]/i,
@@ -41,7 +41,7 @@ export default function checkDataType(format, data, field) {
     'x+n': /[0-9]/i,
   };
 
-  const type = format?.ContentType;
+  const type: string = format.ContentType;
 
   switch (type) {
     case 'a':

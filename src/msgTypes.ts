@@ -1,5 +1,14 @@
-// @ts-nocheck
-const private_common_types = {
+interface MessageType {
+  [key: string]: string
+}
+
+interface Version {
+  [key: number]: MessageType;
+}
+
+
+
+const private_common_types: MessageType = {
   '9900': 'Private use, reserved by ISO, request, Acquirer',
   '9901': 'Private use, reserved by ISO, request, Acquirer repeat',
   '9902': 'Private use, reserved by ISO, request, Issuer',
@@ -43,7 +52,7 @@ const private_common_types = {
   '9955': 'Private use, reserved by ISO, notification response, Other repeat',
 };
 
-const message_types = {
+const message_types: Version = {
   1987: {
     '0100': 'Authorization request',
     '0110': 'Authorization request response',
@@ -209,7 +218,8 @@ const message_types = {
   },
 };
 
-export default function (mti) {
+export default function (mti: string | null) {
+  if(!mti) return false
   const msg_type1987 = message_types['1987'][mti];
   const msg_type1993 = message_types['1993'][mti];
   const msg_type2003 = message_types['2003'][mti];

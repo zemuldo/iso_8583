@@ -1,7 +1,6 @@
 import { DefaultError } from './errors';
 import { ISO8583JSONMessageType } from './ISO8583Base';
 import { RequiredFieldSchemaT } from './t';
-// @ts-nocheck
 import * as helpers from './helpers';
 
 // Breaking change: No dynmaic file import. Pass the config

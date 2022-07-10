@@ -14,21 +14,21 @@ export type RequireFields = {
   [key: string]: number[];
 }
 
-export interface RequiredFieldSchemaEntryT {
+export interface RequiredFieldSchemaT {
   processing_code: string;
   required_fields: RequireFields[];
   required_echo: number[];
 }
 
-export interface RequiredFieldSchemaT extends Array<RequiredFieldSchemaEntryT> {}
 export interface CustomFormatT {
-  [key: string]: {
-    ContentType: string;
-    Label: string;
-    LenType: string;
-    MaxLen?: number;
-    MinLen?: number;
-  };
+  ContentType: string;
+  Label: string;
+  LenType: string;
+  MaxLen?: number;
+  MinLen?: number;
+}
+export interface CustomFormatsT {
+  [key: string]: CustomFormatT;
 }
 
 export interface Err {
@@ -87,7 +87,7 @@ export class Main {
   MsgType: string | null = null;
   BufferMsg: ISO8583RawT | null = null;
   Msg: ISO8583JsonT | null = null;
-  formats: CustomFormatT;
+  formats: CustomFormatsT;
   hasSpecialFields: boolean;
   bitmaps: KeyValueStringT | null;
   fields: KeyValueStringT;
@@ -114,7 +114,7 @@ export class Main {
 
   constructor(
     message: ISOMessageT,
-    customFormats: CustomFormatT,
+    customFormats: CustomFormatsT,
     requiredFieldsSchema: RequiredFieldSchemaT,
   ) {
     if (Buffer.isBuffer(message)) {

@@ -1,6 +1,7 @@
-// @ts-nocheck
+import { RequiredFieldSchemaT } from './t';
+import { ISO8583JSONMessageType } from './ISO8583Base';
 const helpers = require('./helpers');
-export default function (json, iso_send, iso_answer) {
+export default function (json: any, iso_send: ISO8583JSONMessageType, iso_answer: ISO8583JSONMessageType) {
   const message_code = iso_send[0];
   const processing_code = iso_send[3];
   const key = 'required_echo';

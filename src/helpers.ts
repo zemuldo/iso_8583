@@ -1,8 +1,9 @@
-import { KeyValueStringT } from './t';
-// @ts-nocheck
 /**
  * This module has helper functions that are useful along side this library.
  */
+
+import { KeyValueStringT } from './t';
+
 const formatd = require('date-fns');
 
  export const getPostillionLength = function (buf: Buffer) {

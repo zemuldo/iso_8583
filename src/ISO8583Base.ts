@@ -49,12 +49,12 @@ export default class ISO8583Base {
   MsgType: string | null = null;
   BufferMsg: Types.ISO8583RawT | null = null;
   Msg: ISO8583JSONMessageType | null = {};
-  formats: Types.CustomFormatT;
+  formats: Types.CustomFormatsT;
   hasSpecialFields: boolean;
   optionalSecondaryBitmap: boolean = false;
   bitmaps: Uint8Array;
   fields: Types.KeyValueStringT;
-  requiredFieldsSchema: Types.RequiredFieldSchemaT | undefined;
+  requiredFieldsSchema: any;
 
   config: Types.KeyValueT = {};
 
@@ -85,7 +85,7 @@ export default class ISO8583Base {
 
   constructor(
     message?: ISO8583MessageType,
-    customFormats?: Types.CustomFormatT,
+    customFormats?: Types.CustomFormatsT,
     requiredFieldsSchema?: Types.RequiredFieldSchemaT,
   ) {
     this.formats = customFormats || {};

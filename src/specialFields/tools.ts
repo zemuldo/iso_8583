@@ -3,7 +3,7 @@ import { ISO8583JSONMessageType } from './../ISO8583Base';
 import * as Types from './../t';
 import formats from './formats';
 
-export const validateSpecialFields = (msg: ISO8583JSONMessageType, customFormats: Types.CustomFormatT) => {
+export const validateSpecialFields = (msg: ISO8583JSONMessageType, customFormats: Types.CustomFormatsT) => {
   const fields = Object.keys(msg);
   let i = 0;
   for (i; i < fields.length; i++) {
