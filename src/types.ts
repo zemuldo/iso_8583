@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { DefaultError } from './errors';
 /**
  * Module for validating field data types.
  * @module DataTypes
@@ -40,7 +41,7 @@ export default function checkDataType(format, data, field) {
     'x+n': /[0-9]/i,
   };
 
-  const type = format.ContentType;
+  const type = format?.ContentType;
 
   switch (type) {
     case 'a':
@@ -73,6 +74,6 @@ export default function checkDataType(format, data, field) {
       return true;
 
     default:
-      return { error: 'type ' + type + ' is not implemented on field ' + field };
+      return new DefaultError('type ' + type + ' is not implemented on field ' + field);
   }
 }

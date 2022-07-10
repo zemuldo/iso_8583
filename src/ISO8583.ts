@@ -1,17 +1,20 @@
-// @ts-nocheck
+import { KeyValueStringT } from './t';
+// @ts-ignore
+import jxon from 'jxon';
 import * as Types from './t';
 import ISO8583Base from './ISO8583Base';
 import formats from './formats';
 import requiredFields from './requiredFields';
 import requiredEcho from './requiredEcho';
 import types from './types';
-import T from './tools'
+import T from './tools';
 import takeStaticMeta from './unpack/take_static_metadata';
 import msgTypes from './msgTypes';
-import * as H from './helpers'
-import jxon from 'jxon';
+import * as H from './helpers';
+
 import * as SpT from './specialFields/tools';
 import addStaticMetaData from './pack/addStaticMetaData';
+import { DefaultError } from './errors';
 
 /**
  * Main ISO 8583 Class used to create a new message object with formating methods.
@@ -21,17 +24,16 @@ import addStaticMetaData from './pack/addStaticMetaData';
  * @example new Main(SomeMessage,customFormats, requiredFieldConfig) -> Main..
  */
 export default class ISO8583 extends ISO8583Base {
-
+  dataString: string = '';
   constructor(
     message?: Types.ISOMessageT,
     customFormats?: Types.CustomFormatT,
-    requiredFieldsSchema?: Types.KeyValueStringT,
+    requiredFieldsSchema?: Types.RequiredFieldSchemaT,
   ) {
-    // @ts-ignore
     super(message, customFormats, requiredFieldsSchema);
   }
 
-  static getFieldDescription(fields?: any | any[], customFormats?: Types.CustomFormatT) {
+  static getFieldDescription(fields?: string | string[] | number | number[] | null, customFormats?: Types.CustomFormatT) {
     const cFormats = customFormats || {};
     const descriptions: Types.KeyValueStringT = {};
 
@@ -41,7 +43,6 @@ export default class ISO8583 extends ISO8583Base {
 
     if (Array.isArray(fields)) {
       for (const field of fields) {
-        // @ts-ignore
         const this_format = cFormats[field] || formats[field];
         if (this_format) descriptions[field] = this_format.Label;
       }
@@ -96,6 +97,7 @@ export default class ISO8583 extends ISO8583Base {
   toAdvice() {
     if (!this.Msg) return this.throwMessageUndef();
     const mti = T.getResType(this.Msg['0']);
+    if (!mti) return { error: 'mti invalid' };
     const append = parseInt(mti.slice(2, 4), 10) + 10;
     const new_mti = mti.slice(0, 2) + append;
     this.Msg['0'] = new_mti;
@@ -103,12 +105,13 @@ export default class ISO8583 extends ISO8583Base {
   }
 
   checkSpecialFields() {
+    if(!this.Msg) return this.throwMessageUndef();
     return SpT.validateSpecialFields(this.Msg, this.formats);
   }
 
   getLenBuffer(len: number) {
-    const buf1 = T.getTCPHeaderBuffer(Math.floor(Number(len) / 256));
-    const buf2 = T.getTCPHeaderBuffer(Math.floor(Number(len) % 256));
+    const buf1 = T.getTCPHeaderBuffer(Math.floor(len / 256));
+    const buf2 = T.getTCPHeaderBuffer(Math.floor(len % 256));
     return Buffer.concat([buf1, buf2]);
   }
 
@@ -148,7 +151,7 @@ export default class ISO8583 extends ISO8583Base {
     if (!this.Msg) return this.throwMessageUndef();
     if (this.Msg['0']) {
       const state = this.validateMessage();
-      if (state.error) {
+      if (state instanceof   Error) {
         return state;
       } else {
         this.Msg = H.attachDiTimeStamps(this.Msg);
@@ -171,19 +174,24 @@ export default class ISO8583 extends ISO8583Base {
     const validDate = T.validateFields(this);
     const validateRequiredFields = requiredFields(this.Msg, this.requiredFieldsSchema);
     const specialValidate = SpT.validateSpecialFields(this.Msg, this.formats);
-    // @ts-ignore
-    if (!state.error && !validDate.error && !specialValidate.error && !validateRequiredFields.error) {
+
+    if (
+      !(state instanceof   Error) &&
+      !(validDate instanceof   Error) &&
+      !(specialValidate instanceof   Error) &&
+      !(validateRequiredFields instanceof   Error)
+    ) {
       for (let i = 1; i < this.bitmaps.length; i++) {
         const field = i + 1;
         if (this.bitmaps[i] === 1) {
           if (!this.Msg[field]) {
             continue;
           }
-          // @ts-ignore
+
           const this_format = this.formats[field] || formats[field];
           const state = types(this_format, this.Msg[field], field);
-          if (state.error) {
-            return state;
+          if (state instanceof Error) {
+            return false;
           }
           if (this_format) {
             if (this_format.LenType === 'fixed') {
@@ -213,10 +221,7 @@ export default class ISO8583 extends ISO8583Base {
     }
   }
 
-  // @ts-ignore
-  validateEcho({ iso_send, iso_answer }) {
-    // @ts-ignore
-
+  validateEcho(iso_send: KeyValueStringT, iso_answer: KeyValueStringT) {
     return requiredEcho(this.requiredFieldsSchema, iso_answer, iso_send);
   }
 
@@ -286,7 +291,7 @@ export default class ISO8583 extends ISO8583Base {
       for (let i = 0; i < bitmap_127.length; i++) {
         if (bitmap_127[i] === 1) {
           const field = '127.25.' + (Number(i) + 1);
-          // @ts-ignore
+
           const this_format = this.formats[field] || formats[field];
           if (this_format.LenType === 'fixed') {
             this.Msg[field] = dataString.slice(0, this_format.MaxLen);
@@ -317,7 +322,7 @@ export default class ISO8583 extends ISO8583Base {
   // ***tested***
   rebuildExtensions() {
     if (!this.Msg) return this.throwMessageUndef();
-    // @ts-ignore
+
     this.dataString = '';
     if (this.Msg['127']) {
       let dataString = this.Msg['127'];
@@ -327,7 +332,7 @@ export default class ISO8583 extends ISO8583Base {
       for (let i = 0; i < bitmap_127.length; i++) {
         if (bitmap_127[i] === 1) {
           const field = '127.' + (Number(i) + 1);
-          // @ts-ignore
+
           const this_format = this.formats[field] || formats[field];
           if (this_format.LenType === 'fixed') {
             this.Msg[field] = dataString.slice(0, this_format.MaxLen);
@@ -365,9 +370,8 @@ export default class ISO8583 extends ISO8583Base {
   getBmpsBinary() {
     if (!this.Msg) return this.throwMessageUndef();
     const state = this.assembleBitMap();
-    // @ts-ignore
-    if (state.error) {
-      // @ts-ignore
+
+    if (state instanceof   Error) {
       return state.error;
     } else {
       if (!this.Msg['0']) {
@@ -398,17 +402,17 @@ export default class ISO8583 extends ISO8583Base {
    */
   getBitMapHex_127_ext() {
     const state = this.assembleBitMap_127();
-    // @ts-ignore
-    if (state.error) {
+
+    if (state instanceof   Error) {
       return state;
     } else {
       let map = '';
       const maps = [];
       let counter = 0;
-      // @ts-ignore
+
       for (let i = 0; i < state.length; i++) {
         counter++;
-        // @ts-ignore
+
         map += state[i];
         if (counter === 4) {
           maps.push(parseInt(map, 2).toString(16));
@@ -430,17 +434,17 @@ export default class ISO8583 extends ISO8583Base {
   getBitMapHex_127_ext_25() {
     this.rebuildExtensions();
     const state = this.assembleBitMap_127_25();
-    // @ts-ignore
-    if (state.error) {
+
+    if (state instanceof   Error) {
       return state;
     } else {
       let map = '';
       const maps = [];
       let counter = 0;
-      // @ts-ignore
+
       for (let i = 0; i < state.length; i++) {
         counter++;
-        // @ts-ignore
+
         map += state[i];
         if (counter === 4) {
           maps.push(parseInt(map, 2).toString(16));
@@ -454,9 +458,8 @@ export default class ISO8583 extends ISO8583Base {
 
   getBitMapHex() {
     const state = this.assembleBitMap();
-    // @ts-ignore
+
     if (state.error) {
-      // @ts-ignore
       return state.error;
     } else {
       if (this.bitmaps !== null && msgTypes(this.MsgType)) {
@@ -479,7 +482,9 @@ export default class ISO8583 extends ISO8583Base {
 
   getBitMapFields() {
     const bitmap = [];
-    // @ts-ignore
+
+    if (!this.Msg) return this.throwMessageUndef();
+
     const fields = Object.keys(this.Msg);
     for (let i = 1; i < fields.length; i++) {
       const field = parseInt(fields[i], 10);
@@ -489,8 +494,7 @@ export default class ISO8583 extends ISO8583Base {
     return bitmap;
   }
 
-  // @ts-ignore
-  hasSecondaryBitmap(primaryBitmapBuffer, config) {
+  hasSecondaryBitmap(primaryBitmapBuffer: Buffer, config: Types.Config) {
     const binary = primaryBitmapBuffer.toString(config.bitmapEncoding || 'hex');
     const bitmap = T.getHex(binary).split('').map(Number);
     return bitmap[0] === 1;
@@ -517,11 +521,11 @@ export default class ISO8583 extends ISO8583Base {
       }
       buffer = takeStaticMeta(this, buffer);
       const iso = this.unpack_0_127(buffer, {}, _config);
-      // @ts-ignore
-      if (iso.error) {
+
+      if (iso instanceof   Error) {
         return iso;
       } else {
-        return iso.json;
+        return iso;
       }
     } else {
       return T.toErrorObject(['expecting buffer but got ', typeof buffer]);
@@ -548,13 +552,13 @@ export default class ISO8583 extends ISO8583Base {
         buffer = buffer.slice(2, buffer.byteLength);
       }
       buffer = takeStaticMeta(this, buffer);
-      // @ts-ignore
+
       const iso = this.unpack_0_127(buffer, {}, _config);
-      // @ts-ignore
+
       if (iso.error) {
         return iso;
       } else {
-        return iso.json;
+        return iso;
       }
     } else {
       return T.toErrorObject(['expecting buffer but got ', typeof buffer]);
@@ -579,11 +583,11 @@ export default class ISO8583 extends ISO8583Base {
     // console.warn('getBufferMessage will be removed in next version. Use encode instead');
     const staticMetadataBuf = addStaticMetaData(this);
     const _0_127_Buffer = this.assemble0_127_Fields();
-    if (_0_127_Buffer.error) {
+    if (_0_127_Buffer instanceof   Error) {
       return _0_127_Buffer;
     } else {
-      const len_0_127_1 = T.getTCPHeaderBuffer(Math.floor(Number(_0_127_Buffer.byteLength) / 256));
-      const len_0_127_2 = T.getTCPHeaderBuffer(Math.floor(Number(_0_127_Buffer.byteLength) % 256));
+      const len_0_127_1 = T.getTCPHeaderBuffer(Math.floor(_0_127_Buffer.byteLength / 256));
+      const len_0_127_2 = T.getTCPHeaderBuffer(Math.floor(_0_127_Buffer.byteLength % 256));
       return Buffer.concat([len_0_127_1, len_0_127_2, staticMetadataBuf, _0_127_Buffer]);
       // return Buffer.concat([len_0_127_1, len_0_127_2, _0_127_Buffer]);
     }
@@ -599,8 +603,8 @@ export default class ISO8583 extends ISO8583Base {
   encode() {
     const staticMetadataBuf = addStaticMetaData(this);
     const _0_127_Buffer = this.assemble0_127_Fields();
-    // @ts-ignore
-    if (_0_127_Buffer.error) {
+
+    if (_0_127_Buffer instanceof   Error) {
       return _0_127_Buffer;
     } else {
       const len_0_127_1 = T.getTCPHeaderBuffer(Math.floor(Number(_0_127_Buffer.byteLength) / 256));
@@ -658,9 +662,9 @@ export default class ISO8583 extends ISO8583Base {
 
   addField(field: string | number, data: string) {
     if (!this.Msg) return T.toErrorObject('message undefined');
-    // @ts-ignore
+
     const this_format = this.formats[field] || formats[field];
-    if (!this_format) return T.toErrorObject('field ', field, ' not implemented');
+    if (!this_format) return T.toErrorObject('field ' + field + ' not implemented');
     const state = types(this_format, this.Msg[field].toString(), field);
 
     if (field === 0 || field === '0') {
@@ -668,7 +672,7 @@ export default class ISO8583 extends ISO8583Base {
       this.MsgType = data;
       return true;
     } else {
-      if (state.error) {
+      if (state instanceof   Error) {
         return state;
       } else {
         this.Msg[field.toString()] = data;
@@ -682,7 +686,7 @@ export default class ISO8583 extends ISO8583Base {
     for (const key in this.Msg) {
       if (this.Msg.hasOwnProperty(key)) {
         const state = this.addField(key, this.Msg[key]);
-        if (state.error) {
+        if (state instanceof   Error) {
           return state;
         }
       }
@@ -737,7 +741,7 @@ export default class ISO8583 extends ISO8583Base {
     if (!this.MsgType || !msgTypes(this.MsgType)) return T.toErrorObject('mti undefined or invalid');
     else {
       const state = this.addFromDiObject();
-      if (state.error) {
+      if (state instanceof   Error) {
         return state;
       } else {
         return (

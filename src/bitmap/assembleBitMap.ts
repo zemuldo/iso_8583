@@ -9,9 +9,9 @@ import T from '../tools';
  */
 function assembleBitmap(): Types.BitMap | Types.Error {
   if (this.checkMTI()) {
-    let upper = this.hasSpecialFields ? 193 : 128;
+    const upper = this.hasSpecialFields ? 193 : 128;
     let _map = new Uint8Array(upper);
-    let fields = Object.keys(this.Msg);
+    const fields = Object.keys(this.Msg);
 
     // Support backward compat
     if (this.includesSecondaryBitmap || !this.optionalSecondaryBitmap) {
@@ -22,7 +22,7 @@ function assembleBitmap(): Types.BitMap | Types.Error {
 
     // construct 128 bit mask
     for (let i = 0; i < fields.length; i++) {
-      let field = parseInt(fields[i], 10);
+      const field = parseInt(fields[i], 10);
       if (field > 1) {
         _map[field - 1] = 1;
       }

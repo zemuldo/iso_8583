@@ -22,12 +22,12 @@ module.exports = function (slice_127_25, isoJSON) {
     };
   } else {
     slice_127_25 = slice_127_25.slice(4, slice_127_25.length);
-    let bitmap = T.getHex(slice_127_25.slice(0, 16).toString()).split('').map(Number);
+    const bitmap = T.getHex(slice_127_25.slice(0, 16).toString()).split('').map(Number);
     slice_127_25 = slice_127_25.slice(16, slice_127_25.length);
     for (let i = 0; i < 34; i++) {
       if (bitmap[i] === 1) {
-        let subField = '127.25.' + (i + 1);
-        let this_format = this.formats[subField] || formats[subField];
+        const subField = '127.25.' + (i + 1);
+        const this_format = this.formats[subField] || formats[subField];
         if (this_format) {
           if (this_format.LenType === 'fixed') {
             if (this_format.ContentType === 'b') {
@@ -38,7 +38,7 @@ module.exports = function (slice_127_25, isoJSON) {
               slice_127_25 = slice_127_25.slice(this_format.MaxLen, slice_127_25.length);
             }
           } else {
-            let thisLen = T.getLenType(this_format.LenType);
+            const thisLen = T.getLenType(this_format.LenType);
             if (!this_format.MaxLen)
               return T.toErrorObject(['max length not implemented for ', this_format.LenType], subField);
             if (this.Msg[subField] && this.Msg[subField].length > this_format.MaxLen)
@@ -46,7 +46,7 @@ module.exports = function (slice_127_25, isoJSON) {
             if (thisLen === 0) {
               throw T.toErrorObject(['field ', subField, ' format not implemented']);
             } else {
-              let len = slice_127_25.slice(0, thisLen).toString();
+              const len = slice_127_25.slice(0, thisLen).toString();
               slice_127_25 = slice_127_25.slice(thisLen, slice_127_25.length);
               isoJSON[subField] = slice_127_25.slice(0, Number(len)).toString();
               slice_127_25 = slice_127_25.slice(Number(len), slice_127_25.length);

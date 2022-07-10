@@ -1,5 +1,5 @@
 // @ts-nocheck
-let private_common_types = {
+const private_common_types = {
   '9900': 'Private use, reserved by ISO, request, Acquirer',
   '9901': 'Private use, reserved by ISO, request, Acquirer repeat',
   '9902': 'Private use, reserved by ISO, request, Issuer',
@@ -43,7 +43,7 @@ let private_common_types = {
   '9955': 'Private use, reserved by ISO, notification response, Other repeat',
 };
 
-let message_types = {
+const message_types = {
   1987: {
     '0100': 'Authorization request',
     '0110': 'Authorization request response',
@@ -210,10 +210,10 @@ let message_types = {
 };
 
 export default function (mti) {
-  let msg_type1987 = message_types['1987'][mti];
-  let msg_type1993 = message_types['1993'][mti];
-  let msg_type2003 = message_types['2003'][mti];
-  let msg_typePrivate = private_common_types[mti];
+  const msg_type1987 = message_types['1987'][mti];
+  const msg_type1993 = message_types['1993'][mti];
+  const msg_type2003 = message_types['2003'][mti];
+  const msg_typePrivate = private_common_types[mti];
 
   const _mti = msg_type2003 || msg_type1993 || msg_type1987 || msg_typePrivate;
 

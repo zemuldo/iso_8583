@@ -1,4 +1,6 @@
-export const requiredFieldsSchema = [
+import { RequiredFieldSchemaT } from './../t';
+
+export const requiredFieldsSchema: RequiredFieldSchemaT = [
   {
     processing_code: '888888',
     required_fields: [

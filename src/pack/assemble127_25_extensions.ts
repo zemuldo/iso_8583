@@ -11,18 +11,18 @@ module.exports = function () {
   let buff = Buffer.alloc(16, this.Msg['127.25.1']);
   if (T.isXmlEncoded(this.Msg['127.25'])) {
     buff = Buffer.alloc(this.Msg['127.25'].length, this.Msg['127.25']);
-    let padCount = T.getLenType(formats['127.25'].LenType);
+    const padCount = T.getLenType(formats['127.25'].LenType);
     let actualLen = buff.byteLength.toString();
-    let x = padCount - actualLen.length;
+    const x = padCount - actualLen.length;
     for (let i = 0; i < x; i++) actualLen = '0' + actualLen;
 
-    let lenBuff = Buffer.alloc(actualLen.length, actualLen);
+    const lenBuff = Buffer.alloc(actualLen.length, actualLen);
     return Buffer.concat([lenBuff, buff]);
   }
-  let bitmaps_127 = this.assembleBitMap_127_25();
+  const bitmaps_127 = this.assembleBitMap_127_25();
   for (let i = 1; i < 40; i++) {
-    let field = '127.25.' + (Number(i) + 1);
-    let this_format = this.formats[field] || formats[field];
+    const field = '127.25.' + (Number(i) + 1);
+    const this_format = this.formats[field] || formats[field];
     if (bitmaps_127[i] === 1) {
       if (field === '127.25.1') {
         continue;
@@ -34,19 +34,19 @@ module.exports = function () {
         if (this_format.LenType === 'fixed') {
           if (this_format.ContentType === 'b') {
             if (this_format.MaxLen === this.Msg[field].length) {
-              let size = this_format.MaxLen / 2;
-              let thisBuff = Buffer.alloc(size, this.Msg[field], 'hex');
+              const size = this_format.MaxLen / 2;
+              const thisBuff = Buffer.alloc(size, this.Msg[field], 'hex');
               buff = Buffer.concat([buff, thisBuff]);
             } else return T.toErrorObject(['invalid length of data on field ', field]);
           }
         } else {
           if (this_format.MaxLen === this.Msg[field].length) {
-            let thisBuff = Buffer.alloc(this.Msg[field].length, this.Msg[field]);
+            const thisBuff = Buffer.alloc(this.Msg[field].length, this.Msg[field]);
             buff = Buffer.concat([buff, thisBuff]);
           } else return T.toErrorObject(['invalid length of data on field ', field]);
         }
       } else {
-        let thisLen = T.getLenType(this_format.LenType);
+        const thisLen = T.getLenType(this_format.LenType);
         if (!this_format.MaxLen)
           return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
 
@@ -59,13 +59,13 @@ module.exports = function () {
             error: 'field ' + field + ' has no field implementation',
           };
         } else {
-          let actualLength = this.Msg[field].length;
-          let padCount = thisLen - actualLength.toString().length;
+          const actualLength = this.Msg[field].length;
+          const padCount = thisLen - actualLength.toString().length;
           let lenIndicator = actualLength.toString();
           for (let i = 0; i < padCount; i++) {
             lenIndicator = 0 + lenIndicator;
           }
-          let thisBuff = Buffer.alloc(this.Msg[field].length + lenIndicator.length, lenIndicator + this.Msg[field]);
+          const thisBuff = Buffer.alloc(this.Msg[field].length + lenIndicator.length, lenIndicator + this.Msg[field]);
           buff = Buffer.concat([buff, thisBuff]);
         }
       }
@@ -75,11 +75,11 @@ module.exports = function () {
       };
   }
 
-  let padCount = T.getLenType(formats['127.25'].LenType);
+  const padCount = T.getLenType(formats['127.25'].LenType);
   let actualLen = buff.byteLength.toString();
-  let x = padCount - actualLen.length;
+  const x = padCount - actualLen.length;
   for (let i = 0; i < x; i++) actualLen = '0' + actualLen;
 
-  let lenBuff = Buffer.alloc(actualLen.length, actualLen);
+  const lenBuff = Buffer.alloc(actualLen.length, actualLen);
   return Buffer.concat([lenBuff, buff]);
 };

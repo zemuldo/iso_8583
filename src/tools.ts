@@ -1,3 +1,4 @@
+import { DefaultError } from './errors';
 import ISO8583Base from './ISO8583Base';
 import formats from './formats';
 import * as Types from './t';
@@ -19,7 +20,7 @@ export default {
    * @param {integer} indicator length of ISO 8583 message string.
    * @returns {buffer} 1 byte buffer representing the message length indicator
    */
-  getTCPHeaderBuffer: (indicator: string) => {
+  getTCPHeaderBuffer: (indicator: number) => {
     const integer = Number(indicator);
     return Buffer.alloc(1, integer, 'hex');
   },
@@ -31,9 +32,10 @@ export default {
    * @example Tools.toErrorObject("some error") -> {error: "some error"}
    * @example Tools.toErrorObject("some error on field", 67, "happened" ) -> {error: "some error on field 67 happened"}
    */
-  toErrorObject: (errors: string[]) => {
-    if (Array.isArray(errors)) return { error: errors.join('') };
-    else return { error: errors }
+  toErrorObject: (errors: (string|number)[] | string | number) => {
+    if (Array.isArray(errors)) return new DefaultError(errors.join(''));
+    // @ts-ignore
+    else return new DefaultError(errors);
   },
   /**
    * Convert a hexadecimal string in to binary string: To a string of 0s and 1s
@@ -114,11 +116,11 @@ export default {
     const obj = self.Msg;
     const customFormats = self.formats;
     let state = false;
-    for (let field in obj) {
+    for (const field in obj) {
       if (parseInt(field, 10) > 64) self.includesSecondaryBitmap = true;
       if (obj.hasOwnProperty(field)) {
         // @ts-ignore
-        let this_format = customFormats[field] || formats[field];
+        const this_format = customFormats[field] || formats[field];
         if (this_format && checkTypes(this_format, obj[field], field)) {
           state = true;
         } else {
@@ -162,7 +164,7 @@ export default {
         return '0230';
 
       case '0332':
-        //'0323' ignored
+        // '0323' ignored
         return '0322';
 
       case '0400':
@@ -183,7 +185,7 @@ export default {
         return '0530';
 
       case '0532':
-        //'0523' ignored
+        // '0523' ignored
         return '0522';
 
       case '0600':
@@ -195,7 +197,7 @@ export default {
         return '0630';
 
       default:
-        return { error: 'mti invalid' };
+        return '';
     }
   },
 

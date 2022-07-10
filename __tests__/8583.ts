@@ -1,3 +1,6 @@
+// @ts-nocheck
+
+import { DefaultError } from './../src/errors';
 import { requiredFieldsSchema } from './../src/mock/requiredFields';
 import Main from '../src/ISO8583';
 
@@ -179,7 +182,9 @@ test('assembleBitMap() should return error object if no MTI', () => {
   };
 
   let message = new Main(data);
-  expect(message.assembleBitMap()).toStrictEqual({ error: 'bitmap error, iso message type undefined or invalid' });
+  const result = message.assembleBitMap();
+  expect(result).toBeInstanceOf(Error);
+  expect(result.error).toStrictEqual('bitmap error, iso message type undefined or invalid');
 });
 test('checkMTI() should return true, iso 1987 support', () => {
   let data = {
@@ -607,7 +612,8 @@ test('getFieldDescription() should return include only existing field descriptio
     54: 'Additional amounts',
   };
 
-  expect(Main.getFieldDescription([12, 22, null, 54, 777])).toStrictEqual(expected);
+  expect(Main.getFieldDescription([12, 22, 54, 777])).toStrictEqual(expected);
+  expect(Main.getFieldDescription(null)).toStrictEqual({});
 });
 
 /**
@@ -628,7 +634,9 @@ test('should return proper transaction type description for type 01', () => {
 test('should return error if transaction type is not defined', () => {
   let data = { 2: '4444555566667777' };
   let isopack = new Main(data);
-  expect(isopack.getTType()).toStrictEqual({ error: 'transaction type not defined in message' });
+  const result = isopack.getTType();
+  expect(result).toBeInstanceOf(Error);
+  expect(result.error).toStrictEqual('transaction type not defined in message');
 });
 
 test('getTransactionType() should be an alias to getTType()', () => {
@@ -644,7 +652,9 @@ test('getTransactionType() should be an alias to getTType()', () => {
 test('getAccType() should return error if transaction type is not defined', () => {
   let data = { 2: '4444555566667777' };
   let isopack = new Main(data);
-  expect(isopack.getTType()).toStrictEqual({ error: 'transaction type not defined in message' });
+  const result = isopack.getTType();
+  expect(result).toBeInstanceOf(Error);
+  expect(result.error).toStrictEqual('transaction type not defined in message');
 });
 
 test('getAccType() should return proper 00 account type', () => {
@@ -671,7 +681,7 @@ test('getAccountTypeFrom() should be an alias to getAccType()', () => {
 test('getAccountTypeTo() should return error if transaction type is not defined', () => {
   let data = { 2: '4444555566667777' };
   let isopack = new Main(data);
-  expect(isopack.getAccType()).toStrictEqual({ error: 'transaction type not defined in message' });
+  expect(isopack.getAccType()).toEqual(new DefaultError('transaction type not defined in message'));
 });
 
 test('getAccountTypeTo() should return proper 30 account type', () => {
@@ -744,7 +754,9 @@ test('validateMessage() variable length should get error', () => {
   };
 
   let isopack = new Main(data);
-  expect(isopack.validateMessage()).toStrictEqual({ error: 'invalid length of data on field 32' });
+  const results = isopack.validateMessage();
+  expect(results).toBeInstanceOf(Error);
+  expect(results.error).toStrictEqual('invalid length of data on field 32');
 });
 
 /**
@@ -966,12 +978,12 @@ test('toRetransmit() should return new message with appropriate retransmit MTI, 
     0: '0100',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
   expect(isopack.validateMessage()).toStrictEqual(true);
-  expect(isopack.toRetransmit()).toStrictEqual({...data, '0': '0101'});
+  expect(isopack.toRetransmit()).toStrictEqual({ ...data, '0': '0101' });
 });
 
 test('toRetransmit() should return new message with appropriate retransmit MTI, 0201', () => {
@@ -979,12 +991,12 @@ test('toRetransmit() should return new message with appropriate retransmit MTI, 
     0: '0200',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
   expect(isopack.validateMessage()).toStrictEqual(true);
-  expect(isopack.toRetransmit()).toStrictEqual({...data, '0': '0201'});
+  expect(isopack.toRetransmit()).toStrictEqual({ ...data, '0': '0201' });
 });
 
 test('toRetransmit() should return new message with appropriate retransmit MTI, 0411', () => {
@@ -993,12 +1005,12 @@ test('toRetransmit() should return new message with appropriate retransmit MTI, 
     2: '4761739001010119',
     3: '000000',
     4: '000000005000',
-    7: '0911131411'
+    7: '0911131411',
   };
 
   let isopack = new Main(data);
-   expect(isopack.validateMessage()).toStrictEqual(true);
-   expect(isopack.toRetransmit()).toStrictEqual({...data, '0': '0411'});
+  expect(isopack.validateMessage()).toStrictEqual(true);
+  expect(isopack.toRetransmit()).toStrictEqual({ ...data, '0': '0411' });
 });
 
 test('toRetransmit() should return new message with appropriate retransmit MTI, 0421', () => {
@@ -1006,12 +1018,12 @@ test('toRetransmit() should return new message with appropriate retransmit MTI, 
     0: '0420',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
   expect(isopack.validateMessage()).toStrictEqual(true);
-  expect(isopack.toRetransmit()).toStrictEqual({...data, '0': '0421'});
+  expect(isopack.toRetransmit()).toStrictEqual({ ...data, '0': '0421' });
 });
 
 // Test Response
@@ -1020,7 +1032,7 @@ test('toResponse() should return new message with appropriate retransmit MTI, 01
     0: '0100',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
@@ -1033,7 +1045,7 @@ test('toResponse() should return new message with appropriate retransmit MTI, 02
     0: '0200',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
@@ -1047,7 +1059,7 @@ test('toResponse() should return new message with appropriate retransmit MTI, 04
     2: '4761739001010119',
     3: '000000',
     4: '000000005000',
-    7: '0911131411'
+    7: '0911131411',
   };
 
   let isopack = new Main(data);
@@ -1060,7 +1072,7 @@ test('toResponse() should return new message with appropriate retransmit MTI, 04
     0: '0420',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
@@ -1073,12 +1085,12 @@ test('toResponse() should return new message with appropriate retransmit MTI, 04
     0: '0430',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
-   expect(isopack.validateMessage()).toStrictEqual(true);
-   expect(isopack.toResponse()).toStrictEqual({ ...data, '0': '0440' });
+  expect(isopack.validateMessage()).toStrictEqual(true);
+  expect(isopack.toResponse()).toStrictEqual({ ...data, '0': '0440' });
 });
 
 // Test Advise
@@ -1087,7 +1099,7 @@ test('toAdvice() should return new message with appropriate retransmit MTI, 0120
     0: '0100',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
@@ -1100,7 +1112,7 @@ test('toAdvice() should return new message with appropriate retransmit MTI, 0220
     0: '0200',
     2: '4761739001010119',
     3: '000000',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
@@ -1114,7 +1126,7 @@ test('toAdvice() should return new message with appropriate retransmit MTI, 0420
     2: '4761739001010119',
     3: '000000',
     4: '000000005000',
-    7: '0911131411'
+    7: '0911131411',
   };
 
   let isopack = new Main(data);
@@ -1126,7 +1138,7 @@ test('should return false - fields [3, 4] is required for 888888 - with custom f
   let data = {
     0: '0100',
     2: '4761739001010119',
-    3: '888888'
+    3: '888888',
   };
 
   let isopack = new Main(data);
@@ -1136,7 +1148,7 @@ test('should return false - fields [3, 4] is required for 888888 - with custom f
 
 test('should return error to validate required fields', () => {
   let data = {
-    3: '000000'
+    3: '000000',
   };
 
   let isopack = new Main(data);
@@ -1147,7 +1159,7 @@ test('should return false - fields [3, 4] is required for 888888 message code - 
   let data = {
     0: '0100',
     2: '4761739001010119',
-    3: '888888'
+    3: '888888',
   };
   let customFormats = {};
 
@@ -1175,7 +1187,7 @@ test('should return true - with custom file config after new Main()', () => {
     0: '0100',
     2: '4761739001010119',
     3: '888888',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(data);
@@ -1184,103 +1196,94 @@ test('should return true - with custom file config after new Main()', () => {
 });
 
 test('should return false to validate required echo fields', () => {
-
   const iso_send = {
     0: '0100',
     2: '4761739001010119',
     3: '888888',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   const iso_answer = {
     0: '0200',
     2: '4761739001010119',
     3: '888888',
-    4: '9999999999999'
+    4: '9999999999999',
   };
 
   let isopack = new Main();
-  isopack.requiredFieldsSchema = requiredFieldsSchema
+  isopack.requiredFieldsSchema = requiredFieldsSchema;
 
-  expect(isopack.validateEcho({iso_send, iso_answer})).toStrictEqual(false);
-
+  expect(isopack.validateEcho(iso_send, iso_answer)).toStrictEqual(false);
 });
 
 test('should return true to validate required echo fields', () => {
-
   const iso_send = {
     0: '0100',
     2: '4761739001010119',
     3: '888888',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   const iso_answer = {
     0: '0200',
     2: '4761739001010119',
     3: '888888',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main();
   isopack.requiredFieldsSchema = requiredFieldsSchema;
-  expect(isopack.validateEcho({ iso_send, iso_answer })).toStrictEqual(true);
-
+  expect(isopack.validateEcho(iso_send, iso_answer)).toStrictEqual(true);
 });
 
 test('should return false to validate required echo AND required fields', () => {
-
   const iso_send = {
     0: '0100',
     2: '4761739001010119',
     3: '888888',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   const iso_answer = {
     0: '0200',
     2: '4761739001010119',
     3: '888888',
-    4: '9999999999999'
+    4: '9999999999999',
   };
 
   let isopack = new Main(iso_send);
-  
-  isopack.requiredFieldsSchema = requiredFieldsSchema;
-   expect(isopack.validateMessage()).toStrictEqual(true);
-  expect(isopack.validateEcho({ iso_send, iso_answer })).toStrictEqual(false);
 
+  isopack.requiredFieldsSchema = requiredFieldsSchema;
+  expect(isopack.validateMessage()).toStrictEqual(true);
+  expect(isopack.validateEcho(iso_send, iso_answer)).toStrictEqual(false);
 });
 
 test('should return true to validate required echo AND required fields', () => {
-
   const iso_send = {
     0: '0100',
     2: '4761739001010119',
     3: '888888',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   const iso_answer = {
     0: '0200',
     2: '4761739001010119',
     3: '888888',
-    4: '000000005000'
+    4: '000000005000',
   };
 
   let isopack = new Main(iso_send);
   isopack.requiredFieldsSchema = requiredFieldsSchema;
 
   expect(isopack.validateMessage()).toStrictEqual(true);
-  expect(isopack.validateEcho({ iso_send, iso_answer })).toStrictEqual(true);
-
+  expect(isopack.validateEcho(iso_send, iso_answer)).toStrictEqual(true);
 });
 
 test('should handle data encoded in plain text utf8 including the bitmap case 1', () => {
-
   const isopack = new Main();
   const isoString = '0800822000000000000004000000000000001125161336000255301';
-  const config = {lenHeader: false, lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false, };
+  const config = { lenHeader: false, lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false };
   const message = isopack.getIsoJSON(Buffer.alloc(isoString.length, isoString), config);
 
   expect(message[0]).toStrictEqual('0800');
@@ -1288,41 +1291,40 @@ test('should handle data encoded in plain text utf8 including the bitmap case 1'
 });
 
 test('should handle data encoded in plain text utf8 including the bitmap case 2', () => {
-
   const isopack = new Main();
   const isoString = '0800822000000800000004000000000000000904003641670011f8f2f4f6f0f0f6f7f0f0f1f10301';
-  const config = {lenHeader: false, lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false, };
+  const config = { lenHeader: false, lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false };
   const message = isopack.getIsoJSON(Buffer.alloc(isoString.length, isoString), config);
 
   expect(message[0]).toStrictEqual('0800');
 });
 
 test('should fail, length indicator not included and not disabled', () => {
-
   const isopack = new Main();
   const isoString = '0800822000000000000004000000000000001125161336000255301';
-  const config = { lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false, };
+  const config = { lenHeaderEncoding: 'utf8', bitmapEncoding: 'utf8', secondaryBitmap: false };
   const message = isopack.getIsoJSON(Buffer.alloc(isoString.length, isoString), config);
 
- expect(message.error).toStrictEqual('failed to unpack at get mti');
+  // @ts-ignore
+  expect(message.error).toStrictEqual('failed to unpack at get mti');
 });
 
 test('should unpack data that has no secondary bitmap', () => {
-
   const isopack = new Main();
-  const buffer = Buffer.from('303830302220010000800000393930303030303832333135313731363030303030313833313030303030303031', 'hex');
-  const config = {lenHeader: false};
+  const buffer = Buffer.from(
+    '303830302220010000800000393930303030303832333135313731363030303030313833313030303030303031',
+    'hex',
+  );
+  const config = { lenHeader: false };
   const message = isopack.getIsoJSON(buffer, config);
 
   expect(message[0]).toStrictEqual('0800');
-  expect(message[7]).toStrictEqual( '0823151716');
+  expect(message[7]).toStrictEqual('0823151716');
   expect(message[11]).toStrictEqual('000001');
   expect(message[41]).toStrictEqual('00000001');
-
 });
 
-test('should puck unpack data with field 127.25 as XML',  () => {
-
+test('should puck unpack data with field 127.25 as XML', () => {
   let data = {
     '0': '0100',
     '2': '4761739001010010',
@@ -1343,11 +1345,12 @@ test('should puck unpack data with field 127.25 as XML',  () => {
     '49': '404',
     '56': '1510',
     '123': '51010151134C101',
-    '127.25': '<IccData><IccRequest><AmountAuthorized>000000002341</AmountAuthorized><AmountOther>000000000000</AmountOther><ApplicationIdentifier>14A0000000031010</ApplicationIdentifier><ApplicationInterchangeProfile>5000</ApplicationInterchangeProfile><ApplicationTransactionCounter>0008</ApplicationTransactionCounter><Cryptogram>D17AC224D703ED03</Cryptogram><CryptogramInformationData>80</CryptogramInformationData><InterfaceDeviceSerialNumber>3332303030303632</InterfaceDeviceSerialNumber><IssuerApplicationData>1406011203A09800</IssuerApplicationData><TerminalApplicationVersionNumber>0096</TerminalApplicationVersionNumber><TerminalVerificationResult>4280000800</TerminalVerificationResult><TransactionCurrencyCode>404</TransactionCurrencyCode><TransactionDate>201008</TransactionDate><TransactionSequenceCounter>800000144</TransactionSequenceCounter><TransactionType>00</TransactionType><UnpredictableNumber>9FACCF09</UnpredictableNumber></IccRequest></IccData>'
+    '127.25':
+      '<IccData><IccRequest><AmountAuthorized>000000002341</AmountAuthorized><AmountOther>000000000000</AmountOther><ApplicationIdentifier>14A0000000031010</ApplicationIdentifier><ApplicationInterchangeProfile>5000</ApplicationInterchangeProfile><ApplicationTransactionCounter>0008</ApplicationTransactionCounter><Cryptogram>D17AC224D703ED03</Cryptogram><CryptogramInformationData>80</CryptogramInformationData><InterfaceDeviceSerialNumber>3332303030303632</InterfaceDeviceSerialNumber><IssuerApplicationData>1406011203A09800</IssuerApplicationData><TerminalApplicationVersionNumber>0096</TerminalApplicationVersionNumber><TerminalVerificationResult>4280000800</TerminalVerificationResult><TransactionCurrencyCode>404</TransactionCurrencyCode><TransactionDate>201008</TransactionDate><TransactionSequenceCounter>800000144</TransactionSequenceCounter><TransactionType>00</TransactionType><UnpredictableNumber>9FACCF09</UnpredictableNumber></IccRequest></IccData>',
   };
 
   let isopack = new Main(data);
-  
+
   expect(isopack.validateMessage()).toStrictEqual(true);
   expect(isopack.getBufferMessage().byteLength).toStrictEqual(1189);
   let buffer = isopack.getBufferMessage();
@@ -1383,7 +1386,7 @@ test('Encode, Decode', () => {
   };
 
   const b = new Main(data).encode();
- expect(b.byteLength.toString()).toStrictEqual('468');
+  expect(b.byteLength.toString()).toStrictEqual('468');
 
   const json = new Main(b).decode();
   expect(json['127.25.30']).toStrictEqual('BAC24959');

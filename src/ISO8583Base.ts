@@ -1,3 +1,4 @@
+import { DefaultError } from './errors';
 import * as Types from './t';
 import toSafeLog from './safeToLog';
 import * as SpT from './specialFields/tools'
@@ -35,33 +36,46 @@ const assemble127_25_extensions = require('./pack/assemble127_25_extensions');
  * @param {object} requiredFieldsSchema - Required field Schema definitions for different message types.
  * @example new Main(SomeMessage,customFormats, requiredFieldConfig) -> Main..
  */
+
+export interface ISO8583JSONMessageType {
+  [key: string]: string;
+}
+
+export type ISO8583RawMessageType = Buffer;
+
+export type ISO8583MessageType = ISO8583JSONMessageType | ISO8583RawMessageType;
+
 export default class ISO8583Base {
   MsgType: string | null = null;
   BufferMsg: Types.ISO8583RawT | null = null;
-  Msg: Types.KeyValueStringT | null = {};
+  Msg: ISO8583JSONMessageType | null = {};
   formats: Types.CustomFormatT;
   hasSpecialFields: boolean;
   optionalSecondaryBitmap: boolean = false;
   bitmaps: Uint8Array;
   fields: Types.KeyValueStringT;
-  requiredFieldsSchema: Types.KeyValueStringT[] | undefined;
+  requiredFieldsSchema: Types.RequiredFieldSchemaT | undefined;
 
   config: Types.KeyValueT = {};
 
-  metaData: Types.KeyValueStringT | null = null;
+  metaData: string = '';
 
   excessBuffer: Buffer | null = null;
 
   maskPan: () => void;
   toSafeLog: (config: Types.KeyValueStringT, data: Types.KeyValueStringT, panMaskFormat: string) => void;
 
-  assembleBitMap: () => Types.Error | Types.BitMap;
-  assembleBitMap_127: () => Types.Error | Types.BitMap;
-  assembleBitMap_127_25: () => Types.Error | Types.BitMap;
+  assembleBitMap: () => DefaultError | Types.BitMap;
+  assembleBitMap_127: () => DefaultError | Types.BitMap;
+  assembleBitMap_127_25: () => DefaultError | Types.BitMap;
 
-  unpack_0_127: (incoming: Buffer, isoJSON: Types.KeyValueStringT, config: Types.KeyValueT) => void;
-  unpack_127_1_63: (slice_127: Buffer, isoJSON: Types.KeyValueStringT) => void;
-  unpack_127_25_1_63: (slice_127_25: Buffer, isoJSON: Types.KeyValueStringT) => void;
+  unpack_0_127: (
+    incoming: Buffer,
+    isoJSON: Types.KeyValueStringT,
+    config: Types.KeyValueT,
+  ) => Types.KeyValueStringT | DefaultError;
+  unpack_127_1_63: (slice_127: Buffer, isoJSON: Types.KeyValueStringT) => Types.KeyValueStringT | DefaultError;
+  unpack_127_25_1_63: (slice_127_25: Buffer, isoJSON: Types.KeyValueStringT) => Types.KeyValueStringT | DefaultError;
 
   assemble0_127_Fields: () => Buffer;
   assemble127_extensions: () => Buffer;
@@ -70,9 +84,9 @@ export default class ISO8583Base {
   includesSecondaryBitmap: boolean;
 
   constructor(
-    message?: Types.KeyValueStringT,
+    message?: ISO8583MessageType,
     customFormats?: Types.CustomFormatT,
-    requiredFieldsSchema?: Types.KeyValueStringT[],
+    requiredFieldsSchema?: Types.RequiredFieldSchemaT,
   ) {
     this.formats = customFormats || {};
     this.hasSpecialFields = false;

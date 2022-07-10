@@ -7,13 +7,13 @@ import T from '../tools';
  * @memberof module:Bitmap-Assemble
  */
 function assembleBitmap_127_25() {
-  let extend = this.rebuildExtensions();
-  let state = this.checkMTI();
+  const extend = this.rebuildExtensions();
+  const state = this.checkMTI();
   if (state && !extend.error) {
     if (this.Msg['0'] && state) {
-      let _map = new Uint8Array(64);
+      const _map = new Uint8Array(64);
       for (let i = 0; i < _map.length; i++) {
-        let field = '127.25.' + (i + 1);
+        const field = '127.25.' + (i + 1);
         if (this.Msg[field]) {
           _map[i] = 1;
         }

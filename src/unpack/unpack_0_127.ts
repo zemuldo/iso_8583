@@ -10,7 +10,7 @@ import formats from '../formats';
  */
 module.exports = function (incoming: Buffer, isoJSON: Types.KeyValueStringT, config: Types.KeyValueT) {
   if (Buffer.isBuffer(incoming)) {
-    let mti = incoming.slice(0, 4).toString();
+    const mti = incoming.slice(0, 4).toString();
     isoJSON['0'] = mti;
 
     if (!this._checkMTI(mti)) {
@@ -32,11 +32,11 @@ module.exports = function (incoming: Buffer, isoJSON: Types.KeyValueStringT, con
     let thisBuff = incoming.slice(bitmapEnd, incoming.byteLength);
     for (let i = 1; i < bitmap.length; i++) {
       if (bitmap[i] === 1) {
-        //format defined
-        let field = i + 1;
-        let this_format = this.formats[field] || formats[field];
+        // format defined
+        const field = i + 1;
+        const this_format = this.formats[field] || formats[field];
         if (field === 127) {
-          let get127Exts = this.unpack_127_1_63(thisBuff, isoJSON);
+          const get127Exts = this.unpack_127_1_63(thisBuff, isoJSON);
           if (get127Exts.error) {
             return get127Exts;
           } else {
@@ -55,7 +55,7 @@ module.exports = function (incoming: Buffer, isoJSON: Types.KeyValueStringT, con
               thisBuff = thisBuff.slice(this_format.MaxLen, thisBuff.byteLength);
             }
           } else {
-            let thisLen = T.getLenType(this_format.LenType);
+            const thisLen = T.getLenType(this_format.LenType);
             if (!this_format.MaxLen)
               return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
             if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
@@ -64,7 +64,7 @@ module.exports = function (incoming: Buffer, isoJSON: Types.KeyValueStringT, con
             if (thisLen === 0) {
               return T.toErrorObject(['field ', field, ' format not implemented']);
             } else {
-              let len = thisBuff.slice(0, thisLen).toString();
+              const len = thisBuff.slice(0, thisLen).toString();
               thisBuff = thisBuff.slice(thisLen, thisBuff.byteLength);
               isoJSON[field] = thisBuff.slice(0, Number(len)).toString();
               thisBuff = thisBuff.slice(Number(len), thisBuff.byteLength);
@@ -74,9 +74,7 @@ module.exports = function (incoming: Buffer, isoJSON: Types.KeyValueStringT, con
       }
     }
 
-    return {
-      json: isoJSON,
-      remSlice: thisBuff,
-    };
+    this.remainingBuffer = thisBuff;
+    return isoJSON;
   } else return T.toErrorObject(['expecting buffer but got ', typeof incoming]);
 };

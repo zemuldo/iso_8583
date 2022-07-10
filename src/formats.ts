@@ -1,3 +1,5 @@
+import { CustomFormatT } from "./t";
+
 /**
  * Default ISO 8583 field definitions. Can overridden by passing the custom formats to the Main's constructor
  *  <ul>
@@ -60,7 +62,7 @@
   }
 }
  */
-const Formats = {
+const Formats: CustomFormatT = {
   '0': {
     ContentType: 'n',
     Label: 'Message Type Indicator',
