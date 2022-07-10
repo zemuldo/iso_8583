@@ -1,7 +1,7 @@
-const maskPan = require('../src/maskPan');
-const Iso8583 = require('../src/ISO8583');
+import maskPan from '../src/maskPan';
+import Iso8583 from '../src/ISO8583';
 
-test('should return error', () => {
+test('should return error ', () => {
   const masked = maskPan('456789345678', '***');
 
   expect(masked).toStrictEqual({ error: 'unknown pan masking format' });

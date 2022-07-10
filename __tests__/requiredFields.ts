@@ -1,3 +1,4 @@
+import { requiredFieldsSchema } from './../src/mock/requiredFields';
 
 import required from '../src/requiredFields';
 
@@ -9,7 +10,7 @@ test('should return error - fields [0, 2, 4] is required - is missing 4', () => 
     3: '000000'
   };
 
-  expect(required(data, null)).toStrictEqual({ error: 'Processing code: 000000 - Missing required fields: 4' });
+  expect(required(data, null).toString()).toStrictEqual('Error: Processing code: 000000 - Missing required fields: 4');
 });
 
 test('should return error - field [0] is required - is missing 0', () => {
@@ -19,7 +20,7 @@ test('should return error - field [0] is required - is missing 0', () => {
     999999: 'c'
   };
 
-  expect(required(data, null)).toStrictEqual({ error: 'Processing code: 000002 - Missing required fields: 0' });
+  expect(required(data, null).toString()).toStrictEqual('Error: Processing code: 000002 - Missing required fields: 0');
 });
 
 test('should return true - fields [0, 2, 4] is required', () => {
@@ -42,7 +43,7 @@ test('should return error - fields [3, 7] is required for 0100 message code - is
     4: 'c'
   };
 
-  expect(required(data, null)).toStrictEqual({ error: 'Processing code: 999999 - Missing required fields: 7' });
+  expect(required(data, null).toString()).toStrictEqual('Error: Processing code: 999999 - Missing required fields: 7');
 });
 
 test('should return error - fields [3, 7, 11] is required for 0500 message code - is missing 11', () => {
@@ -54,7 +55,7 @@ test('should return error - fields [3, 7, 11] is required for 0500 message code 
     7: 'd'
   };
 
-  expect(required(data, null)).toStrictEqual({ error: 'Processing code: 999999 - Missing required fields: 11' });
+  expect(required(data, null).toString()).toStrictEqual('Error: Processing code: 999999 - Missing required fields: 11');
 });
 
 test('should return true - fields [3, 7, 11] is required for 0500', () => {
@@ -75,9 +76,11 @@ test('should return error - fields [1, 2] is required for 0000 message code - is
     0: '0000',
     3: '888888'
   };
-  const file = '../src/mock/required-fields.custom.json';
+  const file = requiredFieldsSchema
 
-  expect(required(data, file)).toStrictEqual({ error: 'Processing code: 888888 - Missing required fields: 1,2' });
+  expect(required(data, file).toString()).toStrictEqual(
+    'Error: Processing code: 888888 - Missing required fields: 1,2',
+  );
 });
 
 test('should return true - fields [3, 4] is required for 9999 message code - with custom file', () => {

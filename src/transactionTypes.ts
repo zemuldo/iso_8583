@@ -1,4 +1,5 @@
-let transType = {
+import { KeyValueStringT } from './t';
+let transType: KeyValueStringT = {
   '00': 'Goods and services',
   '01': 'Cash withdrawal',
   '02': 'Adjustment',
@@ -42,4 +43,4 @@ let transType = {
   '93': 'Dead-end general admin (see field 127.33 Extended Transaction Type)'
 };
 
-module.exports = transType;
+export default transType;

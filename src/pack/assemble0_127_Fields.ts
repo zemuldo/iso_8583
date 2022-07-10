@@ -100,4 +100,4 @@ function assemble0_127_Fields() {
   }
 }
 
-module.exports = assemble0_127_Fields;
+export default assemble0_127_Fields;

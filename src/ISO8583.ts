@@ -35,7 +35,7 @@ export default class ISO8583 extends ISO8583Base {
 
   static getFieldDescription(fields?: string | string[] | number | number[] | null, customFormats?: Types.CustomFormatsT) {
     const cFormats = customFormats || {};
-    const descriptions: Types.KeyValueStringT = {};
+    const descriptions: any = {};
 
     if (!fields) {
       return descriptions;
@@ -188,7 +188,7 @@ export default class ISO8583 extends ISO8583Base {
             continue;
           }
 
-          const this_format = this.formats[field] || formats[field];
+          const this_format: any = this.formats[field] || formats[field];
           const state = types(this_format, this.Msg[field], field);
           if (state instanceof Error) {
             return false;
@@ -292,7 +292,7 @@ export default class ISO8583 extends ISO8583Base {
         if (bitmap_127[i] === 1) {
           const field = '127.25.' + (Number(i) + 1);
 
-          const this_format = this.formats[field] || formats[field];
+          const this_format: any = this.formats[field] || formats[field];
           if (this_format.LenType === 'fixed') {
             this.Msg[field] = dataString.slice(0, this_format.MaxLen);
             dataString = dataString.slice(this_format.MaxLen, dataString.length);
@@ -333,7 +333,7 @@ export default class ISO8583 extends ISO8583Base {
         if (bitmap_127[i] === 1) {
           const field = '127.' + (Number(i) + 1);
 
-          const this_format = this.formats[field] || formats[field];
+          const this_format: any = this.formats[field] || formats[field];
           if (this_format.LenType === 'fixed') {
             this.Msg[field] = dataString.slice(0, this_format.MaxLen);
             dataString = dataString.slice(this_format.MaxLen, dataString.length);

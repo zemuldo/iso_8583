@@ -6,7 +6,7 @@ import formats from '../formats';
  * @method unpack_127_1_63
  * @memberof module:Message-UnPackage
  */
-module.exports = function (slice_127, isoJSON) {
+export default function (slice_127, isoJSON) {
   slice_127 = slice_127.slice(6, slice_127.length);
   const bitmap = T.getHex(slice_127.slice(0, 8).toString('hex')).split('').map(Number);
   slice_127 = slice_127.slice(8, slice_127.length);

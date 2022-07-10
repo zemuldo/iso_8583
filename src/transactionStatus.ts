@@ -1,4 +1,5 @@
-let transStatus = {
+import { KeyValueStringT } from './t';
+let transStatus: KeyValueStringT = {
   '00': 'Approved or completed successfully',
   '01': 'Refer to card issuer',
   '02': 'Refer to card issuer, special condition',
@@ -111,4 +112,4 @@ let transStatus = {
   'E1': 'Prepay error'
 };
 
-module.exports = transStatus;
+export default transStatus;

@@ -7,7 +7,7 @@ import formats from '../formats';
  * @method assemble0_127_25_extensions
  * @memberof module:Message-Package
  */
-module.exports = function () {
+export default function () {
   let buff = Buffer.alloc(16, this.Msg['127.25.1']);
   if (T.isXmlEncoded(this.Msg['127.25'])) {
     buff = Buffer.alloc(this.Msg['127.25'].length, this.Msg['127.25']);
@@ -51,13 +51,9 @@ module.exports = function () {
           return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
 
         if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen)
-          return {
-            error: 'invalid length of data on field ' + field,
-          };
+          return T.toErrorObject( 'invalid length of data on field ' + field)
         if (thisLen === 0) {
-          return {
-            error: 'field ' + field + ' has no field implementation',
-          };
+          return T.toErrorObject('field ' + field + ' has no field implementation')
         } else {
           const actualLength = this.Msg[field].length;
           const padCount = thisLen - actualLength.toString().length;
@@ -70,9 +66,7 @@ module.exports = function () {
         }
       }
     } else
-      return {
-        error: 'field ' + field + ' has invalid data',
-      };
+      return T.toErrorObject('field ' + field + ' has invalid data')
   }
 
   const padCount = T.getLenType(formats['127.25'].LenType);

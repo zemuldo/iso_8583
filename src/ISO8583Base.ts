@@ -2,32 +2,31 @@ import { DefaultError } from './errors';
 import * as Types from './t';
 import toSafeLog from './safeToLog';
 import * as SpT from './specialFields/tools'
-
-const maskPan = require('./maskPan');
+import maskPan from './maskPan';
 
 /**
  * Set of methods for unpacking TCP message encoded in ISO 8583 format. Members of Main Class
  * @module Message-UnPackage
  */
-const unpack_0_127 = require('./unpack/unpack_0_127');
-const unpack_127_1_63 = require('./unpack/unpack_127_1_63');
-const unpack_127_25_1_63 = require('./unpack/unpack_127_25_1_63');
+import  unpack_0_127 from './unpack/unpack_0_127'
+import unpack_127_1_63 from './unpack/unpack_127_1_63';
+import unpack_127_25_1_63 from './unpack/unpack_127_25_1_63';
 
 /**
  * Set of methods for assembling the bitmaps for message field 0-127, 127.0-63, 127.25.0-39. Members of Main Class
  * @module Bitmap-Assemble
  */
-const assembleBitMap = require('./bitmap/assembleBitMap');
-const assembleBitMap_127 = require('./bitmap/assembleBitMap_127');
-const assembleBitMap_127_25 = require('./bitmap/assembleBitMap_127_25');
+import assembleBitMap from './bitmap/assembleBitMap';
+import assembleBitMap_127 from './bitmap/assembleBitMap_127';
+import assembleBitMap_127_25 from './bitmap/assembleBitMap_127_25';
 
 /**
  * Set of methods for packing JSON message into a Buffer message. Members of Main Class
  * @module Message-Package
  */
-const assemble0_127_Fields = require('./pack/assemble0_127_Fields');
-const assemble127_extensions = require('./pack/assemble127_extensions');
-const assemble127_25_extensions = require('./pack/assemble127_25_extensions');
+import assemble0_127_Fields from './pack/assemble0_127_Fields';
+import assemble127_extensions from './pack/assemble127_extensions';
+import assemble127_25_extensions from './pack/assemble127_25_extensions';
 
 /**
  * Main ISO 8583 Class used to create a new message object with formating methods.
@@ -62,12 +61,12 @@ export default class ISO8583Base {
 
   excessBuffer: Buffer | null = null;
 
-  maskPan: () => void;
+  maskPan: (pan: string, format: string, masker?: string | undefined) => string | { error: string };
   toSafeLog: (config: Types.KeyValueStringT, data: Types.KeyValueStringT, panMaskFormat: string) => void;
 
   assembleBitMap: () => DefaultError | Types.BitMap;
-  assembleBitMap_127: () => DefaultError | Types.BitMap;
-  assembleBitMap_127_25: () => DefaultError | Types.BitMap;
+  assembleBitMap_127: () => Uint8Array | DefaultError;
+  assembleBitMap_127_25: () => Uint8Array | DefaultError;
 
   unpack_0_127: (
     incoming: Buffer,
@@ -78,8 +77,8 @@ export default class ISO8583Base {
   unpack_127_25_1_63: (slice_127_25: Buffer, isoJSON: Types.KeyValueStringT) => Types.KeyValueStringT | DefaultError;
 
   assemble0_127_Fields: () => Buffer;
-  assemble127_extensions: () => Buffer;
-  assemble127_25_extensions: () => Buffer;
+  assemble127_extensions: () => Buffer | DefaultError;
+  assemble127_25_extensions: () => Buffer | DefaultError;
 
   includesSecondaryBitmap: boolean;
 

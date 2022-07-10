@@ -8,7 +8,7 @@ import types from '../types';
  * @method assemble0_127_extensions
  * @memberof module:Message-Package
  */
-module.exports = function () {
+export default function () {
   const mtiCheck = this.checkMTI();
   const validate = this.validateMessage(this.Msg);
   const state = this.rebuildExtensions();
@@ -33,15 +33,13 @@ module.exports = function () {
         }
 
         if (!this.Msg[field]) {
-          return {
-            error: 'Field ' + field + ' in bitmap but not in json',
-          };
+          return T.toErrorObject('Field ' + field + ' in bitmap but not in json')
         }
         const this_format = this.formats[field] || formats[field];
         if (this_format) {
           const state = types(this_format, this.Msg[field], field);
           if (state.error) {
-            return state;
+            return T.toErrorObject("Message is invalid");
           }
           if (this_format.LenType === 'fixed') {
             if (formats[field].ContentType === 'b') {
@@ -50,35 +48,25 @@ module.exports = function () {
                 const thisBuff = Buffer.alloc(size, this.Msg[field], 'hex');
                 buff = Buffer.concat([buff, thisBuff]);
               } else {
-                return {
-                  error: 'invalid length of data on field ' + field,
-                };
+                return T.toErrorObject('invalid length of data on field ' + field)
               }
             } else {
               if (this_format.MaxLen === this.Msg[field].length) {
                 const thisBuff = Buffer.alloc(this.Msg[field].length, this.Msg[field]);
                 buff = Buffer.concat([buff, thisBuff]);
               } else {
-                return {
-                  error: 'invalid length of data on field ' + field,
-                };
+                return T.toErrorObject('invalid length of data on field ' + field)
               }
             }
           } else {
             const thisLen = T.getLenType(this_format.LenType);
             if (!this_format.MaxLen)
-              return {
-                error: 'max length not implemented for ' + this_format.LenType + field,
-              };
+              return T.toErrorObject('max length not implemented for ' + this_format.LenType + field)
 
             if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen)
-              return {
-                error: 'invalid length of data on field ' + field,
-              };
+              return T.toErrorObject('invalid length of data on field ' + field)
             if (thisLen === 0) {
-              return {
-                error: 'field' + field + ' has no field implementation',
-              };
+              return T.toErrorObject('field' + field + ' has no field implementation')
             } else {
               const actualLength = this.Msg[field].length;
               const padCount = thisLen - actualLength.toString().length;
@@ -90,9 +78,7 @@ module.exports = function () {
             }
           }
         } else
-          return {
-            error: 'field ' + field + ' not implemented',
-          };
+          return T.toErrorObject('field ' + field + ' not implemented');
       }
     }
 

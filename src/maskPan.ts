@@ -23,7 +23,7 @@ const maskingFormats: MaskingFormats = {
   },
 };
 
-module.exports = function (pan: string, format: string, masker: string) {
+export default function (pan: string, format: string, masker?: string) {
   let p = pan;
   const m = masker || '*';
   if (!maskingFormats[format]) return { error: 'unknown pan masking format' };

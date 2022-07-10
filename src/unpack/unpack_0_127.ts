@@ -8,7 +8,7 @@ import formats from '../formats';
  * @method unpack_0_127
  * @memberof module:Message-UnPackage
  */
-module.exports = function (incoming: Buffer, isoJSON: Types.KeyValueStringT, config: Types.KeyValueT) {
+export default function (incoming: Buffer, isoJSON: Types.KeyValueStringT, config: Types.KeyValueT) {
   if (Buffer.isBuffer(incoming)) {
     const mti = incoming.slice(0, 4).toString();
     isoJSON['0'] = mti;

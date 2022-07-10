@@ -7,7 +7,7 @@ import formats from '../formats';
  * @method unpack_127_25_1_63
  * @memberof module:Message-UnPackage
  */
-module.exports = function (slice_127_25, isoJSON) {
+export default function (slice_127_25, isoJSON) {
   if (slice_127_25.byteLength > 10 && T.isXmlEncoded(slice_127_25.slice(4, slice_127_25.length).toString())) {
     isoJSON['127.25'] = slice_127_25.slice(4, slice_127_25.length).toString();
     return {

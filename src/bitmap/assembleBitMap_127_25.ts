@@ -22,4 +22,4 @@ function assembleBitmap_127_25() {
     } else return T.toErrorObject('bitmap error, iso message type undefined or invalid');
   } else return T.toErrorObject('bitmap error, iso message type undefined or invalid');
 }
-module.exports = assembleBitmap_127_25;
+export default assembleBitmap_127_25;

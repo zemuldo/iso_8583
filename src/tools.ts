@@ -4,9 +4,9 @@ import formats from './formats';
 import * as Types from './t';
 import checkTypes from './types'
 
-const accTypes = require('./accountTypes');
-const transTypes = require('./transactionTypes');
-const transStatus = require('./transactionStatus');
+import accTypes  from './accountTypes';
+import transTypes   from './transactionTypes';
+import transStatus   from './transactionStatus';
 
 /**
  * Handy Utils for transforming data
@@ -124,9 +124,7 @@ export default {
         if (this_format && checkTypes(this_format, obj[field], field)) {
           state = true;
         } else {
-          return {
-            error: 'field ' + field + ' error',
-          };
+          return new Error('field ' + field + ' error')
         }
       }
     }

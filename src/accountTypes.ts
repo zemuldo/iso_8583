@@ -1,4 +1,5 @@
-const accntTypes = {
+import { KeyValueStringT } from './t';
+const accntTypes: KeyValueStringT = {
   '00': 'Default – unspecified',
   '10': 'Savings account',
   '20': 'Check account',
@@ -10,4 +11,4 @@ const accntTypes = {
   '92': 'Instalment loan'
 };
 
-module.exports = accntTypes;
+export default accntTypes;

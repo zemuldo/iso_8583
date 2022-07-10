@@ -31,4 +31,4 @@ function assembleBitmap(): Types.BitMap | Types.Error {
     return _map;
   } else return T.toErrorObject('bitmap error, iso message type undefined or invalid');
 }
-module.exports = assembleBitmap;
+export default assembleBitmap;

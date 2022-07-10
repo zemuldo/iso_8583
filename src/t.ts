@@ -21,9 +21,9 @@ export interface RequiredFieldSchemaT {
 }
 
 export interface CustomFormatT {
-  ContentType: string;
-  Label: string;
-  LenType: string;
+  ContentType?: string;
+  Label?: string;
+  LenType?: string;
   MaxLen?: number;
   MinLen?: number;
 }

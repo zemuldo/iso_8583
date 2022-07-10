@@ -1,3 +1,4 @@
+import { CustomFormatT } from './../src/t';
 
 import types from '../src/types';
 
@@ -6,11 +7,13 @@ function customAssert(a: any, b: any) {
 }
 
 test('should return error if options has no ContentType', () => {
-  customAssert(types({}, null, undefined), {error: 'type undefined is not implemented on field undefined'});
+  const results = types({}, null, '10');
+  expect(results).toBeInstanceOf(Error);
+  customAssert(results.toString(), 'Error: field 10 is empty');
 });
 
 test('should process \'a\' type', () => {
-  const options = {'ContentType': 'a'};
+  const options: CustomFormatT = {'ContentType': 'a', 'Label': 'string', 'LenType': 'string'};
   const data = 'ABCD';
 
   customAssert(types(options, data, '0'), true);
@@ -21,7 +24,7 @@ test('should return false in case of \'a\' type invalid data', () => {
   const data = 'A1';
   const field = 2;
 
-  customAssert(types(options, data, field), {error: 'while processing field 2: provided data is not of type \'a\''});
+  customAssert(types(options, data, field).toString(), "Error: while processing field 2: provided data is not of type 'a'");
 });
 
 test('should process numeric (\'n\') type', () => {
@@ -36,7 +39,7 @@ test('should return false in case of \'n\' type invalid data', () => {
   const data = '01234567890z';
   const field = 16;
 
-  customAssert(types(options, data, field), {error: 'while processing field 16: provided data is not of type \'n\''});
+  customAssert(types(options, data, field).toString(), "Error: while processing field 16: provided data is not of type 'n'");
 });
 
 test('should process binary data representation (\'b\') type', () => {
@@ -51,7 +54,10 @@ test('should return false in case of \'b\' type invalid data', () => {
   const data = 'Invalid DATA';
   const field = 77;
 
-  customAssert(types(options, data, field), {error: 'while processing field 77: provided data is not of type \'b\''});
+  customAssert(
+    types(options, data, field).toString(),
+    "Error: while processing field 77: provided data is not of type 'b'",
+  );
 });
 
 test('should process numeric and special characters (\'ns\') type', () => {
@@ -66,7 +72,7 @@ test('should return false in case of \'ns\' type invalid data', () => {
   const data = '+_--=.,ASD';
   const field = 93;
 
-  customAssert(types(options, data, field), {error: 'while processing field 93: provided data is not of type \'ns\''});
+  customAssert(types(options, data, field).toString(), "Error: while processing field 93: provided data is not of type 'ns'");
 });
 
 test('should process special characters (\'s\') type', () => {
@@ -81,7 +87,10 @@ test('should return false in case of \'s\' type invalid data', () => {
   const data = '+_--=.,ASD';
   const field = 93;
 
-  customAssert(types(options, data, field), {error: 'while processing field 93: provided data is not of type \'s\''});
+  customAssert(
+    types(options, data, field).toString(),
+    "Error: while processing field 93: provided data is not of type 's'",
+  );
 });
 
 test('should process alphanumeric (\'an\') type', () => {
@@ -96,7 +105,7 @@ test('should return false in case of \'an\' type invalid data', () => {
   const data = 'AS.,ASDaadasd';
   const field = 9;
 
-  customAssert(types(options, data, field), {error: 'while processing field 9: provided data is not of type \'an\''});
+  customAssert(types(options, data, field).toString(), "Error: while processing field 9: provided data is not of type 'an'");
 });
 
 test('should process alphanumeric with special characters (\'ans\') type', () => {
@@ -111,7 +120,7 @@ test('should return false in case of \'ans\' type invalid data', () => {
   const data = 'AS.,ASDaadasd\x01';
   const field = 9;
 
-  customAssert(types(options, data, field), {error: 'while processing field 9: provided data is not of type \'ans\''});
+  customAssert(types(options, data, field).toString(), "Error: while processing field 9: provided data is not of type 'ans'");
 });
 
 test('should process alphanumeric with pad character (\'anp\') type', () => {
@@ -126,7 +135,7 @@ test('should return false in case of \'anp\' type invalid data', () => {
   const data = '=-=<>.,.';
   const field = 98;
 
-  customAssert(types(options, data, field), {error: 'while processing field 98: provided data is not of type \'anp\''});
+  customAssert(types(options, data, field).toString(), "Error: while processing field 98: provided data is not of type 'anp'");
 });
 
 test('should process \'x+n\' type (a prefix of C followed by numeric characters)', () => {
@@ -149,7 +158,10 @@ test('should return false in case of \'x+n\' type invalid data', () => {
   const data = 'X09180938019';
   const field = 103;
 
-  customAssert(types(options, data, field), {error: 'while processing field ' + field + ': provided data is not of type \'' + options.ContentType + '\''});
+  customAssert(
+    types(options, data, field).toString(),
+    'Error: while processing field ' + field + ": provided data is not of type '" + options.ContentType + "'",
+  );
 });
 
 test('should return false in case of \'x+n\' type invalid amount data', () => {
@@ -157,7 +169,10 @@ test('should return false in case of \'x+n\' type invalid amount data', () => {
   const data = 'C09180938ABCD';
   const field = 103;
 
-  customAssert(types(options, data, field), {error: 'while processing field ' + field + ': provided data is not of type \'' + options.ContentType + '\''});
+  customAssert(
+    types(options, data, field).toString(),
+    'Error: while processing field ' + field + ": provided data is not of type '" + options.ContentType + "'",
+  );
 });
 
 

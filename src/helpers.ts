@@ -4,7 +4,7 @@
 
 import { KeyValueStringT } from './t';
 
-const formatd = require('date-fns');
+import {format} from 'date-fns';
 
  export const getPostillionLength = function (buf: Buffer) {
    const div = buf[0];
@@ -48,15 +48,17 @@ export const attachPostillionLength = function (_data: string | Buffer) {
  export const attachDiTimeStamps = function (obj: KeyValueStringT) {
    if (!obj['7'] || !obj['12'] || !obj['13']) {
      const time = new Date();
-     obj['7'] = formatd(time, 'MMDDhhmmss');
-     obj['12'] = formatd(time, 'hhmmss');
-     obj['13'] = formatd(time, 'MMDD');
+     obj['7'] = format(time, 'MMDDhhmmss');
+     obj['12'] = format(time, 'hhmmss');
+     obj['13'] = format(time, 'MMDD');
    }
    return obj;
  };
 
- export const findRequiredFields = function (json: any = [], key: string, processing_code: string, message_code: string | null) {
-   let requiredFields: any = [];
+export const findRequiredFields = function (json: any = [], key: string, processing_code: string, message_code: string | null) {
+  
+  let requiredFields: any = [];
+  if (!json) return requiredFields;
 
    for (let i = 0; i < json.length; i++) {
      if (json[i].processing_code === processing_code) {
@@ -75,7 +77,7 @@ export const attachPostillionLength = function (_data: string | Buffer) {
    return requiredFields;
  };
 
- export const matchValues = function (iso_fields: string[] | number[], required_fields: string[] | number[]) {
+ export const matchValues = function ( required_fields: string[] | number[], iso_fields: string[] | number[]) {
    const missing_fields = required_fields;
 
    // Refactory to use .filter()
