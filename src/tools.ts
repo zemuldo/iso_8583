@@ -214,7 +214,8 @@ export default {
     else return 'Code ' + id + ' Name Undefined';
   },
 
-  isXmlEncoded: (string: string) => {
-    return string.startsWith('<') && string.endsWith('>');
+  isXmlEncoded: (s: string) => {
+    if(!s) return false;
+    return s.startsWith('<') && s.endsWith('>');
   },
 };

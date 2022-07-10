@@ -38,20 +38,24 @@ export default function () {
               const thisBuff = Buffer.alloc(size, this.Msg[field], 'hex');
               buff = Buffer.concat([buff, thisBuff]);
             } else return T.toErrorObject(['invalid length of data on field ', field]);
-          }
-        } else {
-          if (this_format.MaxLen === this.Msg[field].length) {
-            const thisBuff = Buffer.alloc(this.Msg[field].length, this.Msg[field]);
-            buff = Buffer.concat([buff, thisBuff]);
-          } else return T.toErrorObject(['invalid length of data on field ', field]);
+          } else {
+            if (this_format.MaxLen === this.Msg[field].length) {
+              const thisBuff = Buffer.alloc(this.Msg[field].length, this.Msg[field]);
+              buff = Buffer.concat([buff, thisBuff]);
+            } else {
+              return T.toErrorObject(['invalid length of data on field ', field]);
+            }
+          } 
         }
       } else {
         const thisLen = T.getLenType(this_format.LenType);
         if (!this_format.MaxLen)
           return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
 
-        if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen)
-          return T.toErrorObject( 'invalid length of data on field ' + field)
+        if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
+           return T.toErrorObject('invalid length of data on field ' + field);
+        }
+         
         if (thisLen === 0) {
           return T.toErrorObject('field ' + field + ' has no field implementation')
         } else {
@@ -65,8 +69,7 @@ export default function () {
           buff = Buffer.concat([buff, thisBuff]);
         }
       }
-    } else
-      return T.toErrorObject('field ' + field + ' has invalid data')
+    }
   }
 
   const padCount = T.getLenType(formats['127.25'].LenType);

@@ -193,17 +193,23 @@ export default class ISO8583 extends ISO8583Base {
           if (state instanceof Error) {
             return false;
           }
+          
           if (this_format) {
             if (this_format.LenType === 'fixed') {
               if (this_format.MaxLen === this.Msg[field].length) {
                 valid = true;
-              } else return T.toErrorObject(['invalid length of data on field ', field]);
+              } else {
+                return T.toErrorObject(['invalid length of data on field ', field]);
+              }
             } else {
+              
               const thisLen = T.getLenType(this_format.LenType);
               if (!this_format.MaxLen)
                 return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
-              if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen)
+              if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
                 return T.toErrorObject(['invalid length of data on field ', field]);
+              }
+                
               if (thisLen === 0) {
                 return T.toErrorObject(['field', field, ' has no field implementation']);
               } else {
@@ -301,7 +307,7 @@ export default class ISO8583 extends ISO8583Base {
             if (!this_format.MaxLen)
               return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
             if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen)
-              return T.toErrorObject(['invalid length of data on field ', field]);
+              return T.toErrorObject([`invalid length ${this.Msg[field].length} of data on field `, field]);
             if (thisLen === 0) {
               throw T.toErrorObject(['field ', field, ' format not implemented']);
             } else {
