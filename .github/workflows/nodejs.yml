@@ -3,6 +3,8 @@
 
 name: Test
 
+on: push
+
 jobs:
   Node-Test:
 
