@@ -8,7 +8,9 @@ import formats from '../formats';
  * @memberof module:Message-Package
  */
 export default function () {
-  let buff = Buffer.alloc(16, this.Msg['127.25.1']);
+  const bitampHext = this.Msg['127.25.1'] || this.getBitMapHex_127_ext_25();
+  this.Msg['127.25.1'] = bitampHext;
+  let buff = this.buildBitmapBuffer(bitampHext, 'ascii');
   if (T.isXmlEncoded(this.Msg['127.25'])) {
     buff = Buffer.alloc(this.Msg['127.25'].length, this.Msg['127.25']);
     const padCount = T.getLenType(formats['127.25'].LenType);
@@ -45,30 +47,30 @@ export default function () {
             } else {
               return T.toErrorObject(['invalid length of data on field ', field]);
             }
-          } 
-        }
-      } else {
-        const thisLen = T.getLenType(this_format.LenType);
-        if (!this_format.MaxLen)
-          return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
-
-        if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
-           return T.toErrorObject('invalid length of data on field ' + field);
-        }
-         
-        if (thisLen === 0) {
-          return T.toErrorObject('field ' + field + ' has no field implementation')
-        } else {
-          const actualLength = this.Msg[field].length;
-          const padCount = thisLen - actualLength.toString().length;
-          let lenIndicator = actualLength.toString();
-          for (let i = 0; i < padCount; i++) {
-            lenIndicator = 0 + lenIndicator;
           }
-          const thisBuff = Buffer.alloc(this.Msg[field].length + lenIndicator.length, lenIndicator + this.Msg[field]);
-          buff = Buffer.concat([buff, thisBuff]);
+        } else {
+          const thisLen = T.getLenType(this_format.LenType);
+          if (!this_format.MaxLen)
+            return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
+
+          if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
+            return T.toErrorObject('invalid length of data on field ' + field);
+          }
+
+          if (thisLen === 0) {
+            return T.toErrorObject('field ' + field + ' has no field implementation');
+          } else {
+            const actualLength = this.Msg[field].length;
+            const padCount = thisLen - actualLength.toString().length;
+            let lenIndicator = actualLength.toString();
+            for (let i = 0; i < padCount; i++) {
+              lenIndicator = 0 + lenIndicator;
+            }
+            const thisBuff = Buffer.alloc(this.Msg[field].length + lenIndicator.length, lenIndicator + this.Msg[field]);
+            buff = Buffer.concat([buff, thisBuff]);
+          }
         }
-      }
+      } 
     }
   }
 

@@ -20,17 +20,17 @@ export default function () {
     for (let i = 0; i < bitmaps_127.length; i++) {
       const field = '127.' + (Number(i) + 1);
       if (bitmaps_127[i] === 1) {
-        if (field === '127.25') {
-          const _25_buff = this.assemble127_25_extensions();
-          if (!_25_buff.error) {
-            if (_25_buff.byteLength > 12) {
-              buff = Buffer.concat([buff, _25_buff]);
-              continue;
-            } else {
-              continue;
-            }
-          }
-        }
+           if (field === '127.25') {
+             const _25_buff = this.assemble127_25_extensions();
+             if (!_25_buff.error) {
+               if (_25_buff.byteLength > 12) {
+                 buff = Buffer.concat([buff, _25_buff]);
+                 continue;
+               } else {
+                 continue;
+               }
+             }
+           }
 
         if (!this.Msg[field]) {
           return T.toErrorObject('Field ' + field + ' in bitmap but not in json')
