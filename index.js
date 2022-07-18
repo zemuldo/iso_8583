@@ -1,5 +1,5 @@
 'use strict'
 
-let main = require('./lib/8583')
+let main = require('./lib/ISO8583')
 
 module.exports = main;
