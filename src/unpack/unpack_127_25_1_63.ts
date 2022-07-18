@@ -42,7 +42,7 @@ export default function (slice_127_25, isoJSON) {
             if (!this_format.MaxLen)
               return T.toErrorObject(['max length not implemented for ', this_format.LenType], subField);
             if (this.Msg[subField] && this.Msg[subField].length > this_format.MaxLen)
-              return T.toErrorObject(['invalid length of data on field ', subField]);
+              return T.toInvalidLengthErrorObject(subField, this.Msg[field].length);
             if (thisLen === 0) {
               throw T.toErrorObject(['field ', subField, ' format not implemented']);
             } else {

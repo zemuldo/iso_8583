@@ -39,13 +39,13 @@ export default function () {
               const size = this_format.MaxLen / 2;
               const thisBuff = Buffer.alloc(size, this.Msg[field], 'hex');
               buff = Buffer.concat([buff, thisBuff]);
-            } else return T.toErrorObject(['invalid length of data on field ', field]);
+            } else return T.toInvalidLengthErrorObject(field, this.Msg[field].length);
           } else {
             if (this_format.MaxLen === this.Msg[field].length) {
               const thisBuff = Buffer.alloc(this.Msg[field].length, this.Msg[field]);
               buff = Buffer.concat([buff, thisBuff]);
             } else {
-              return T.toErrorObject(['invalid length of data on field ', field]);
+              return T.toInvalidLengthErrorObject(field, this.Msg[field].length);
             }
           }
         } else {
@@ -54,7 +54,7 @@ export default function () {
             return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
 
           if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
-            return T.toErrorObject('invalid length of data on field ' + field);
+            return T.toInvalidLengthErrorObject(field, this.Msg[field].length);
           }
 
           if (thisLen === 0) {

@@ -14,7 +14,6 @@ import * as H from './helpers';
 
 import * as SpT from './specialFields/tools';
 import addStaticMetaData from './pack/addStaticMetaData';
-import { DefaultError } from './errors';
 
 /**
  * Main ISO 8583 Class used to create a new message object with formating methods.
@@ -25,15 +24,14 @@ import { DefaultError } from './errors';
  */
 export default class ISO8583 extends ISO8583Base {
   dataString: string = '';
-  constructor(
-    message?: Types.ISOMessageT,
-    customFormats?: Types.CustomFormatsT,
-    requiredFieldsSchema?: any,
-  ) {
+  constructor(message?: Types.ISOMessageT, customFormats?: Types.CustomFormatsT, requiredFieldsSchema?: any) {
     super(message, customFormats, requiredFieldsSchema);
   }
 
-  static getFieldDescription(fields?: string | string[] | number | number[] | null, customFormats?: Types.CustomFormatsT) {
+  static getFieldDescription(
+    fields?: string | string[] | number | number[] | null,
+    customFormats?: Types.CustomFormatsT,
+  ) {
     const cFormats = customFormats || {};
     const descriptions: any = {};
 
@@ -105,7 +103,7 @@ export default class ISO8583 extends ISO8583Base {
   }
 
   checkSpecialFields() {
-    if(!this.Msg) return this.throwMessageUndef();
+    if (!this.Msg) return this.throwMessageUndef();
     return SpT.validateSpecialFields(this.Msg, this.formats);
   }
 
@@ -151,7 +149,7 @@ export default class ISO8583 extends ISO8583Base {
     if (!this.Msg) return this.throwMessageUndef();
     if (this.Msg['0']) {
       const state = this.validateMessage();
-      if (state instanceof   Error) {
+      if (state instanceof Error) {
         return state;
       } else {
         this.Msg = H.attachDiTimeStamps(this.Msg);
@@ -170,16 +168,17 @@ export default class ISO8583 extends ISO8583Base {
   validateMessage() {
     if (!this.Msg) return false;
     let valid = false;
+    let error = null
     const state = this.assembleBitMap();
     const validDate = T.validateFields(this);
     const validateRequiredFields = requiredFields(this.Msg, this.requiredFieldsSchema);
     const specialValidate = SpT.validateSpecialFields(this.Msg, this.formats);
 
     if (
-      !(state instanceof   Error) &&
-      !(validDate instanceof   Error) &&
-      !(specialValidate instanceof   Error) &&
-      !(validateRequiredFields instanceof   Error)
+      !(state instanceof Error) &&
+      !(validDate instanceof Error) &&
+      !(specialValidate instanceof Error) &&
+      !(validateRequiredFields instanceof Error)
     ) {
       for (let i = 1; i < this.bitmaps.length; i++) {
         const field = i + 1;
@@ -191,39 +190,38 @@ export default class ISO8583 extends ISO8583Base {
           const this_format: any = this.formats[field] || formats[field];
           const state = types(this_format, this.Msg[field], field);
           if (state instanceof Error) {
-            return false;
+            error = state;
           }
-          
+
           if (this_format) {
             if (this_format.LenType === 'fixed') {
               if (this_format.MaxLen === this.Msg[field].length) {
                 valid = true;
               } else {
-                return T.toErrorObject(['invalid length of data on field ', field]);
+                error = T.toInvalidLengthErrorObject(field, this.Msg[field].length)
               }
             } else {
-              
               const thisLen = T.getLenType(this_format.LenType);
               if (!this_format.MaxLen)
-                return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
+                error =  T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
               if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
-                return T.toErrorObject(['invalid length of data on field ', field]);
+                 error = T.toInvalidLengthErrorObject(field, this.Msg[field].length);
               }
-                
+
               if (thisLen === 0) {
-                return T.toErrorObject(['field', field, ' has no field implementation']);
+                error = T.toErrorObject(['field', field, ' has no field implementation']);
               } else {
                 valid = true;
               }
             }
           } else {
-            return T.toErrorObject(['field ', field, ' has invalid data']);
+            error = T.toErrorObject(['field ', field, ' has invalid data']);
           }
         }
       }
-      return valid;
+      return error? error : valid;
     } else {
-      return valid;
+      return error ? error : valid;
     }
   }
 
@@ -284,86 +282,94 @@ export default class ISO8583 extends ISO8583Base {
     }
   }
 
-  rebuildExtensions_127_25() {
+  rebuildField(field: string, bitmapLength?: number) {
     if (!this.Msg) return this.throwMessageUndef();
-    if (this.Msg['127.25'] && T.isXmlEncoded(this.Msg['127.25'])) {
+    let data = this.Msg[field];
+    if(!data) return true
+    // Hnalde quoted key value string eg 'key1='value1',key2="value2"'
+    if (this.embededProperties.field_127_25_key_value_string) {
+      return this.unpackKeyValueStringField(field);
+    }
+
+    if (data && T.isXmlEncoded(data)) {
       return this.validateMessage();
     }
-    if (this.Msg['127.25']) {
-      let dataString = this.Msg['127.25'];
-      const bitmap_127 = T.getHex(dataString.slice(0, 16)).split('').map(Number);
-      this.Msg['127.25.1'] = dataString.slice(0, 16);
-      dataString = dataString.slice(16, dataString.length);
-      for (let i = 0; i < bitmap_127.length; i++) {
-        if (bitmap_127[i] === 1) {
-          const field = '127.25.' + (Number(i) + 1);
-
-          const this_format: any = this.formats[field] || formats[field];
-          if (this_format.LenType === 'fixed') {
-            this.Msg[field] = dataString.slice(0, this_format.MaxLen);
-            dataString = dataString.slice(this_format.MaxLen, dataString.length);
-          } else {
-            const thisLen = T.getLenType(this_format.LenType);
-            if (!this_format.MaxLen)
-              return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
-            if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen)
-              return T.toErrorObject([`invalid length ${this.Msg[field].length} of data on field `, field]);
-            if (thisLen === 0) {
-              throw T.toErrorObject(['field ', field, ' format not implemented']);
-            } else {
-              // check length of iso field
-              const len = dataString.slice(0, thisLen).toString();
-              dataString = dataString.slice(thisLen, dataString.length);
-              this.Msg[field] = dataString.slice(0, Number(len)).toString();
-              dataString = dataString.slice(Number(len), dataString.length);
-            }
-          }
-        }
-      }
+    if (data) {
+      return this.upackFieldWithBitmap(field, bitmapLength || 16);
     }
 
     return this.validateMessage();
   }
 
   // ***tested***
-  rebuildExtensions() {
+  upackFieldWithBitmap(parentField: string, bitmaLength: number) {
     if (!this.Msg) return this.throwMessageUndef();
+    let dataString = this.Msg[parentField];
+    let bitmap_127 = T.getHex(dataString.slice(0, bitmaLength)).split('').map(Number);
+    this.Msg[`${parentField}.1`] = dataString.slice(0, bitmaLength);
+    dataString = dataString.slice(bitmaLength, dataString.length);
+    for (let i = 0; i < bitmap_127.length; i++) {
+      if (bitmap_127[i] === 1) {
+        let field = `${parentField}.` + (Number(i) + 1);
+        let this_format = this.formats[field] || formats[field];
+        if (!this_format) throw T.toErrorObject(['field ', field, ' format not implemented']);
+        if (this_format.LenType === 'fixed') {
+          this.Msg[field] = dataString.slice(0, this_format.MaxLen);
+          dataString = dataString.slice(this_format.MaxLen, dataString.length);
+        } else {
+          let thisLen = T.getLenType(this_format.LenType);
+          if (!this_format.MaxLen)
+            return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
 
-    this.dataString = '';
-    if (this.Msg['127']) {
-      let dataString = this.Msg['127'];
-      const bitmap_127 = T.getHex(dataString.slice(0, 16)).split('').map(Number);
-      this.Msg['127.1'] = dataString.slice(0, 16);
-      dataString = dataString.slice(16, dataString.length);
-      for (let i = 0; i < bitmap_127.length; i++) {
-        if (bitmap_127[i] === 1) {
-          const field = '127.' + (Number(i) + 1);
-
-          const this_format: any = this.formats[field] || formats[field];
-          if (this_format.LenType === 'fixed') {
-            this.Msg[field] = dataString.slice(0, this_format.MaxLen);
-            dataString = dataString.slice(this_format.MaxLen, dataString.length);
+          if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen)
+            return T.toInvalidLengthErrorObject(field, this.Msg[field].length);
+          if (thisLen === 0) {
+            throw T.toErrorObject(['field ', field, ' format not implemented']);
           } else {
-            const thisLen = T.getLenType(this_format.LenType);
-            if (!this_format.MaxLen)
-              return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
-
-            if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen)
-              return T.toErrorObject(['invalid length of data on field ', field]);
-            if (thisLen === 0) {
-              throw T.toErrorObject(['field ', field, ' format not implemented']);
-            } else {
-              // check length of iso field
-              const len = dataString.slice(0, thisLen).toString();
-              dataString = dataString.slice(thisLen, dataString.length);
-              this.Msg[field] = dataString.slice(0, Number(len)).toString();
-              dataString = dataString.slice(Number(len), dataString.length);
-            }
+            //check length of iso field
+            let len = dataString.slice(0, thisLen).toString();
+            dataString = dataString.slice(thisLen, dataString.length);
+            this.Msg[field] = dataString.slice(0, Number(len)).toString();
+            dataString = dataString.slice(Number(len), dataString.length);
           }
         }
       }
     }
-    return this.rebuildExtensions_127_25();
+  }
+
+  unpackKeyValueStringField(field: string) {
+    if (!this.Msg) return this.throwMessageUndef();
+    const dataString = this.Msg[field];
+
+    const data = dataString?.split('; ');
+    if (data.length < 2) {
+      return true;
+    }
+    // @ts-ignore
+     data.reduce((_ignored, s) => {
+       const kv = s?.split('=');
+
+       const k = kv[0];
+
+       const v = kv.slice(1, kv.length).join('=');
+       // @ts-ignore
+       this.Msg[`${field}.${k}`] = v;
+     }, {});
+    return true;
+
+  }
+
+  // ***tested***
+  rebuildExtensions() {
+    if (!this.Msg) return this.throwMessageUndef();
+    let state = this.rebuildField('127');
+    if(state instanceof Error) return state;
+    state = this.rebuildField('127.25');
+    if(state instanceof Error) return state;
+
+    const valid = this.validateMessage();
+
+    return valid
   }
 
   /**
@@ -377,7 +383,7 @@ export default class ISO8583 extends ISO8583Base {
     if (!this.Msg) return this.throwMessageUndef();
     const state = this.assembleBitMap();
 
-    if (state instanceof   Error) {
+    if (state instanceof Error) {
       return state.error;
     } else {
       if (!this.Msg['0']) {
@@ -409,7 +415,7 @@ export default class ISO8583 extends ISO8583Base {
   getBitMapHex_127_ext() {
     const state = this.assembleBitMap_127();
 
-    if (state instanceof   Error) {
+    if (state instanceof Error) {
       return state;
     } else {
       let map = '';
@@ -441,7 +447,7 @@ export default class ISO8583 extends ISO8583Base {
     this.rebuildExtensions();
     const state = this.assembleBitMap_127_25();
 
-    if (state instanceof   Error) {
+    if (state instanceof Error) {
       return state;
     } else {
       let map = '';
@@ -528,7 +534,7 @@ export default class ISO8583 extends ISO8583Base {
       buffer = takeStaticMeta(this, buffer);
       const iso = this.unpack_0_127(buffer, {}, _config);
 
-      if (iso instanceof   Error) {
+      if (iso instanceof Error) {
         return iso;
       } else {
         return iso;
@@ -589,7 +595,7 @@ export default class ISO8583 extends ISO8583Base {
     // console.warn('getBufferMessage will be removed in next version. Use encode instead');
     const staticMetadataBuf = addStaticMetaData(this);
     const _0_127_Buffer = this.assemble0_127_Fields();
-    if (_0_127_Buffer instanceof   Error) {
+    if (_0_127_Buffer instanceof Error) {
       return _0_127_Buffer;
     } else {
       const len_0_127_1 = T.getTCPHeaderBuffer(Math.floor(_0_127_Buffer.byteLength / 256));
@@ -610,7 +616,7 @@ export default class ISO8583 extends ISO8583Base {
     const staticMetadataBuf = addStaticMetaData(this);
     const _0_127_Buffer = this.assemble0_127_Fields();
 
-    if (_0_127_Buffer instanceof   Error) {
+    if (_0_127_Buffer instanceof Error) {
       return _0_127_Buffer;
     } else {
       const len_0_127_1 = T.getTCPHeaderBuffer(Math.floor(Number(_0_127_Buffer.byteLength) / 256));
@@ -678,7 +684,7 @@ export default class ISO8583 extends ISO8583Base {
       this.MsgType = data;
       return true;
     } else {
-      if (state instanceof   Error) {
+      if (state instanceof Error) {
         return state;
       } else {
         this.Msg[field.toString()] = data;
@@ -692,7 +698,7 @@ export default class ISO8583 extends ISO8583Base {
     for (const key in this.Msg) {
       if (this.Msg.hasOwnProperty(key)) {
         const state = this.addField(key, this.Msg[key]);
-        if (state instanceof   Error) {
+        if (state instanceof Error) {
           return state;
         }
       }
@@ -747,7 +753,7 @@ export default class ISO8583 extends ISO8583Base {
     if (!this.MsgType || !msgTypes(this.MsgType)) return T.toErrorObject('mti undefined or invalid');
     else {
       const state = this.addFromDiObject();
-      if (state instanceof   Error) {
+      if (state instanceof Error) {
         return state;
       } else {
         return (

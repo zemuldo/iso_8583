@@ -32,10 +32,13 @@ export default {
    * @example Tools.toErrorObject("some error") -> {error: "some error"}
    * @example Tools.toErrorObject("some error on field", 67, "happened" ) -> {error: "some error on field 67 happened"}
    */
-  toErrorObject: (errors: (string|number)[] | string | number) => {
+  toErrorObject: (errors: (string | number | undefined)[] | string | number) => {
     if (Array.isArray(errors)) return new DefaultError(errors.join(''));
     // @ts-ignore
     else return new DefaultError(errors);
+  },
+  toInvalidLengthErrorObject: (field: string | number, invalidLength: number) => {
+    return new DefaultError(`invalid length ${invalidLength} of data on field ${field}`);
   },
   /**
    * Convert a hexadecimal string in to binary string: To a string of 0s and 1s
@@ -87,7 +90,7 @@ export default {
     return parseInt(string, 10).toString(16);
   },
 
-  getLenType: (lentype: string) => {
+  getLenType: (lentype: string | undefined) => {
     switch (lentype) {
       case 'lvar':
         return 1;
@@ -114,6 +117,7 @@ export default {
 
   validateFields: (self: ISO8583Base) => {
     const obj = self.Msg;
+
     const customFormats = self.formats;
     let state = false;
     for (const field in obj) {
@@ -124,7 +128,7 @@ export default {
         if (this_format && checkTypes(this_format, obj[field], field)) {
           state = true;
         } else {
-          return new Error('field ' + field + ' error')
+          return new Error('field ' + field + ' error');
         }
       }
     }
@@ -215,7 +219,9 @@ export default {
   },
 
   isXmlEncoded: (s: string) => {
-    if(!s) return false;
-    return s.startsWith('<') && s.endsWith('>');
+    if (!s) return false;
+    if(s.startsWith('<') && s.endsWith('>')) return true
+    if(s.startsWith("'<") && s.endsWith(">'")) return true
+    return false
   },
 };

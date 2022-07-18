@@ -5,6 +5,12 @@ import { DefaultError } from './errors';
  * @module DataTypes
  */
 
+function isQuoted(s: string) {
+  if(!s) return false;
+  return (s[0] === "'" && s[s.length - 1] === "'") || (s[0] === '"' && s[s.length - 1] === '"');
+}
+
+
 /**
   * @method
   * @param {object} format The field format configuration
@@ -27,7 +33,10 @@ import { DefaultError } from './errors';
     MinLen: 1
   }, "446288148638637X", 3) -> { error: 'while processing field 3 : provided data is not of type n'}
   */
-export default function checkDataType(format: CustomFormatT, data: string | null, field: string | number) {
+export default function checkDataType(format: CustomFormatT, _data: string | null, field: string | number) {
+  let data = _data;
+  // @ts-ignore
+    if (isQuoted(_data)) data = _data?.slice(1, -1);
   if(!data) return new DefaultError(`field ${field} is empty`);
   const regex = {
     a: /[A-Z]/i,

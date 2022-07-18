@@ -40,6 +40,10 @@ export interface ISO8583JSONMessageType {
   [key: string]: string;
 }
 
+export interface EmbededProperties {
+  field_127_25_key_value_string?: boolean;
+}
+
 export type ISO8583RawMessageType = Buffer;
 
 export type ISO8583MessageType = ISO8583JSONMessageType | ISO8583RawMessageType;
@@ -60,6 +64,8 @@ export default class ISO8583Base {
   metaData: string = '';
 
   excessBuffer: Buffer | null = null;
+
+  embededProperties: EmbededProperties = {}
 
   maskPan: (pan: string, format: string, masker?: string | undefined) => string | { error: string };
   toSafeLog: (config: Types.KeyValueStringT, data: Types.KeyValueStringT, panMaskFormat: string) => void;

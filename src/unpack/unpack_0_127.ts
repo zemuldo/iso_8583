@@ -59,7 +59,7 @@ export default function (incoming: Buffer, isoJSON: Types.KeyValueStringT, confi
             if (!this_format.MaxLen)
               return T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
             if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
-              return T.toErrorObject(['invalid length of data on field ', field]);
+              return T.toInvalidLengthErrorObject(field, this.Msg[field].length);
             }
             if (thisLen === 0) {
               return T.toErrorObject(['field ', field, ' format not implemented']);

@@ -757,7 +757,7 @@ test('validateMessage() variable length should get error', () => {
   let isopack = new Main(data);
   const results = isopack.validateMessage();
   expect(results).toBeInstanceOf(Error);
-  expect(results.error).toStrictEqual('invalid length of data on field 32');
+  expect(results.error).toStrictEqual('invalid length 30 of data on field 32');
 });
 
 /**
@@ -1535,4 +1535,90 @@ test('Rebuild 127.25 extensions', () => {
   const {json} = new Main(data).unpack_127_25_1_63(buf, {});
   expect(json['127.25.30']).toStrictEqual('BAC24959');
 });
+
+
+test('Rebuild 127.25 extensions when key:value; string', () => {
+  let data = {
+    '1': '42000022',
+    '2': '4187459999993969',
+    '3': '501000',
+    '4': '210000',
+    '7': '202194610',
+    '11': '116337',
+    '12': '74610',
+    '13': '202',
+    '14': '2406',
+    '15': '202',
+    '18': '6014',
+    '22': '51',
+    '23': '1',
+    '25': '0',
+    '26': '4',
+    '28': '0',
+    '32': '424367',
+    '35': '4187459999993969D2406226********',
+    '37': '116337',
+    '40': '226',
+    '41': '2070597N',
+    '42': '2TUPLA000000003',
+    '43': 'T LIFEs LINK 002424 2070597N LANG',
+    '49': '566',
+    '52': '****************',
+    '56': '1510',
+    '98': '87001511',
+    '103': '87001511',
+    '123': "1=15; 2=5; 3=1; 4=1; 5=1; 6=0; 7=1; 8=5; 9=1; 10=2; 11=3; 12=4; 13='4'; 14=1; 15=1",
+    '127':
+      "2='000000116337'; 3=' 002424002424 '; 22='221ThirdPartyBillPayment3125<ThirdPartyBillPayment><BillPaymentRequest><ReferenceId>1022436062</ReferenceId></BillPaymentRequest></ThirdPartyBillPayment>230ThirdPartyBillPaymentExtension3225<ThirdPartyBillPaymentExtension><BillPaymentRequestExtension><CustomerId>1022436062</CustomerId><ProductCode>5000000</ProductCode><ItemCode>08125438953</ItemCode></BillPaymentRequestExtension></ThirdPartyBillPaymentExtension>211MediaTotals3211<MediaTotals><Totals><Amount>99300000</Amount><Currency>566</Currency><MediaClass>Cash</MediaClass></Totals><Totals><Amount>0</Amount><Currency>000</Currency><MediaClass>Cards</MediaClass></Totals></MediaTotals>218Postilion:MetaData3141221ThirdPartyBillPayment111230ThirdPartyBillPaymentExtension111211MediaTotals111212MediaBatchNr111217AdditionalEmvTags111214AdditionalInfo111212MediaBatchNr16198916217AdditionalEmvTags3344<AdditionalEmvTags><EmvTag><TagId>50</TagId><TagValue>5645525645</TagValue></EmvTag><EmvTag><TagId>81</TagId><TagValue>004C4B40</TagValue></EmvTag><EmvTag><TagId>5F36</TagId><TagValue>00</TagValue></EmvTag><EmvTag><TagId>5F34</TagId><TagValue>02</TagValue></EmvTag><EmvTag><TagId>9B</TagId><TagValue>6800</TagValue></EmvTag></AdditionalEmvTags>214AdditionalInfo3449<AdditionalInfo><Transaction><OpCode> D B CC</OpCode><BufferB>08125438953</BufferB><BufferC>1022436062</BufferC><CfgExtendedTrxType>9701</CfgExtendedTrxType><CfgReceivingInstitutionIDCode>011</CfgReceivingInstitutionIDCode></Transaction><Download><ATMConfigID>5006</ATMConfigID><AtmAppConfigID>5006</AtmAppConfigID><LoadsetGroup>FEP Wincor EMV+VISA</LoadsetGroup><DownloadApp>2020_HYOSUNG_DWNLD_SWT_ETZ_PAY</DownloadApp></Download></AdditionalInfo>'; 25='<?xml version=\"1.0\" encoding=\"UTF-8\"?> <IccData><IccRequest><AmountAuthorized>000000210000</AmountAuthorized><AmountOther>000000000000</AmountOther><ApplicationInterchangeProfile>3800</ApplicationInterchangeProfile><ApplicationTransactionCounter>002D</ApplicationTransactionCounter><Cryptogram>93E957223EF23846</Cryptogram><CryptogramInformationData>80</CryptogramInformationData><CvmResults>420300</CvmResults><IssuerApplicationData>06010A03A0A802</IssuerApplicationData><TerminalCapabilities>E040C8</TerminalCapabilities><TerminalCountryCode>566</TerminalCountryCode><TerminalType>22</TerminalType><TerminalVerificationResult>0000040000</TerminalVerificationResult><TransactionCurrencyCode>566</TransactionCurrencyCode><TransactionDate>220202</TransactionDate><TransactionType>00</TransactionType><UnpredictableNumber>39EB665C</UnpredictableNumber></IccRequest></IccData>'",
+    '': '',
+    '123.1': '15',
+    '123.2': '5',
+    '123.3': '1',
+    '123.4': '1',
+    '123.5': '1',
+    '123.6': '0',
+    '123.7': '1',
+    '123.8': '5',
+    '123.9': '1',
+    '123.1__1': '2',
+    '123.11': '3',
+    '123.12': '4',
+    '123.13': "4'",
+    '123.14': '1',
+    '123.15': '1'
+  };
+
+  const iso = new Main(data);
+  iso.embededProperties.field_127_25_key_value_string = true
+  iso.rebuildField('127');
+
+  expect(iso.Msg['127.2']).toStrictEqual("'000000116337'");
+  expect(iso.Msg['127.3']).toStrictEqual("' 002424002424 '");
+});
+
+
+test('Encode Decode with 127 key:value; string', () => {
+  let data = {
+    '0': '0200',
+    '1': '42000022',
+    '2': '4187459999993969',
+    '3': '501000',
+    '4': '000000005000',
+    '7': '2021946100',
+    '11': '116337',
+    '12': '131411',
+    '13': '0911',
+    '127':
+      "2='000000116337'; 3=' 002424002424    002424002424    002424002424 '; 22='221ThirdPartyBillPayment3125<ThirdPartyBillPayment><BillPaymentRequest><ReferenceId>1022436062</ReferenceId></BillPaymentRequest></ThirdPartyBillPayment>230ThirdPartyBillPaymentExtension3225<ThirdPartyBillPaymentExtension><BillPaymentRequestExtension><CustomerId>1022436062</CustomerId><ProductCode>5000000</ProductCode><ItemCode>08125438953</ItemCode></BillPaymentRequestExtension></ThirdPartyBillPaymentExtension>211MediaTotals3211<MediaTotals><Totals><Amount>99300000</Amount><Currency>566</Currency><MediaClass>Cash</MediaClass></Totals><Totals><Amount>0</Amount><Currency>000</Currency><MediaClass>Cards</MediaClass></Totals></MediaTotals>218Postilion:MetaData3141221ThirdPartyBillPayment111230ThirdPartyBillPaymentExtension111211MediaTotals111212MediaBatchNr111217AdditionalEmvTags111214AdditionalInfo111212MediaBatchNr16198916217AdditionalEmvTags3344<AdditionalEmvTags><EmvTag><TagId>50</TagId><TagValue>5645525645</TagValue></EmvTag><EmvTag><TagId>81</TagId><TagValue>004C4B40</TagValue></EmvTag><EmvTag><TagId>5F36</TagId><TagValue>00</TagValue></EmvTag><EmvTag><TagId>5F34</TagId><TagValue>02</TagValue></EmvTag><EmvTag><TagId>9B</TagId><TagValue>6800</TagValue></EmvTag></AdditionalEmvTags>214AdditionalInfo3449<AdditionalInfo><Transaction><OpCode> D B CC</OpCode><BufferB>08125438953</BufferB><BufferC>1022436062</BufferC><CfgExtendedTrxType>9701</CfgExtendedTrxType><CfgReceivingInstitutionIDCode>011</CfgReceivingInstitutionIDCode></Transaction><Download><ATMConfigID>5006</ATMConfigID><AtmAppConfigID>5006</AtmAppConfigID><LoadsetGroup>FEP Wincor EMV+VISA</LoadsetGroup><DownloadApp>2020_HYOSUNG_DWNLD_SWT_ETZ_PAY</DownloadApp></Download></AdditionalInfo>'; 25='<?xml version=\"1.0\" encoding=\"UTF-8\"?> <IccData><IccRequest><AmountAuthorized>000000210000</AmountAuthorized><AmountOther>000000000000</AmountOther><ApplicationInterchangeProfile>3800</ApplicationInterchangeProfile><ApplicationTransactionCounter>002D</ApplicationTransactionCounter><Cryptogram>93E957223EF23846</Cryptogram><CryptogramInformationData>80</CryptogramInformationData><CvmResults>420300</CvmResults><IssuerApplicationData>06010A03A0A802</IssuerApplicationData><TerminalCapabilities>E040C8</TerminalCapabilities><TerminalCountryCode>566</TerminalCountryCode><TerminalType>22</TerminalType><TerminalVerificationResult>0000040000</TerminalVerificationResult><TransactionCurrencyCode>566</TransactionCurrencyCode><TransactionDate>220202</TransactionDate><TransactionType>00</TransactionType><UnpredictableNumber>39EB665C</UnpredictableNumber></IccRequest></IccData>'",
+  };
+
+  const iso = new Main(data);
+  iso.embededProperties.field_127_25_key_value_string = true;
+  const buf = iso.encode();
+  
+  const json = new Main(buf).decode();
+  expect(json['127.3']).toStrictEqual("' 002424002424    002424002424    002424002424 '");
+  expect(json['127.25']).toContain("</IccRequest></IccData>'");
+});
+
 
