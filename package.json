@@ -1,8 +1,9 @@
 {
   "name": "iso_8583",
-  "version": "3.0.0-beta-1",
+  "version": "3.0.0-beta-2",
   "description": "A javascript library for messaging in iso 8583 messaging format.",
-  "main": "lib/8583.js",
+  "main": "./lib/ISO8583.js",
+  "types": "./lib/ISO8583.d.ts",
   "scripts": {
     "docs": "jsdoc -c js_docs.conf.json README.md",
     "test": "jest",
