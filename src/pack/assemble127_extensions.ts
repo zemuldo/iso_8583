@@ -72,7 +72,7 @@ function assembleKeyValueString(self: ISO8583): DefaultError | Buffer {
 
     if (self.embededProperties.exclude127Bitmap) {
       buff = Buffer.alloc(0);
-    }
+    } 
 
     const dataString = fieldkv.join('; ');
     const dataLength = dataString.length;

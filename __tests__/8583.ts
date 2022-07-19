@@ -1619,7 +1619,7 @@ test('Encode Decode with 127 key:value; string', () => {
   expect(json['127.25']).toContain("</IccRequest></IccData>'");
 });
 
-test('Encode Decode with 127 without 25 key:value; string', () => {
+test('Encode Decode with 127 k=value', () => {
   let data = {
     '0': '0200',
     '2': '9501000000000001',
@@ -1657,6 +1657,53 @@ test('Encode Decode with 127 without 25 key:value; string', () => {
   iso2.embededProperties.field_127_25_key_value_string = true;
   const json = iso2.decode();
   expect(json['127.12']).toStrictEqual("'SWTFBNsnk'");
+  expect(json['127.25']).toStrictEqual(
+    '\'<?xml version="1.0" encoding="UTF-8"?> <IccData><IccRequest></IccRequest></IccData>\'',
+  );
+});
+
+test('Encode Decode with 127 k=value without Bitmap', () => {
+  let data = {
+    '0': '0200',
+    '2': '9501000000000001',
+    '3': '010000',
+    '4': '000000001000',
+    '11': '307647',
+    '14': '2209',
+    '18': '4111',
+    '22': '051',
+    '23': '000',
+    '25': '00',
+    '26': '12',
+    '32': '777777',
+    '33': '111111111',
+    '35': '9501000000000001=4912101',
+    '37': '220630114805',
+    '40': '226',
+    '41': '2UP19135',
+    '42': '2UP1LA000003227',
+    '43': 'KUDI   NIGERIA LIMIT    LA          LANG',
+    '49': '566',
+    '56': '1510',
+    '103': '87005600',
+    '123': '510101511344101',
+    '127':
+      "2='0000053870'; 12='SWTFBNsnk'; 13='01234000000 566'; 14='FBN   '; 20=20220202; 22='<BufferB>09050996560</BufferB>'; 25='<?xml version=\"1.0\" encoding=\"UTF-8\"?> <IccData><IccRequest></IccRequest></IccData>'",
+    '70': '001',
+  };
+
+  const iso1 = new Main(data);
+  iso1.embededProperties.field_127_25_key_value_string = true;
+  iso1.embededProperties.exclude127Bitmap = true;
+  const buf = iso1.encode();
+
+  const iso2 = new Main(buf);
+  iso2.embededProperties.field_127_25_key_value_string = true;
+  iso2.embededProperties.exclude127Bitmap = true;
+  const json = iso2.decode();
+  expect(json['127.2']).toStrictEqual("'0000053870'");
+  expect(json['127.12']).toStrictEqual("'SWTFBNsnk'");
+  expect(json['127.14']).toStrictEqual("'FBN   '");
   expect(json['127.25']).toStrictEqual(
     '\'<?xml version="1.0" encoding="UTF-8"?> <IccData><IccRequest></IccRequest></IccData>\'',
   );

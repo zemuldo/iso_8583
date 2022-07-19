@@ -7,7 +7,7 @@ function unpackKeyValueStringField(self, slice_127, isoJSON) {
   slice_127 = slice_127.slice(6, slice_127.length);
   if (!self.embededProperties.exclude127Bitmap) {
     slice_127 = slice_127.slice(8, slice_127.length);
-  }
+  } 
 
   const dataString = slice_127.slice(0, length).toString();
   slice_127 = slice_127.slice(length, slice_127.length);
