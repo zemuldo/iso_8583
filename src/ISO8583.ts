@@ -168,7 +168,7 @@ export default class ISO8583 extends ISO8583Base {
   validateMessage() {
     if (!this.Msg) return false;
     let valid = false;
-    let error = null
+    let error = null;
     const state = this.assembleBitMap();
     const validDate = T.validateFields(this);
     const validateRequiredFields = requiredFields(this.Msg, this.requiredFieldsSchema);
@@ -198,14 +198,14 @@ export default class ISO8583 extends ISO8583Base {
               if (this_format.MaxLen === this.Msg[field].length) {
                 valid = true;
               } else {
-                error = T.toInvalidLengthErrorObject(field, this.Msg[field].length)
+                error = T.toInvalidLengthErrorObject(field, this.Msg[field].length);
               }
             } else {
               const thisLen = T.getLenType(this_format.LenType);
               if (!this_format.MaxLen)
-                error =  T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
+                error = T.toErrorObject(['max length not implemented for ', this_format.LenType, field]);
               if (this.Msg[field] && this.Msg[field].length > this_format.MaxLen) {
-                 error = T.toInvalidLengthErrorObject(field, this.Msg[field].length);
+                error = T.toInvalidLengthErrorObject(field, this.Msg[field].length);
               }
 
               if (thisLen === 0) {
@@ -219,7 +219,7 @@ export default class ISO8583 extends ISO8583Base {
           }
         }
       }
-      return error? error : valid;
+      return error ? error : valid;
     } else {
       return error ? error : valid;
     }
@@ -285,7 +285,7 @@ export default class ISO8583 extends ISO8583Base {
   rebuildField(field: string, bitmapLength?: number) {
     if (!this.Msg) return this.throwMessageUndef();
     let data = this.Msg[field];
-    if(!data) return true
+    if (!data) return true;
     // Hnalde quoted key value string eg 'key1='value1',key2="value2"'
     if (this.embededProperties.field_127_25_key_value_string) {
       return this.unpackKeyValueStringField(field);
@@ -346,30 +346,29 @@ export default class ISO8583 extends ISO8583Base {
       return true;
     }
     // @ts-ignore
-     data.reduce((_ignored, s) => {
-       const kv = s?.split('=');
+    data.reduce((_ignored, s) => {
+      const kv = s?.split('=');
 
-       const k = kv[0];
+      const k = kv[0];
 
-       const v = kv.slice(1, kv.length).join('=');
-       // @ts-ignore
-       this.Msg[`${field}.${k}`] = v;
-     }, {});
+      const v = kv.slice(1, kv.length).join('=');
+      // @ts-ignore
+      this.Msg[`${field}.${k}`] = v;
+    }, {});
     return true;
-
   }
 
   // ***tested***
   rebuildExtensions() {
     if (!this.Msg) return this.throwMessageUndef();
     let state = this.rebuildField('127');
-    if(state instanceof Error) return state;
+    if (state instanceof Error) return state;
     state = this.rebuildField('127.25');
-    if(state instanceof Error) return state;
+    if (state instanceof Error) return state;
 
     const valid = this.validateMessage();
 
-    return valid
+    return valid;
   }
 
   /**
