@@ -23,8 +23,8 @@ import addStaticMetaData from './pack/addStaticMetaData';
  */
 export default class ISO8583 extends ISO8583Base {
   dataString: string = '';
-  constructor(message?: Types.ISOMessageT, customFormats?: Types.CustomFormatsT, requiredFieldsSchema?: any) {
-    super(message, customFormats, requiredFieldsSchema);
+  constructor(message?: Types.ISOMessageT, customFormats?: Types.CustomFormatsT, requiredFieldsSchema?: any, config?: Types.KeyValueT) {
+    super(message, customFormats, requiredFieldsSchema, config);
   }
 
   static getFieldDescription(

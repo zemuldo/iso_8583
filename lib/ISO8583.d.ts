@@ -11,7 +11,7 @@ import ISO8583Base from './ISO8583Base';
  */
 export default class ISO8583 extends ISO8583Base {
     dataString: string;
-    constructor(message?: Types.ISOMessageT, customFormats?: Types.CustomFormatsT, requiredFieldsSchema?: any);
+    constructor(message?: Types.ISOMessageT, customFormats?: Types.CustomFormatsT, requiredFieldsSchema?: any, config?: Types.KeyValueT);
     static getFieldDescription(fields?: string | string[] | number | number[] | null, customFormats?: Types.CustomFormatsT): any;
     setMetadata(metaData: string): this;
     /**
