@@ -140,7 +140,7 @@ export default class ISO8583 extends ISO8583Base {
     contractField(field: string): string | number;
     addField(field: string | number, data: string): true | import("./errors").DefaultError;
     addFromDiObject(): true | import("./errors").DefaultError;
-    getJsonFromXml(xmString: string): KeyValueStringT | import("./errors").DefaultError;
-    getXMLString(): string | import("./errors").DefaultError;
+    getJsonFromXml(xmString: string): void;
+    getXMLString(): void;
     throwMessageUndef(): void;
 }
