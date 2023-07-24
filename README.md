@@ -4,6 +4,10 @@
 
 ISO_8583 is a <span style="color:green; font-size:18px">Customizable ISO 8583 Library for JavaScript and NodeJS</span> that does message conversion between a system and an interface that exchange [ISO 8583 Financial transaction card originated messages](https://en.wikipedia.org/wiki/ISO_8583).
 
+## Note from Joshua Austill
+
+I created this fork to remove GPL licenced code. Other than that I'm going to try to keep it as close to the parent as possible.
+
 ## Install from npm using
 
 ```shell

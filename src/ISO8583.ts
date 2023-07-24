@@ -1,6 +1,5 @@
 import { KeyValueStringT } from './t';
 // @ts-ignore
-import jxon from 'jxon';
 import * as Types from './t';
 import ISO8583Base from './ISO8583Base';
 import formats from './formats';
@@ -707,63 +706,11 @@ export default class ISO8583 extends ISO8583Base {
   }
 
   getJsonFromXml(xmString: string) {
-    if (xmString) {
-      const obj = jxon.stringToJs(xmString);
-      if (obj.Iso8583PostXml) {
-        const iso = obj.Iso8583PostXml;
-        const res: Types.KeyValueStringT = {};
-        // prepare MTI
-        const mti = iso.MsgType.toString();
-        res['0'] = mti;
-
-        for (const key in iso.Fields) {
-          if (iso.Fields.hasOwnProperty(key)) {
-            const item = this.contractField(key);
-            res[item] = iso.Fields[key];
-          }
-        }
-
-        return res;
-      } else if (obj.iso8583postxml) {
-        const iso = obj.iso8583postxml;
-        const res: Types.KeyValueStringT = {};
-        let mti = '';
-        mti = iso.msgtype.toString();
-        if (mti.length === 3) {
-          mti = '0' + mti;
-        }
-        res['0'] = mti;
-
-        for (const key in iso.fields) {
-          if (iso.fields.hasOwnProperty(key)) {
-            const item = this.contractField(key);
-            res[item] = iso.fields[key];
-          }
-        }
-
-        return res;
-      } else return T.toErrorObject('could not parse xml');
-    } else return T.toErrorObject('xml is not properly encoded');
+    throw new Error('I removed this because it uses jxon, which is GPL licenced');
   }
 
   getXMLString() {
-    const header = '<?xml version="1.0" encoding="UTF-8"?>';
-
-    if (!this.MsgType || !msgTypes(this.MsgType)) return T.toErrorObject('mti undefined or invalid');
-    else {
-      const state = this.addFromDiObject();
-      if (state instanceof Error) {
-        return state;
-      } else {
-        return (
-          header +
-          jxon.jsToString({
-            MsgType: this.MsgType,
-            Fields: this.fields,
-          })
-        );
-      }
-    }
+    throw new Error('I removed this as it uses jxon, which is GPL licenced');
   }
 
   throwMessageUndef() {
