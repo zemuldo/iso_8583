@@ -45,5 +45,5 @@ export default class ISO8583Base {
     assemble127_extensions: () => Buffer | DefaultError;
     assemble127_25_extensions: () => Buffer | DefaultError;
     includesSecondaryBitmap: boolean;
-    constructor(message?: ISO8583MessageType, customFormats?: Types.CustomFormatsT, requiredFieldsSchema?: Types.RequiredFieldSchemaT);
+    constructor(message?: ISO8583MessageType, customFormats?: Types.CustomFormatsT, requiredFieldsSchema?: Types.RequiredFieldSchemaT, config?: Types.KeyValueT);
 }

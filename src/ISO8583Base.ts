@@ -93,8 +93,12 @@ export default class ISO8583Base {
     message?: ISO8583MessageType,
     customFormats?: Types.CustomFormatsT,
     requiredFieldsSchema?: Types.RequiredFieldSchemaT,
+    config?: Types.KeyValueT,
   ) {
     this.formats = customFormats || {};
+    if (config) {
+      this.config = config;
+    }
     this.hasSpecialFields = false;
     if (Buffer.isBuffer(message)) {
       this.BufferMsg = message;
