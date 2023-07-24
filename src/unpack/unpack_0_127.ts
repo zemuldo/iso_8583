@@ -35,7 +35,7 @@ export default function (incoming: Buffer, isoJSON: Types.KeyValueStringT, confi
         // format defined
         const field = i + 1;
         const this_format = this.formats[field] || formats[field];
-        if (field === 127) {
+        if (!config.skip127 && field === 127) {
           const get127Exts = this.unpack_127_1_63(thisBuff, isoJSON);
           if (get127Exts.error) {
             return get127Exts;
