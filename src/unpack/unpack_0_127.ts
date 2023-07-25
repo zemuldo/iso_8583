@@ -68,7 +68,7 @@ export default function (incoming: Buffer, isoJSON: Types.KeyValueStringT, confi
               } else {
                 const len = thisBuff.slice(0, thisLen).toString();
                 thisBuff = thisBuff.slice(thisLen, thisBuff.byteLength);
-                isoJSON[field] = thisBuff.slice(0, Number(len)).toString();
+                isoJSON[field] = thisBuff.slice(0, Number(len)).toString(config.bitmapEncoding || 'hex');
                 thisBuff = thisBuff.slice(Number(len), thisBuff.byteLength);
               }
             }
