@@ -70,7 +70,14 @@ export default function (incoming: Buffer, isoJSON: Types.KeyValueStringT, confi
                 len = lenBuff.readUIntBE(0, thisLen);
               }
               thisBuff = thisBuff.subarray(thisLen, thisBuff.byteLength);
-              isoJSON[field] = thisBuff.subarray(0, len).toString(field === 127 ? config.custom127Encoding : (config.bitmapEncoding || 'hex'));
+
+              let encoding: string = 'hex';
+              if (field === 127 && config.custom127Encoding) {
+                encoding = config.custom127Encoding;
+              } else if (config.bitmapEncoding) {
+                encoding = config.bitmapEncoding;
+              }
+              isoJSON[field] = thisBuff.subarray(0, len).toString(encoding);
               thisBuff = thisBuff.subarray(Number(len), thisBuff.byteLength);
             }
           }

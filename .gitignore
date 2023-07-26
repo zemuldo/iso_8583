@@ -11,3 +11,4 @@ yarn.lock
 coveragex
 docs
 .metals
+lib/
