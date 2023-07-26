@@ -63,19 +63,15 @@ export default function (incoming: Buffer, isoJSON: Types.KeyValueStringT, confi
             if (thisLen === 0) {
               return T.toErrorObject(['field ', field, ' format not implemented']);
             } else {
-              if (config.custom127Encoding && field === 127) {
-                isoJSON[field] = thisBuff.subarray(0).toString(config.custom127Encoding);
-              } else {
-                const lenBuff: Buffer = thisBuff.subarray(0, thisLen);
-                const lenString: string = lenBuff.toString();
-                let len: number = Number(lenString);
-                if (isNaN(len)) { // with certain lengths you get NAN and readUIntBE seems to work in those cases, not sure why...
-                  len = lenBuff.readUIntBE(0, thisLen);
-                }
-                thisBuff = thisBuff.subarray(thisLen, thisBuff.byteLength);
-                isoJSON[field] = thisBuff.subarray(0, len).toString(config.bitmapEncoding || 'hex');
-                thisBuff = thisBuff.subarray(Number(len), thisBuff.byteLength);
+              const lenBuff: Buffer = thisBuff.subarray(0, thisLen);
+              const lenString: string = lenBuff.toString();
+              let len: number = Number(lenString);
+              if (isNaN(len)) { // with certain lengths you get NAN and readUIntBE seems to work in those cases, not sure why...
+                len = lenBuff.readUIntBE(0, thisLen);
               }
+              thisBuff = thisBuff.subarray(thisLen, thisBuff.byteLength);
+              isoJSON[field] = thisBuff.subarray(0, len).toString(field === 127 ? config.custom127Encoding : (config.bitmapEncoding || 'hex'));
+              thisBuff = thisBuff.subarray(Number(len), thisBuff.byteLength);
             }
           }
         } else return T.toErrorObject(['field ', field, ' format not implemented']);
