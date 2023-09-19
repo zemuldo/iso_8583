@@ -14,7 +14,7 @@ function assembleKeyValueString(self: ISO8583): DefaultError | Buffer {
   if (mtiCheck && validate && state) {
     const bitmaps_127 = self.assembleBitMap_127();
     const bmpsHex = self.getBitMapHex_127_ext();
-    const buff = Buffer.alloc(8, bmpsHex, 'hex');
+    let buff = Buffer.alloc(8, bmpsHex, 'hex');
     if(self.formats['127.1'] != undefined)
     {
       if (self.formats['127.1'].ContentType === 'an')
