@@ -44,8 +44,26 @@ export default function (slice_127, isoJSON) {
      return unpackKeyValueStringField(this, slice_127, isoJSON);
    }
   slice_127 = slice_127.slice(6, slice_127.length);
-  const bitmap = T.getHex(slice_127.slice(0, 8).toString('hex')).split('').map(Number);
-  slice_127 = slice_127.slice(8, slice_127.length);
+  //const bitmap = T.getHex(slice_127.slice(0, 8).toString('hex')).split('').map(Number);
+  let bitmap = "";
+  if(this.formats['127.1'] != undefined)
+  { 
+    if (this.formats['127.1'].ContentType === 'an')
+    {
+      bitmap = T.getHex(slice_127.slice(0, 16).toString('ascii'))
+      .split('')
+      .map(Number);
+      slice_127 = slice_127.slice(16, slice_127.length);
+    }
+  }
+  else
+  {
+    bitmap = T.getHex(slice_127.slice(0, 8).toString('hex'))
+    .split('')
+    .map(Number);
+    slice_127 = slice_127.slice(8, slice_127.length);
+  }
+ 
   for (let i = 0; i < 40; i++) {
     if (bitmap[i] === 1) {
       const subField = '127.' + (i + 1);
