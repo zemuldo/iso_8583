@@ -30,12 +30,11 @@ export default function (incoming: Buffer, isoJSON: Types.KeyValueStringT, confi
     const bitmap = T.getHex(slice).split('').map(Number);
 
     let thisBuff = incoming.slice(bitmapEnd, incoming.byteLength);
-    for (let i = 1; i < bitmap.length; i++) {
-      if (bitmap[i] === 1) {
+    for (let field = 2; field <= bitmap.length; field++) {
+      if (bitmap[field - 1] === 1) {
         // format defined
-        const field = i + 1;
         const this_format = this.formats[field] || formats[field];
-        if (field === 127) {
+        if (!config.custom127Encoding && field === 127) {
           const get127Exts = this.unpack_127_1_63(thisBuff, isoJSON);
           if (get127Exts.error) {
             return get127Exts;
@@ -64,17 +63,28 @@ export default function (incoming: Buffer, isoJSON: Types.KeyValueStringT, confi
             if (thisLen === 0) {
               return T.toErrorObject(['field ', field, ' format not implemented']);
             } else {
-              const len = thisBuff.slice(0, thisLen).toString();
-              thisBuff = thisBuff.slice(thisLen, thisBuff.byteLength);
-              isoJSON[field] = thisBuff.slice(0, Number(len)).toString();
-              thisBuff = thisBuff.slice(Number(len), thisBuff.byteLength);
+              const lenBuff: Buffer = thisBuff.subarray(0, thisLen);
+              const lenString: string = lenBuff.toString();
+              let len: number = Number(lenString);
+              if (isNaN(len)) { // with certain lengths you get NAN and readUIntBE seems to work in those cases, not sure why...
+                len = lenBuff.readUIntBE(0, thisLen);
+              }
+              thisBuff = thisBuff.subarray(thisLen, thisBuff.byteLength);
+
+              let encoding: string = 'hex';
+              if (field === 127 && config.custom127Encoding) {
+                encoding = config.custom127Encoding;
+              } else if (config.bitmapEncoding) {
+                encoding = config.bitmapEncoding;
+              }
+              isoJSON[field] = thisBuff.subarray(0, len).toString(encoding);
+              thisBuff = thisBuff.subarray(Number(len), thisBuff.byteLength);
             }
           }
         } else return T.toErrorObject(['field ', field, ' format not implemented']);
       }
     }
 
-    this.remainingBuffer = thisBuff;
     return isoJSON;
   } else return T.toErrorObject(['expecting buffer but got ', typeof incoming]);
 };
